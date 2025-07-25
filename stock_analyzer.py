@@ -92,54 +92,59 @@ with open(report_path, 'w', encoding='utf-8') as f:
     f.write('<StockAnalysisReport>\n')
     
     for symbol in symbols:
-        symbol_df = df[df['symbol'] == symbol].copy()
-        symbol_df.set_index('date', inplace=True)
-        
-        # 移動平均計算
-        symbol_df['MA30'] = calculate_moving_average(symbol_df['close'])
-        
-        # テクニカル指標計算
-        crosses = calculate_crosses(symbol_df).add_prefix('cross_')
-        rsi = calculate_rsi(symbol_df).add_prefix('rsi_')
-        macd_data = calculate_macd(symbol_df).add_prefix('macd_')
-        
-        # 結果を結合
-        symbol_df = pd.concat([symbol_df, crosses, rsi, macd_data], axis=1)
-        symbol_df.rename(columns={
-            'cross_golden_cross': 'golden_cross',
-            'cross_dead_cross': 'dead_cross',
-            'rsi_rsi': 'rsi',
-            'macd_macd': 'macd',
-            'macd_signal_line': 'signal_line'
-        }, inplace=True)
-        
-        # テクニカル指標をデータベースに保存
-        with engine.connect() as conn:
-            conn.execute(text("DELETE FROM technical_indicators WHERE symbol = :symbol"), {'symbol': symbol})
-            conn.commit()
+        try:
+            symbol_df = df[df['symbol'] == symbol].copy()
+            symbol_df.set_index('date', inplace=True)
             
-            for idx, row in symbol_df.iterrows():
-                golden_cross_val = row['golden_cross'].item() if hasattr(row['golden_cross'], 'item') else row['golden_cross']
-                dead_cross_val = row['dead_cross'].item() if hasattr(row['dead_cross'], 'item') else row['dead_cross']
-                rsi_val = row['rsi'].item() if hasattr(row['rsi'], 'item') else row['rsi']
-                macd_val = row['macd'].item() if hasattr(row['macd'], 'item') else row['macd']
-                signal_line_val = row['signal_line'].item() if hasattr(row['signal_line'], 'item') else row['signal_line']
+            # 移動平均計算
+            symbol_df['MA30'] = calculate_moving_average(symbol_df['close'])
+            
+            # テクニカル指標計算
+            crosses = calculate_crosses(symbol_df).add_prefix('cross_')
+            rsi = calculate_rsi(symbol_df).add_prefix('rsi_')
+            macd_data = calculate_macd(symbol_df).add_prefix('macd_')
+            
+            # 結果を結合
+            symbol_df = pd.concat([symbol_df, crosses, rsi, macd_data], axis=1)
+            symbol_df.rename(columns={
+                'cross_golden_cross': 'golden_cross',
+                'cross_dead_cross': 'dead_cross',
+                'rsi_rsi': 'rsi',
+                'macd_macd': 'macd',
+                'macd_signal_line': 'signal_line'
+            }, inplace=True)
+            
+            # テクニカル指標をデータベースに保存
+            with engine.connect() as conn:
+                conn.execute(text("DELETE FROM technical_indicators WHERE symbol = :symbol"), {'symbol': symbol})
+                conn.commit()
                 
-                insert_query = text("""
-                    INSERT INTO technical_indicators (symbol, date, golden_cross, dead_cross, rsi, macd, signal_line)
-                    VALUES (:symbol, :date, :golden_cross, :dead_cross, :rsi, :macd, :signal_line)
-                """)
-                params = {
-                    'symbol': symbol,
-                    'date': idx,
-                    'golden_cross': golden_cross_val,
-                    'dead_cross': dead_cross_val,
-                    'rsi': rsi_val,
-                    'macd': macd_val,
-                    'signal_line': signal_line_val
-                }
-                conn.execute(insert_query, params)
-            conn.commit()
+                for idx, row in symbol_df.iterrows():
+                    golden_cross_val = row['golden_cross'].item() if hasattr(row['golden_cross'], 'item') else row['golden_cross']
+                    dead_cross_val = row['dead_cross'].item() if hasattr(row['dead_cross'], 'item') else row['dead_cross']
+                    rsi_val = row['rsi'].item() if hasattr(row['rsi'], 'item') else row['rsi']
+                    macd_val = row['macd'].item() if hasattr(row['macd'], 'item') else row['macd']
+                    signal_line_val = row['signal_line'].item() if hasattr(row['signal_line'], 'item') else row['signal_line']
+                    
+                    insert_query = text("""
+                        INSERT INTO technical_indicators (symbol, date, golden_cross, dead_cross, rsi, macd, signal_line)
+                        VALUES (:symbol, :date, :golden_cross, :dead_cross, :rsi, :macd, :signal_line)
+                    """)
+                    params = {
+                        'symbol': symbol,
+                        'date': idx,
+                        'golden_cross': golden_cross_val,
+                        'dead_cross': dead_cross_val,
+                        'rsi': rsi_val,
+                        'macd': macd_val,
+                        'signal_line': signal_line_val
+                    }
+                    conn.execute(insert_query, params)
+                conn.commit()
+        
+        except Exception as e:
+            print(f"エラーが発生したため銘柄 {symbol} をスキップします: {str(e)}")
+            continue
         
         # ローソク足チャートの作成
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8), gridspec_kw={'height_ratios': [3, 1]})

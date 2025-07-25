@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS technical_indicators (
     date TIMESTAMP WITH TIME ZONE NOT NULL,
     golden_cross BOOLEAN,
     dead_cross BOOLEAN,
-    rsi DECIMAL(10,4),
-    macd DECIMAL(10,4),
-    signal_line DECIMAL(10,4),
+    rsi DECIMAL(20,4),
+    macd DECIMAL(20,4),
+    signal_line DECIMAL(20,4),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (symbol, date),
     FOREIGN KEY (symbol) REFERENCES stocks(symbol)
