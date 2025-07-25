@@ -1,0 +1,4 @@
+{
+    "markdown.preview.security":  true,
+    "security.workspace.trust.enabled":  true
+}

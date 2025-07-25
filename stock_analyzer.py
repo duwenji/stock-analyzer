@@ -140,12 +140,12 @@ for symbol in symbols:
             label.set_fontproperties(font_prop)
 
     plt.tight_layout()
-    plt.savefig(f'reports/{symbol}_candle_chart.png')
+    plt.savefig(os.path.abspath(f'reports/{symbol}_candle_chart.png'))
     plt.close()
     
     # 表形式レポートの作成
     analysis_report += f"## {symbol} {company_names.get(symbol, '')} 分析結果\n"
-    analysis_report += f"![ローソク足チャート](./reports/{symbol}_candle_chart.png)\n\n"
+    analysis_report += f"![ローソク足チャート]({os.path.abspath(f'reports/{symbol}_candle_chart.png')})\n\n"
     analysis_report += "### 主要指標\n"
     analysis_report += "| 指標 | 値 | 状態 |\n"
     analysis_report += "|------|----|------|\n"

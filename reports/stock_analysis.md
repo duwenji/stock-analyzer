@@ -1,7 +1,7 @@
 # 株式分析レポート
 
 ## 7203.T Toyota Motor Corporation 分析結果
-![ローソク足チャート](./reports/7203.T_candle_chart.png)
+![ローソク足チャート](C:\Dev\stock-analyzer\reports\7203.T_candle_chart.png)
 
 ### 主要指標
 | 指標 | 値 | 状態 |
@@ -12,7 +12,7 @@
 | 値幅 | 48.50 | - |
 
 ## 7974.T Nintendo Co., Ltd. 分析結果
-![ローソク足チャート](./reports/7974.T_candle_chart.png)
+![ローソク足チャート](C:\Dev\stock-analyzer\reports\7974.T_candle_chart.png)
 
 ### 主要指標
 | 指標 | 値 | 状態 |
@@ -23,7 +23,7 @@
 | 値幅 | 365.00 | - |
 
 ## 6758.T Sony Group Corporation 分析結果
-![ローソク足チャート](./reports/6758.T_candle_chart.png)
+![ローソク足チャート](C:\Dev\stock-analyzer\reports\6758.T_candle_chart.png)
 
 ### 主要指標
 | 指標 | 値 | 状態 |
