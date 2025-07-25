@@ -1,0 +1,9 @@
+@echo off
+echo Starting PostgreSQL container...
+docker compose up -d
+
+echo Waiting for database initialization...
+timeout /t 10
+
+echo Connecting to PostgreSQL...
+docker exec -it stock-postgres psql -U stock_user -d stock_analyzer
