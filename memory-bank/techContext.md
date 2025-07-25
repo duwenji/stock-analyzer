@@ -33,7 +33,14 @@
 - アクティベート: `.\venv\Scripts\activate` (Windows)
 - 依存関係インストール: `pip install -r requirements.txt`
 - 依存関係更新: `pip freeze > requirements.txt`
-- サンプルスクリプト: `db_sample.py` (データベース接続サンプル)
+- Windows環境での更新コマンド: `pip install --upgrade pip && pip list --outdated && pip install -U [パッケージ名]`
+- サンプルスクリック: `db_sample.py` (データベース接続サンプル)
+
+## 更新済み主要ライブラリバージョン
+- certifi: 2025.7.14
+- fonttools: 4.59.0
+- multitasking: 0.0.12
+- numpy: 2.3.2
 
 ## コマンド実行ポートフォリオ
 

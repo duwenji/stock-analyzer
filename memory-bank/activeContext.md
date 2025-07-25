@@ -13,6 +13,7 @@
 - stock_analyzer.py: RSI指標の追加実装
 - レポート生成: 複数銘柄比較機能の追加
 - メモリバンクファイルの整合性向上
+- requirements.txt: 依存関係の更新（certifi, fonttools, multitasking, numpy）
 
 ## 次のステップ
 1. matplotlibの日本語フォント設定を修正
@@ -35,3 +36,4 @@
 - PostgreSQLのバックアップと復旧戦略
 - pandasを使った大規模データ処理の最適化
 - テクニカル指標計算の数学的基礎
+- Windows環境での依存関係管理のベストプラクティス
