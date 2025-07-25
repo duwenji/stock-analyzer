@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS stocks (
     symbol TEXT NOT NULL UNIQUE,
     name TEXT,
     industry TEXT,
+    last_fetched TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -25,4 +26,18 @@ CREATE TABLE IF NOT EXISTS stock_prices (
     volume INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (symbol, date) -- シンボルと日付の組み合わせをユニークに
+);
+
+-- テクニカル指標テーブルの作成
+CREATE TABLE IF NOT EXISTS technical_indicators (
+    symbol TEXT NOT NULL,
+    date TIMESTAMP WITH TIME ZONE NOT NULL,
+    golden_cross BOOLEAN,
+    dead_cross BOOLEAN,
+    rsi DECIMAL(10,4),
+    macd DECIMAL(10,4),
+    signal_line DECIMAL(10,4),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (symbol, date),
+    FOREIGN KEY (symbol) REFERENCES stocks(symbol)
 );

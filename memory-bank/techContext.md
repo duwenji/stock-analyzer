@@ -36,11 +36,19 @@
 - Windows環境での更新コマンド: `pip install --upgrade pip && pip list --outdated && pip install -U [パッケージ名]`
 - サンプルスクリック: `db_sample.py` (データベース接続サンプル)
 
-## 更新済み主要ライブラリバージョン
+## 更新済み主要ライブラリバージョン (2025年7月25日更新)
+- beautifulsoup4: 4.13.4
 - certifi: 2025.7.14
+- cffi: 1.17.1
 - fonttools: 4.59.0
+- matplotlib: 3.10.3
 - multitasking: 0.0.12
 - numpy: 2.3.2
+- pandas: 2.3.1
+- psycopg2-binary: 2.9.10
+- requests: 2.32.4
+- SQLAlchemy: 2.0.41
+- yfinance: 0.2.65
 
 ## コマンド実行ポートフォリオ
 
