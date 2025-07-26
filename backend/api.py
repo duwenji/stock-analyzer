@@ -2,22 +2,15 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
-import logging
 from dotenv import load_dotenv
+from utils import setup_backend_logger
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from typing import List, Optional
+from typing import Optional
+from technical_indicators import calculate_moving_average
 
-# ロギングの設定
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("logs/api.log"),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+# ロギング設定の初期化（バックエンド全体で共通）
+logger = setup_backend_logger()
 
 # 環境変数の読み込み
 load_dotenv()
@@ -78,18 +71,25 @@ def get_db_connection():
             detail=f"データベース接続エラー: {str(e)}"
         )
 
-@app.get("/stocks", response_model=List[StockResponse])
-async def get_stocks():
-    """銘柄一覧を取得するエンドポイント"""
+@app.get("/stocks", response_model=dict)
+async def get_stocks(page: int = 1, limit: int = 20):
+    """銘柄一覧を取得するエンドポイント（ページネーション対応）"""
     conn = None
     try:
         # リクエスト情報をログに出力
-        logger.info("受信リクエスト: GET /stocks")
+        logger.info(f"受信リクエスト: GET /stocks?page={page}&limit={limit}")
         
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        query = """
+        # 総件数取得
+        count_query = "SELECT COUNT(*) FROM stocks"
+        cursor.execute(count_query)
+        total = cursor.fetchone()['count']
+        
+        # データ取得（オフセット計算）
+        offset = (page - 1) * limit
+        data_query = f"""
             SELECT 
                 s.symbol, 
                 s.name, 
@@ -106,18 +106,20 @@ async def get_stocks():
                 ORDER BY symbol, date DESC
             ) ti ON s.symbol = ti.symbol
             ORDER BY s.symbol
-            LIMIT 50
+            LIMIT {limit} OFFSET {offset}
         """
-        logger.info(f"クエリを実行します: {query}")
+        logger.info(f"クエリを実行します: {data_query}")
         
-        # CORSヘッダーが設定されていることをログ出力
-        logger.info("CORSヘッダーを設定: Access-Control-Allow-Origin: *")
-        
-        cursor.execute(query)
+        cursor.execute(data_query)
         stocks = cursor.fetchall()
         
-        logger.info(f"{len(stocks)}件の銘柄データを取得しました")
-        return stocks
+        logger.info(f"{len(stocks)}件の銘柄データを取得しました (ページ {page}/{total//limit + 1})")
+        return {
+            "stocks": stocks,
+            "total": total,
+            "page": page,
+            "limit": limit
+        }
     except HTTPException:
         raise  # 既に処理済みのHTTPExceptionは再スロー
     except Exception as e:
@@ -130,6 +132,76 @@ async def get_stocks():
         if conn:
             conn.close()
             logger.info("データベース接続をクローズしました")
+
+@app.get("/chart/{symbol}", response_model=dict)
+async def get_chart(symbol: str):
+    """銘柄のチャート画像をBase64で取得"""
+    try:
+        logger.info(f"受信リクエスト: GET /chart/{symbol}")
+        
+        # 1. 銘柄情報取得（会社名取得用）
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM stocks WHERE symbol = %s", (symbol,))
+        stock_info = cursor.fetchone()
+        
+        if not stock_info:
+            raise HTTPException(status_code=404, detail="銘柄が見つかりません")
+        
+        company_name = stock_info['name']
+        
+        # 2. チャートデータ取得
+        cursor.execute("""
+            SELECT date, open, high, low, close, volume
+            FROM stock_prices
+            WHERE symbol = %s
+              AND date >= CURRENT_DATE - INTERVAL '3 years'  -- システム日付から3年前まで
+            ORDER BY date ASC  -- 昇順でソート
+        """, (symbol,))
+        chart_data = cursor.fetchall()
+        
+        # 3. チャート生成
+        import pandas as pd
+        from chart_plotter import plot_candlestick
+        from io import BytesIO
+        import base64
+        
+        df = pd.DataFrame(chart_data)
+        df['date'] = pd.to_datetime(df['date'])
+        df.set_index('date', inplace=True)
+        # 移動平均計算
+        df['MA30'] = calculate_moving_average(df['close'])
+                        
+        # チャート生成
+        output_path = plot_candlestick(df, symbol, company_name)
+        
+        # 出力パスがNoneの場合のエラーハンドリング
+        if output_path is None:
+            error_msg = f"チャート生成に失敗しました: symbol={symbol}"
+            logger.error(error_msg)
+            raise HTTPException(
+                status_code=500,
+                detail=error_msg
+            )
+        
+        # Base64エンコード
+        with open(output_path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        
+        return {
+            "symbol": symbol,
+            "company_name": company_name,
+            "image": f"data:image/png;base64,{encoded_string}"
+        }
+    except Exception as e:
+        logger.exception(f"チャート生成エラー: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"チャート生成エラー: {str(e)}"
+        )
+    finally:
+        if conn:
+            conn.close()
 
 if __name__ == "__main__":
     import uvicorn

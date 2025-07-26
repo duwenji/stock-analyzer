@@ -1,8 +1,12 @@
 import os
+import logging
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from mpl_finance import candlestick_ohlc
 from utils import get_font_config  # 相対インポートから絶対インポートに変更
+
+# ロギング設定（バックエンド全体の設定を使用）
+logger = logging.getLogger(__name__)
 
 def plot_candlestick(symbol_df, symbol, company_name, output_dir='reports'):
     """
@@ -18,6 +22,10 @@ def plot_candlestick(symbol_df, symbol, company_name, output_dir='reports'):
         str: 保存された画像ファイルパス
     """
     try:
+        # データフレームの先頭と末尾をログ出力
+        logger.info(f"チャートデータ (head):\n{symbol_df.head()}")
+        logger.info(f"チャートデータ (tail):\n{symbol_df.tail()}")
+        
         # 出力ディレクトリ作成
         os.makedirs(output_dir, exist_ok=True)
         
@@ -42,7 +50,7 @@ def plot_candlestick(symbol_df, symbol, company_name, output_dir='reports'):
         
         candlestick_ohlc(ax1, ohlc_data, width=0.6, colorup='r', colordown='g', alpha=1.0)
         
-        # 移動平均プロット
+        # 移動平均プロット（NaNは自動スキップ）
         ax1.plot(dates, symbol_df['MA30'], label='30日移動平均', color='blue')
         
         # タイトルとラベル設定
@@ -77,5 +85,5 @@ def plot_candlestick(symbol_df, symbol, company_name, output_dir='reports'):
         return output_path
     
     except Exception as e:
-        print(f"チャート描画エラー ({symbol}): {str(e)}")
+        logger.exception(f"チャート描画エラー ({symbol}): {str(e)}")
         return None

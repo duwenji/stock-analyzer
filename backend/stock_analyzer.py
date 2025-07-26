@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 import os
 from .utils import get_db_engine, get_company_names
-from technical_indicators import calculate_and_store
+from technical_indicators import calculate_and_store, calculate_moving_average
 from chart_plotter import plot_candlestick
 from report_generator import init_xml_report, finalize_xml_report, generate_stock_entry
 
@@ -45,7 +45,9 @@ def main():
                 print(f"処理中: {symbol} ({company_names.get(symbol, '')})")
                 symbol_df = df[df['symbol'] == symbol].copy()
                 symbol_df.set_index('date', inplace=True)
-                
+                # 移動平均計算
+                symbol_df['MA30'] = calculate_moving_average(symbol_df['close'])
+        
                 # テクニカル指標計算と保存
                 if not calculate_and_store(symbol_df, engine):
                     print(f"指標計算失敗: {symbol}")

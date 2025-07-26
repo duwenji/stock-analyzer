@@ -37,10 +37,7 @@ def calculate_macd(df, fast=12, slow=26, signal=9):
 # 指標計算とDB保存
 def calculate_and_store(symbol_df, engine):
     """銘柄データに対してテクニカル指標を計算しデータベースに保存"""
-    try:
-        # 移動平均計算
-        symbol_df['MA30'] = calculate_moving_average(symbol_df['close'])
-        
+    try:        
         # クロス指標計算
         golden_cross, dead_cross = calculate_crosses(symbol_df)
         symbol_df['golden_cross'] = golden_cross

@@ -1,4 +1,5 @@
 import os
+import logging
 import pandas as pd
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
@@ -6,6 +7,22 @@ from matplotlib.font_manager import FontProperties
 
 # 環境変数の読み込み
 load_dotenv()
+
+def setup_backend_logger():
+    """
+    バックエンド全体のロガー設定（1回だけ実行）
+    ファイル名、関数名、行番号を含む詳細なログフォーマット
+    """
+    if not logging.getLogger().hasHandlers():
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(funcName)s:%(lineno)d] - %(message)s',
+            handlers=[
+                logging.FileHandler("logs/stock-analyzer-backend.log"),
+                logging.StreamHandler()
+            ]
+        )
+    return logging.getLogger(__name__)
 
 def get_db_engine():
     """
