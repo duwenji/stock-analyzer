@@ -1029,3 +1029,109 @@ date
 2025-07-22 15:00:00+00:00  1507.0  1548.5  1507.0  1536.0   46730  1462.197433
 2025-07-23 15:00:00+00:00  1558.5  1581.0  1558.5  1570.5   49490  1465.918100
 2025-07-24 15:00:00+00:00  1559.0  1565.0  1550.5  1557.0    7360  1469.303460
+2025-07-27 00:16:52,379 - utils - INFO - [api.py:<module>:44] - CORSミドルウェアが設定されました: すべてのオリジンを許可
+2025-07-27 00:17:11,617 - utils - INFO - [api.py:get_stocks:80] - 受信リクエスト: GET /stocks?page=1&limit=20
+2025-07-27 00:17:11,621 - utils - INFO - [api.py:get_db_connection:61] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 00:17:11,637 - utils - INFO - [api.py:get_db_connection:65] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 00:17:11,641 - utils - INFO - [api.py:get_stocks:111] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 20 OFFSET 0
+        
+2025-07-27 00:17:12,534 - utils - INFO - [api.py:get_stocks:116] - 20件の銘柄データを取得しました (ページ 1/221)
+2025-07-27 00:17:12,534 - utils - INFO - [api.py:get_stocks:134] - データベース接続をクローズしました
+2025-07-27 00:17:12,536 - utils - INFO - [api.py:get_stocks:80] - 受信リクエスト: GET /stocks?page=1&limit=20
+2025-07-27 00:17:12,536 - utils - INFO - [api.py:get_db_connection:61] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 00:17:12,561 - utils - INFO - [api.py:get_db_connection:65] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 00:17:12,563 - utils - INFO - [api.py:get_stocks:111] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 20 OFFSET 0
+        
+2025-07-27 00:17:13,178 - utils - INFO - [api.py:get_stocks:116] - 20件の銘柄データを取得しました (ページ 1/221)
+2025-07-27 00:17:13,178 - utils - INFO - [api.py:get_stocks:134] - データベース接続をクローズしました
+2025-07-27 00:17:29,213 - utils - INFO - [api.py:get_chart:140] - 受信リクエスト: GET /chart/1326.T
+2025-07-27 00:17:29,213 - utils - INFO - [api.py:get_db_connection:61] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 00:17:29,225 - utils - INFO - [api.py:get_db_connection:65] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 00:17:29,408 - chart_plotter - INFO - [chart_plotter.py:plot_candlestick:26] - チャートデータ (head):
+                              open     high      low    close  volume  MA30
+date                                                                       
+2022-07-26 15:00:00+00:00  21910.0  21950.0  21875.0  21920.0    1313   NaN
+2022-07-27 15:00:00+00:00  22040.0  22085.0  21890.0  21925.0    2859   NaN
+2022-07-28 15:00:00+00:00  21975.0  22015.0  21815.0  21860.0   14745   NaN
+2022-07-31 15:00:00+00:00  21900.0  21905.0  21690.0  21725.0    3199   NaN
+2022-08-01 15:00:00+00:00  21710.0  21715.0  21560.0  21580.0   63640   NaN
+2025-07-27 00:17:29,412 - chart_plotter - INFO - [chart_plotter.py:plot_candlestick:27] - チャートデータ (tail):
+                              open     high      low    close  volume          MA30
+date                                                                               
+2025-07-17 15:00:00+00:00  45690.0  45740.0  45640.0  45740.0   10768  44812.333333
+2025-07-21 15:00:00+00:00  46120.0  46160.0  46010.0  46110.0   10852  44878.000000
+2025-07-22 15:00:00+00:00  46360.0  46410.0  46160.0  46320.0   21035  44945.666667
+2025-07-23 15:00:00+00:00  45740.0  45780.0  45380.0  45430.0   21212  44972.666667
+2025-07-24 15:00:00+00:00  45640.0  45770.0  45430.0  45450.0    7020  44999.333333
+2025-07-27 00:17:31,679 - utils - INFO - [api.py:get_chart:140] - 受信リクエスト: GET /chart/1326.T
+2025-07-27 00:17:31,680 - utils - INFO - [api.py:get_db_connection:61] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 00:17:31,693 - utils - INFO - [api.py:get_db_connection:65] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 00:17:31,710 - chart_plotter - INFO - [chart_plotter.py:plot_candlestick:26] - チャートデータ (head):
+                              open     high      low    close  volume  MA30
+date                                                                       
+2022-07-26 15:00:00+00:00  21910.0  21950.0  21875.0  21920.0    1313   NaN
+2022-07-27 15:00:00+00:00  22040.0  22085.0  21890.0  21925.0    2859   NaN
+2022-07-28 15:00:00+00:00  21975.0  22015.0  21815.0  21860.0   14745   NaN
+2022-07-31 15:00:00+00:00  21900.0  21905.0  21690.0  21725.0    3199   NaN
+2022-08-01 15:00:00+00:00  21710.0  21715.0  21560.0  21580.0   63640   NaN
+2025-07-27 00:17:31,714 - chart_plotter - INFO - [chart_plotter.py:plot_candlestick:27] - チャートデータ (tail):
+                              open     high      low    close  volume          MA30
+date                                                                               
+2025-07-17 15:00:00+00:00  45690.0  45740.0  45640.0  45740.0   10768  44812.333333
+2025-07-21 15:00:00+00:00  46120.0  46160.0  46010.0  46110.0   10852  44878.000000
+2025-07-22 15:00:00+00:00  46360.0  46410.0  46160.0  46320.0   21035  44945.666667
+2025-07-23 15:00:00+00:00  45740.0  45780.0  45380.0  45430.0   21212  44972.666667
+2025-07-24 15:00:00+00:00  45640.0  45770.0  45430.0  45450.0    7020  44999.333333
+2025-07-27 00:17:41,035 - utils - INFO - [api.py:get_chart:140] - 受信リクエスト: GET /chart/1309.T
+2025-07-27 00:17:41,036 - utils - INFO - [api.py:get_db_connection:61] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 00:17:41,062 - utils - INFO - [api.py:get_db_connection:65] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 00:17:41,084 - chart_plotter - INFO - [chart_plotter.py:plot_candlestick:26] - チャートデータ (head):
+                              open     high      low    close  volume  MA30
+date                                                                       
+2022-07-26 15:00:00+00:00  43520.0  43850.0  43500.0  43760.0      78   NaN
+2022-07-27 15:00:00+00:00  43520.0  43800.0  43200.0  43500.0     167   NaN
+2022-07-28 15:00:00+00:00  43130.0  43130.0  41370.0  42000.0     345   NaN
+2022-07-31 15:00:00+00:00  42840.0  43100.0  42210.0  42780.0      87   NaN
+2022-08-01 15:00:00+00:00  42780.0  42780.0  40600.0  40950.0     510   NaN
+2025-07-27 00:17:41,089 - chart_plotter - INFO - [chart_plotter.py:plot_candlestick:27] - チャートデータ (tail):
+                              open     high      low    close  volume          MA30
+date                                                                               
+2025-07-17 15:00:00+00:00  45100.0  45990.0  45100.0  45990.0     136  43786.666667
+2025-07-21 15:00:00+00:00  45970.0  46080.0  45680.0  45910.0     175  43884.000000
+2025-07-22 15:00:00+00:00  46310.0  46730.0  45850.0  46480.0     251  44005.666667
+2025-07-23 15:00:00+00:00  46480.0  46480.0  46010.0  46180.0      49  44117.000000
+2025-07-24 15:00:00+00:00  46010.0  46280.0  45940.0  45940.0     141  44227.666667

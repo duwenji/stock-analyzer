@@ -2,4 +2,4 @@
 /sample
 reports/
 __pycache__/
-backend/logs/api.log
+backend/logs/stock-analyzer-backend.log
