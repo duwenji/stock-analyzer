@@ -1,0 +1,51 @@
+2025-07-26 20:09:24,549 - INFO - CORSミドルウェアが設定されました: すべてのオリジンを許可
+2025-07-26 20:09:38,809 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:09:38,809 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:09:38,844 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:09:38,844 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:09:38,845 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:09:39,770 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:09:39,770 - INFO - データベース接続をクローズしました
+2025-07-26 20:09:40,078 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:09:40,078 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:09:40,099 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:09:40,100 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:09:40,100 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:09:40,720 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:09:40,720 - INFO - データベース接続をクローズしました
