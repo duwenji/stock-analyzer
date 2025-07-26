@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS stock_prices (
     close REAL,
     volume INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (symbol, date) -- シンボルと日付の組み合わせをユニークに
+    UNIQUE (symbol, date),
+    CONSTRAINT fk_stock_prices_stocks FOREIGN KEY (symbol) REFERENCES stocks(symbol) ON DELETE CASCADE
 );
 
 -- テクニカル指標テーブルの作成
