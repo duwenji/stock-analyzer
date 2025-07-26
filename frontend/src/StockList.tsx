@@ -42,36 +42,38 @@ const StockList: React.FC = () => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="overflow-x-auto">
+    <div className="text-center">
       <h2 className="text-xl font-bold mb-4">銘柄一覧</h2>
-      <table className="min-w-full bg-white border border-gray-300">
+      <div className="inline-block overflow-x-auto">
+        <table className="bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-100">
-            <th className="py-2 px-4 border-b">シンボル</th>
-            <th className="py-2 px-4 border-b">企業名</th>
-            <th className="py-2 px-4 border-b">業種</th>
-            <th className="py-2 px-4 border-b">ゴールデンクロス</th>
-            <th className="py-2 px-4 border-b">デッドクロス</th>
-            <th className="py-2 px-4 border-b">RSI</th>
-            <th className="py-2 px-4 border-b">MACD</th>
-            <th className="py-2 px-4 border-b">シグナル</th>
+            <th className="py-2 px-4 border-b text-center">シンボル</th>
+            <th className="py-2 px-4 border-b text-center" style={{ textAlign: 'left' }}>企業名</th>
+            <th className="py-2 px-4 border-b text-center" style={{ textAlign: 'left' }}>業種</th>
+            <th className="py-2 px-4 border-b text-center">ゴールデンクロス</th>
+            <th className="py-2 px-4 border-b text-center">デッドクロス</th>
+            <th className="py-2 px-4 border-b text-center">RSI</th>
+            <th className="py-2 px-4 border-b text-center">MACD</th>
+            <th className="py-2 px-4 border-b text-center">シグナル</th>
           </tr>
         </thead>
         <tbody>
           {stocks.map((stock) => (
             <tr key={stock.symbol} className="hover:bg-gray-50">
-              <td className="py-2 px-4 border-b">{stock.symbol}</td>
-              <td className="py-2 px-4 border-b">{stock.name}</td>
-              <td className="py-2 px-4 border-b text-left">{stock.industry}</td>
-              <td className="py-2 px-4 border-b">{stock.golden_cross ? "✓" : ""}</td>
-              <td className="py-2 px-4 border-b">{stock.dead_cross ? "✓" : ""}</td>
-              <td className="py-2 px-4 border-b">{stock.rsi?.toFixed(2)}</td>
-              <td className="py-2 px-4 border-b">{stock.macd?.toFixed(4)}</td>
-              <td className="py-2 px-4 border-b">{stock.signal_line?.toFixed(4)}</td>
+              <td className="py-2 px-4 border-b text-center">{stock.symbol}</td>
+              <td className="py-2 px-4 border-b" style={{ textAlign: 'left' }}>{stock.name}</td>
+              <td className="py-2 px-4 border-b" style={{ textAlign: 'left' }}>{stock.industry}</td>
+              <td className="py-2 px-4 border-b text-center">{stock.golden_cross ? "✓" : ""}</td>
+              <td className="py-2 px-4 border-b text-center">{stock.dead_cross ? "✓" : ""}</td>
+              <td className="py-2 px-4 border-b text-center">{stock.rsi?.toFixed(2)}</td>
+              <td className="py-2 px-4 border-b text-center">{stock.macd?.toFixed(4)}</td>
+              <td className="py-2 px-4 border-b text-center">{stock.signal_line?.toFixed(4)}</td>
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   );
 };

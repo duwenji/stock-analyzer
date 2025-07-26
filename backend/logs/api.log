@@ -49,3 +49,654 @@
 2025-07-26 20:09:40,100 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
 2025-07-26 20:09:40,720 - INFO - 50件の銘柄データを取得しました
 2025-07-26 20:09:40,720 - INFO - データベース接続をクローズしました
+2025-07-26 20:18:54,613 - INFO - CORSミドルウェアが設定されました: すべてのオリジンを許可
+2025-07-26 20:19:12,875 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:19:12,876 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:19:12,900 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:19:12,901 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:19:12,901 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:19:13,829 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:19:13,829 - INFO - データベース接続をクローズしました
+2025-07-26 20:19:13,832 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:19:13,832 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:19:13,857 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:19:13,858 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:19:13,858 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:19:14,480 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:19:14,480 - INFO - データベース接続をクローズしました
+2025-07-26 20:21:21,732 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:21:21,732 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:21:21,742 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:21:21,742 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:21:21,742 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:21:22,642 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:21:22,642 - INFO - データベース接続をクローズしました
+2025-07-26 20:21:22,644 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:21:22,644 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:21:22,653 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:21:22,654 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:21:22,654 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:21:23,369 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:21:23,369 - INFO - データベース接続をクローズしました
+2025-07-26 20:22:20,361 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:22:20,362 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:22:20,382 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:22:20,382 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:22:20,382 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:22:21,343 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:22:21,343 - INFO - データベース接続をクローズしました
+2025-07-26 20:22:21,347 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:22:21,347 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:22:21,370 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:22:21,370 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:22:21,371 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:22:22,062 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:22:22,062 - INFO - データベース接続をクローズしました
+2025-07-26 20:23:18,048 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:23:18,049 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:23:18,060 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:23:18,060 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:23:18,061 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:23:18,962 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:23:18,963 - INFO - データベース接続をクローズしました
+2025-07-26 20:23:18,967 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:23:18,967 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:23:18,988 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:23:18,988 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:23:18,989 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:23:19,625 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:23:19,625 - INFO - データベース接続をクローズしました
+2025-07-26 20:37:21,244 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:37:21,244 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:37:21,257 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:37:21,257 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:37:21,257 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:37:22,240 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:37:22,241 - INFO - データベース接続をクローズしました
+2025-07-26 20:37:22,244 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:37:22,244 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:37:22,268 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:37:22,268 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:37:22,268 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:37:22,936 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:37:22,936 - INFO - データベース接続をクローズしました
+2025-07-26 20:45:42,997 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:45:42,997 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:45:43,021 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:45:43,021 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:45:43,021 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:45:43,952 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:45:43,952 - INFO - データベース接続をクローズしました
+2025-07-26 20:45:43,954 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:45:43,954 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:45:43,972 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:45:43,972 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:45:43,973 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:45:44,575 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:45:44,575 - INFO - データベース接続をクローズしました
+2025-07-26 20:46:37,516 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:46:37,517 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:46:37,530 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:46:37,531 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:46:37,531 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:46:38,424 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:46:38,425 - INFO - データベース接続をクローズしました
+2025-07-26 20:46:38,427 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:46:38,427 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:46:38,439 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:46:38,440 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:46:38,440 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:46:39,088 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:46:39,088 - INFO - データベース接続をクローズしました
+2025-07-26 20:51:50,957 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:51:50,958 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:51:50,970 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:51:50,970 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:51:50,970 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:51:51,911 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:51:51,911 - INFO - データベース接続をクローズしました
+2025-07-26 20:51:51,913 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:51:51,913 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:51:51,930 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:51:51,931 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:51:51,931 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:51:52,580 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:51:52,581 - INFO - データベース接続をクローズしました
+2025-07-26 20:58:06,377 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:58:06,377 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:58:06,388 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:58:06,388 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:58:06,388 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:58:07,313 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:58:07,313 - INFO - データベース接続をクローズしました
+2025-07-26 20:58:07,315 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 20:58:07,315 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 20:58:07,334 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 20:58:07,334 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 20:58:07,335 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 20:58:08,001 - INFO - 50件の銘柄データを取得しました
+2025-07-26 20:58:08,001 - INFO - データベース接続をクローズしました
+2025-07-26 21:12:41,789 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 21:12:41,789 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 21:12:41,811 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 21:12:41,811 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 21:12:41,811 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 21:12:42,748 - INFO - 50件の銘柄データを取得しました
+2025-07-26 21:12:42,749 - INFO - データベース接続をクローズしました
+2025-07-26 21:12:42,751 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 21:12:42,751 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 21:12:42,760 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 21:12:42,761 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 21:12:42,761 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 21:12:43,390 - INFO - 50件の銘柄データを取得しました
+2025-07-26 21:12:43,391 - INFO - データベース接続をクローズしました
+2025-07-26 21:18:36,602 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 21:18:36,602 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 21:18:36,613 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 21:18:36,613 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 21:18:36,613 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 21:18:37,493 - INFO - 50件の銘柄データを取得しました
+2025-07-26 21:18:37,493 - INFO - データベース接続をクローズしました
+2025-07-26 21:18:37,496 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 21:18:37,496 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 21:18:37,506 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 21:18:37,506 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 21:18:37,506 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 21:18:38,124 - INFO - 50件の銘柄データを取得しました
+2025-07-26 21:18:38,125 - INFO - データベース接続をクローズしました
+2025-07-26 21:20:18,718 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 21:20:18,718 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 21:20:18,732 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 21:20:18,732 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 21:20:18,733 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 21:20:19,668 - INFO - 50件の銘柄データを取得しました
+2025-07-26 21:20:19,668 - INFO - データベース接続をクローズしました
+2025-07-26 21:20:19,671 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 21:20:19,671 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 21:20:19,693 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 21:20:19,694 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 21:20:19,694 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 21:20:20,323 - INFO - 50件の銘柄データを取得しました
+2025-07-26 21:20:20,324 - INFO - データベース接続をクローズしました
+2025-07-26 21:25:13,603 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 21:25:13,603 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 21:25:13,632 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 21:25:13,632 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 21:25:13,633 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 21:25:14,594 - INFO - 50件の銘柄データを取得しました
+2025-07-26 21:25:14,595 - INFO - データベース接続をクローズしました
+2025-07-26 21:25:14,597 - INFO - 受信リクエスト: GET /stocks
+2025-07-26 21:25:14,597 - INFO - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-26 21:25:14,629 - INFO - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-26 21:25:14,629 - INFO - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            ORDER BY s.symbol
+            LIMIT 50
+        
+2025-07-26 21:25:14,630 - INFO - CORSヘッダーを設定: Access-Control-Allow-Origin: *
+2025-07-26 21:25:15,268 - INFO - 50件の銘柄データを取得しました
+2025-07-26 21:25:15,268 - INFO - データベース接続をクローズしました
