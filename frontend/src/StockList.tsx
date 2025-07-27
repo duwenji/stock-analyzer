@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { 
+  useTable, 
+  useSortBy, 
+  usePagination,
+  Column,
+  Row,
+  Cell,
+  HeaderGroup
+} from 'react-table';
 
 interface Stock {
   symbol: string;
@@ -12,39 +21,116 @@ interface Stock {
   signal_line?: number;
 }
 
-interface ApiResponse {
-  stocks: Stock[];
-  total: number;
-  page: number;
-  limit: number;
-}
-
 const StockList: React.FC = () => {
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(20);
+  const [itemsPerPage] = useState<number>(20);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [chartImage, setChartImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  // ソート状態管理
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Stock; direction: 'asc' | 'desc' } | null>(null);
+
+  // カラム定義
+  const columns: Column<Stock>[] = React.useMemo(() => [
+    {
+      Header: 'No.',
+      id: 'index',
+      accessor: (_: Stock, index: number) => (currentPage - 1) * itemsPerPage + index + 1,
+      Cell: ({ value }: { value: number }) => (
+        <div className="text-center">{value}</div>
+      )
+    },
+    {
+      Header: 'シンボル',
+      accessor: 'symbol',
+      Cell: ({ value }: { value: string }) => (
+        <div className="text-center">{value}</div>
+      )
+    },
+    {
+      Header: '企業名',
+      accessor: 'name',
+      Cell: ({ value }: { value: string }) => (
+        <div className="text-left">{value}</div>
+      )
+    },
+    {
+      Header: '業種',
+      accessor: 'industry',
+      Cell: ({ value }: { value: string }) => (
+        <div className="text-left">{value}</div>
+      )
+    },
+    {
+      Header: 'ゴールデンクロス',
+      accessor: 'golden_cross',
+      Cell: ({ value }: { value?: boolean }) => (
+        <div className="text-center">{value ? "✓" : ""}</div>
+      )
+    },
+    {
+      Header: 'デッドクロス',
+      accessor: 'dead_cross',
+      Cell: ({ value }: { value?: boolean }) => (
+        <div className="text-center">{value ? "✓" : ""}</div>
+      )
+    },
+    {
+      Header: 'RSI',
+      accessor: 'rsi',
+      Cell: ({ value }: { value?: number }) => (
+        <div className="text-center">
+          {typeof value === 'number' ? value.toFixed(2) : value}
+        </div>
+      )
+    },
+    {
+      Header: 'MACD',
+      accessor: 'macd',
+      Cell: ({ value }: { value?: number }) => (
+        <div className="text-center">
+          {typeof value === 'number' ? value.toFixed(4) : value}
+        </div>
+      )
+    },
+    {
+      Header: 'シグナル',
+      accessor: 'signal_line',
+      Cell: ({ value }: { value?: number }) => (
+        <div className="text-center">
+          {typeof value === 'number' ? value.toFixed(4) : value}
+        </div>
+      )
+    }
+  ], [currentPage, itemsPerPage]);
+
+  // テーブルインスタンス生成
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable<Stock>(
+    { 
+      columns,
+      data: stocks,
+      manual: true,
+      pageCount: Math.ceil(totalItems / itemsPerPage),
+    } as any, // 型エラー回避のため一時的にanyを使用
+    useSortBy,
+    usePagination
+  );
 
   const fetchStocks = async (page: number, limit: number) => {
     try {
-      console.log(`APIリクエスト開始: GET http://localhost:8000/stocks?page=${page}&limit=${limit}`);
       const response = await axios.get(`http://localhost:8000/stocks?page=${page}&limit=${limit}`);
-      console.log('APIレスポンス成功:', {
-        status: response.status,
-        data: response.data
-      });
       setStocks(response.data.stocks);
       setTotalItems(response.data.total);
       setLoading(false);
     } catch (err) {
-      console.error('APIリクエストエラー:', err);
       setError('銘柄一覧の取得に失敗しました');
       setLoading(false);
     }
@@ -54,51 +140,13 @@ const StockList: React.FC = () => {
     fetchStocks(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
-  // ソート処理関数（undefined値対応）
-  const sortedStocks = React.useMemo(() => {
-    if (!sortConfig) return stocks;
-    
-    return [...stocks].sort((a, b) => {
-      const valA = a[sortConfig.key];
-      const valB = b[sortConfig.key];
-      
-      // undefined値を適切に扱う
-      if (valA === undefined && valB === undefined) return 0;
-      if (valA === undefined) return 1;
-      if (valB === undefined) return -1;
-      
-      if (valA < valB) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
-      }
-      if (valA > valB) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
-  }, [stocks, sortConfig]);
-
-  // ソートハンドラー
-  const handleSort = (key: keyof Stock) => {
-    let direction: 'asc' | 'desc' = 'asc';
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    }
-    setSortConfig({ key, direction });
-  };
-
   const handleRowClick = async (symbol: string) => {
     try {
-      console.log(`チャートリクエスト開始: GET http://localhost:8000/chart/${symbol}`);
       const response = await axios.get(`http://localhost:8000/chart/${symbol}`);
-      console.log('チャートレスポンス成功:', {
-        status: response.status,
-        data: { symbol: response.data.symbol }
-      });
       setSelectedSymbol(symbol);
       setChartImage(response.data.image);
       setIsModalOpen(true);
     } catch (err) {
-      console.error('チャート取得エラー:', err);
       setError('チャートの取得に失敗しました');
     }
   };
@@ -111,10 +159,6 @@ const StockList: React.FC = () => {
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  if (loading) return <div>読み込み中...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
-
-  // ページネーションコントロール
   const renderPagination = () => {
     if (totalPages <= 1) return null;
     
@@ -175,7 +219,6 @@ const StockList: React.FC = () => {
     );
   };
 
-  // チャートモーダル
   const ChartModal = () => {
     if (!isModalOpen || !chartImage) return null;
     
@@ -216,67 +259,63 @@ const StockList: React.FC = () => {
     <div className="text-center">
       <h2 className="text-xl font-bold mb-4">銘柄一覧</h2>
       
-      {/* ページネーションコントロール（上部） */}
       {renderPagination()}
       
-<div className="inline-block overflow-x-auto w-full my-4 relative max-h-[70vh]">
-        <table className="bg-white border border-gray-300 w-full">
-        <thead>
-          <tr className="bg-indigo-600 text-white sticky top-0 z-10">
-            <th className="py-3 px-4 border-r border-gray-300 text-center w-16">No.</th>
-            <th 
-              className="py-3 px-4 border-r border-gray-300 text-center cursor-pointer hover:bg-indigo-700 transition-colors"
-              onClick={() => handleSort('symbol')}
-            >
-              シンボル {sortConfig?.key === 'symbol' && (
-                <span className="font-bold">
-                  {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                </span>
-              )}
-            </th>
-            <th className="py-3 px-4 border-r border-gray-300 text-left">企業名</th>
-            <th className="py-3 px-4 border-r border-gray-300 text-left">業種</th>
-            <th className="py-3 px-4 border-r border-gray-300 text-center">ゴールデンクロス</th>
-            <th className="py-3 px-4 border-r border-gray-300 text-center">デッドクロス</th>
-            <th className="py-3 px-4 border-r border-gray-300 text-center">RSI</th>
-            <th className="py-3 px-4 border-r border-gray-300 text-center">MACD</th>
-            <th className="py-3 px-4 text-center">シグナル</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200">
-          {sortedStocks.map((stock, index) => (
-            <tr 
-              key={stock.symbol} 
-              className="hover:bg-indigo-50 cursor-pointer transition-colors"
-              onClick={() => handleRowClick(stock.symbol)}
-            >
-              <td className="py-3 px-4 text-center border-r border-gray-300 font-medium">
-                {(currentPage - 1) * itemsPerPage + index + 1}
-              </td>
-              <td className="py-3 px-4 text-center border-r border-gray-300">{stock.symbol}</td>
-              <td className="py-3 px-4 text-left border-r border-gray-300">{stock.name}</td>
-              <td className="py-3 px-4 text-left border-r border-gray-300">{stock.industry}</td>
-              <td className="py-3 px-4 text-center border-r border-gray-300">{stock.golden_cross ? "✓" : ""}</td>
-              <td className="py-3 px-4 text-center border-r border-gray-300">{stock.dead_cross ? "✓" : ""}</td>
-              <td className="py-3 px-4 text-center border-r border-gray-300">
-                {typeof stock.rsi === 'number' ? stock.rsi.toFixed(2) : stock.rsi}
-              </td>
-              <td className="py-3 px-4 text-center border-r border-gray-300">
-                {typeof stock.macd === 'number' ? stock.macd.toFixed(4) : stock.macd}
-              </td>
-              <td className="py-3 px-4 text-center">
-                {typeof stock.signal_line === 'number' ? stock.signal_line.toFixed(4) : stock.signal_line}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+      <div className="inline-block overflow-x-auto w-full my-4 relative max-h-[70vh]">
+        <table 
+          {...getTableProps()} 
+          className="bg-white border border-gray-300 w-full"
+        >
+          <thead>
+            {headerGroups.map((headerGroup: HeaderGroup<Stock>) => (
+              <tr 
+                {...headerGroup.getHeaderGroupProps()} 
+                className="bg-gradient-to-r from-indigo-700 to-indigo-800 text-white sticky top-0 z-10 shadow-md"
+              >
+                {headerGroup.headers.map((column: HeaderGroup<Stock>) => (
+                  <th 
+                    {...column.getHeaderProps()}
+                    className="py-3 px-4 border-r border-indigo-500 cursor-pointer hover:bg-indigo-600 transition-colors"
+                  >
+                    <div className="flex items-center justify-center font-bold">
+                      {column.render('Header')}
+                      {(column as any).isSorted && (
+                        <span className="ml-1 text-yellow-300">
+                          {(column as any).isSortedDesc ? '▼' : '▲'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()} className="divide-y divide-gray-200">
+            {rows.map((row: Row<Stock>) => {
+              prepareRow(row);
+              return (
+                <tr 
+                  {...row.getRowProps()}
+                  className="hover:bg-indigo-100 cursor-pointer transition-colors duration-200"
+                  onClick={() => handleRowClick(row.original.symbol)}
+                >
+                  {row.cells.map((cell: Cell<Stock>) => (
+                    <td 
+                      {...cell.getCellProps()}
+                      className="py-3 px-4 border-r border-gray-300"
+                    >
+                      {cell.render('Cell')}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
       </div>
       
-      {/* ページネーションコントロール（下部） */}
       {renderPagination()}
       
-      {/* チャートモーダル */}
       <ChartModal />
     </div>
   );
