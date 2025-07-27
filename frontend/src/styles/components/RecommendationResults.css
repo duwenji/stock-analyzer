@@ -1,0 +1,147 @@
+.recommendation-results {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+.recommendation-results h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 10px;
+}
+
+.summary {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.return-estimate {
+  font-size: 18px;
+  margin: 0;
+}
+
+.allocation-chart {
+  display: flex;
+  height: 40px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.allocation-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  color: white;
+  font-weight: 500;
+  transition: width 0.5s ease;
+}
+
+.allocation-bar:nth-child(1) { background-color: #3498db; }
+.allocation-bar:nth-child(2) { background-color: #2ecc71; }
+.allocation-bar:nth-child(3) { background-color: #e74c3c; }
+.allocation-bar:nth-child(4) { background-color: #f39c12; }
+.allocation-bar:nth-child(5) { background-color: #9b59b6; }
+
+.symbol {
+  font-weight: bold;
+}
+
+.percentage {
+  background-color: rgba(0,0,0,0.2);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eaeaea;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.confidence-meter {
+  height: 20px;
+  background-color: #ecf0f1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background-color: #3498db;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  min-width: 30px;
+}
+
+.reason {
+  max-width: 300px;
+  white-space: normal;
+  line-height: 1.4;
+}
+
+.loading, .error {
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.loading {
+  background-color: #eaf6ff;
+  color: #3498db;
+}
+
+.error {
+  background-color: #fdeded;
+  color: #e74c3c;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #7f8c8d;
+  transition: color 0.2s;
+}
+
+.tab-button:hover {
+  color: #3498db;
+}
+
+.tab-button.active {
+  color: #3498db;
+  border-bottom: 2px solid #3498db;
+}

@@ -7165,3 +7165,340 @@ freq         1                  1       12           20         20        1     
 [20 rows x 8 columns]
 2025-07-27 14:30:47,031 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
 2025-07-27 14:30:47,031 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:35:16,507 - utils - INFO - [api.py:get_chart:190] - 受信リクエスト: GET /chart/6203.T
+2025-07-27 14:35:16,507 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:35:16,529 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:35:16,543 - utils - INFO - [api.py:get_chart:215] - チャートデータ:
+                         date        open        high        low       close  volume
+0   2022-07-27 15:00:00+00:00   818.58140   832.67870  814.82214   828.91943   79300
+1   2022-07-28 15:00:00+00:00   834.55840   834.55840  817.64166   822.34076   54400
+2   2022-07-31 15:00:00+00:00   825.16016   832.67870  819.52124   828.91943   60400
+3   2022-08-01 15:00:00+00:00   837.37780   860.87320  820.46106   832.67870  283300
+4   2022-08-02 15:00:00+00:00   829.85925   829.85925  798.84530   807.30365  270100
+..                        ...         ...         ...        ...         ...     ...
+729 2025-07-17 15:00:00+00:00   992.00000   995.00000  974.00000   977.00000  173600
+730 2025-07-21 15:00:00+00:00   985.00000  1006.00000  981.00000   991.00000  188000
+731 2025-07-22 15:00:00+00:00   991.00000  1009.00000  984.00000  1004.00000  307900
+732 2025-07-23 15:00:00+00:00  1014.00000  1022.00000  999.00000  1016.00000  225900
+733 2025-07-24 15:00:00+00:00  1007.00000  1015.00000  997.00000  1004.00000  165000
+
+[734 rows x 6 columns]
+2025-07-27 14:35:24,411 - utils - INFO - [api.py:get_chart:190] - 受信リクエスト: GET /chart/6093.T
+2025-07-27 14:35:24,411 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:35:24,426 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:35:24,446 - utils - INFO - [api.py:get_chart:215] - チャートデータ:
+                         date       open       high        low      close  volume
+0   2022-07-27 15:00:00+00:00  145.41931  147.21461  143.62401  143.62401  164400
+1   2022-07-28 15:00:00+00:00  143.62402  144.52168  142.72638  142.72638   57500
+2   2022-07-31 15:00:00+00:00  143.62402  145.41933  142.72638  145.41933   67000
+3   2022-08-01 15:00:00+00:00  144.52168  144.52168  142.72638  142.72638   54000
+4   2022-08-02 15:00:00+00:00  142.72638  143.62402  141.82874  142.72638   51900
+..                        ...        ...        ...        ...        ...     ...
+729 2025-07-17 15:00:00+00:00  130.00000  130.00000  127.00000  127.00000  209300
+730 2025-07-21 15:00:00+00:00  128.00000  128.00000  127.00000  127.00000  123100
+731 2025-07-22 15:00:00+00:00  128.00000  130.00000  128.00000  129.00000  194700
+732 2025-07-23 15:00:00+00:00  130.00000  131.00000  129.00000  129.00000  248100
+733 2025-07-24 15:00:00+00:00  130.00000  131.00000  129.00000  130.00000  254500
+
+[734 rows x 6 columns]
+2025-07-27 14:35:40,264 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=3&limit=20&search=&sort_by=industry&sort_order=desc
+2025-07-27 14:35:40,265 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:35:40,289 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:35:40,291 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY industry DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:35:40,292 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:35:40,370 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                              name                            industry  ...      rsi       macd signal_line
+0   7815.T  Tokyo Board Industries Co., Ltd.            Lumber & Wood Production  ...  52.1739     4.3365      5.4057
+1   2340.T     Gokurakuyu Holdings Co., Ltd.                             Leisure  ...  61.5385     0.1706     -0.1829
+2   7847.T              Graphite Design Inc.                             Leisure  ...  76.0000     1.7963     -0.8028
+3   3726.T                  4Cs HD Co., Ltd.                     Internet Retail  ...  46.4164   -23.4266    -12.7629
+4   6026.T                    GMO TECH, Inc.      Internet Content & Information  ...  51.2000  -175.1311   -193.6701
+5   3961.T   Silver Egg Technology Co., Ltd.      Internet Content & Information  ...  57.8947    -0.3663     -0.9292
+6   4436.T        MINKABU THE INFONOID, Inc.      Internet Content & Information  ...  48.1132    -3.8650     -3.5246
+7   3662.T          Ateam Holdings Co., Ltd.      Internet Content & Information  ...  75.8865    33.2175     31.7577
+8   3645.T                 Medical Net, Inc.      Internet Content & Information  ...  60.3448     1.7854      0.3603
+9   3922.T              PR TIMES Corporation      Internet Content & Information  ...  83.4371   160.0002    126.9985
+10  317A.T                   エス・エム・エス・データテック     Information Technology Services  ...      NaN     0.0000      0.0000
+11  7508.T                 G-7 Holdings Inc.                      Grocery Stores  ...  40.3509    -8.9396     -6.9843
+12  7997.T           Kurogane Kosakusho Ltd.  Furnishings, Fixtures & Appliances  ...  60.4520    19.7433     17.5979
+13  2816.T                   Daisho Co.,Ltd.                   Food Distribution  ...  61.1111     0.4406     -0.0749
+14  9249.T         Japan Ecosystem Co., Ltd.                       Entertainment  ...  64.0625     0.1078     -0.9105
+15  3791.T                     IG Port, Inc.                       Entertainment  ...  42.3540   -88.2178    -73.6805
+16  1835.T           Totetsu Kogyo Co., Ltd.          Engineering & Construction  ...  66.2791    99.5051    109.9019
+17  9766.T          Konami Group Corporation      Electronic Gaming & Multimedia  ...  44.6125  -156.3623   -117.2003
+18  6787.T       Meiko Electronics Co., Ltd.               Electronic Components  ...  59.2593   166.1699    152.6170
+19  6969.T          Matsuo Electric Co.,Ltd.               Electronic Components  ...  51.0791    18.9898     25.2816
+
+[20 rows x 8 columns]
+2025-07-27 14:35:40,371 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 3/6)
+2025-07-27 14:35:40,371 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:35:42,573 - utils - INFO - [api.py:get_chart:190] - 受信リクエスト: GET /chart/4436.T
+2025-07-27 14:35:42,573 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:35:42,609 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:35:42,629 - utils - INFO - [api.py:get_chart:215] - チャートデータ:
+                         date       open       high        low      close  volume
+0   2022-07-27 15:00:00+00:00  2619.5356  2635.0647  2505.9805  2508.8920  197700
+1   2022-07-28 15:00:00+00:00  2557.4202  2583.6252  2515.6863  2530.2446  131100
+2   2022-07-31 15:00:00+00:00  2530.2446  2590.4192  2491.4224  2580.7136   84600
+3   2022-08-01 15:00:00+00:00  2572.9492  2607.8892  2546.7441  2549.6558   75900
+4   2022-08-02 15:00:00+00:00  2581.6840  2596.2424  2523.4507  2523.4507   89100
+..                        ...        ...        ...        ...        ...     ...
+729 2025-07-17 15:00:00+00:00   519.0000   519.0000   497.0000   497.0000   76100
+730 2025-07-21 15:00:00+00:00   498.0000   506.0000   496.0000   498.0000   52300
+731 2025-07-22 15:00:00+00:00   500.0000   512.0000   497.0000   510.0000   72400
+732 2025-07-23 15:00:00+00:00   509.0000   512.0000   506.0000   507.0000   78400
+733 2025-07-24 15:00:00+00:00   507.0000   515.0000   503.0000   506.0000   64400
+
+[734 rows x 6 columns]
+2025-07-27 14:35:51,696 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=industry&sort_order=desc
+2025-07-27 14:35:51,697 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:35:51,720 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:35:51,722 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY industry DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:35:51,722 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:35:51,796 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                               name                                  industry  ...      rsi       macd signal_line
+0   6231.T              KIMURA KOHKI Co.,Ltd.              Electrical Equipment & Parts  ...  47.3684    54.3625    119.4401
+1   9857.T                   Eiwa Corporation              Electrical Equipment & Parts  ...  32.0930    14.2204     25.4591
+2   4597.T                Solasia Pharma K.K.  Drug Manufacturers - Specialty & Generic  ...  64.0000     2.4116      2.2183
+3   4534.T   Mochida Pharmaceutical Co., Ltd.  Drug Manufacturers - Specialty & Generic  ...  71.7514    20.1065      3.3129
+4   3169.T                  Misawa & Co.,Ltd.                         Department Stores  ...  26.6667    -1.8368     -1.7610
+5   8425.T    Mizuho Leasing Company, Limited                           Credit Services  ...  75.3623    15.6087     11.7170
+6   6753.T                  Sharp Corporation                      Consumer Electronics  ...  48.3557    -7.8857    -13.0111
+7   6752.T     Panasonic Holdings Corporation                      Consumer Electronics  ...  40.5063   -18.8727    -25.2248
+8   3719.T                 AI storm Co., Ltd.                       Consulting Services  ...  60.2740    -1.5483     -2.4149
+9   150A.T                                ＪＳＨ                             Conglomerates  ...  44.2105   -11.2916    -12.3952
+10  8002.T               Marubeni Corporation                             Conglomerates  ...  70.8075    47.8184     38.8334
+11  8081.T                Kanaden Corporation                             Conglomerates  ...  51.4950    25.2684     40.4877
+12  8070.T             Tokyo Sangyo Co., Ltd.                             Conglomerates  ...  64.4068     9.7595      6.4526
+13  4274.T  Hosoya Pyro-Engineering Co., Ltd.                                 Chemicals  ...  56.8627    -3.9401     -5.0663
+14  1972.T   Sanko Metal Industrial Co., Ltd.             Building Products & Equipment  ...  81.0811   215.8824    187.8402
+15  130A.T                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ                             Biotechnology  ...  61.9529     0.2772     -1.5570
+16  2160.T                     GNI Group Ltd.                             Biotechnology  ...  24.2511  -137.5830   -111.6464
+17  2503.T    Kirin Holdings Company, Limited                       Beverages - Brewers  ...  43.8692    -6.9434     -9.2594
+18  9994.T                 Yamaya Corporation                       Beverages - Brewers  ...  71.0335    17.5466    -20.2133
+19  8399.T       Bank of The Ryukyus, Limited                          Banks - Regional  ...  74.0506    24.2741     20.2229
+
+[20 rows x 8 columns]
+2025-07-27 14:35:51,796 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:35:51,797 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:35:53,125 - utils - INFO - [api.py:get_chart:190] - 受信リクエスト: GET /chart/150A.T
+2025-07-27 14:35:53,125 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:35:53,165 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:35:53,181 - utils - INFO - [api.py:get_chart:215] - チャートデータ:
+                         date   open    high    low  close   volume
+0   2024-03-25 15:00:00+00:00  893.0  1008.0  798.0  806.0  5227400
+1   2024-03-26 15:00:00+00:00  806.0   874.0  710.0  777.0  2398300
+2   2024-03-27 15:00:00+00:00  777.0   853.0  711.0  752.0   719800
+3   2024-03-28 15:00:00+00:00  738.0   738.0  713.0  715.0   111700
+4   2024-03-31 15:00:00+00:00  697.0   714.0  593.0  593.0   304000
+..                        ...    ...     ...    ...    ...      ...
+323 2025-07-17 15:00:00+00:00  455.0   457.0  443.0  452.0     8100
+324 2025-07-21 15:00:00+00:00  452.0   452.0  426.0  431.0    19100
+325 2025-07-22 15:00:00+00:00  431.0   433.0  421.0  428.0    13500
+326 2025-07-23 15:00:00+00:00  428.0   441.0  422.0  436.0    10100
+327 2025-07-24 15:00:00+00:00  439.0   439.0  431.0  436.0     4600
+
+[328 rows x 6 columns]
+2025-07-27 15:20:42,350 - utils - INFO - [api.py:<module>:48] - CORSミドルウェアが設定されました: すべてのオリジンを許可
+2025-07-27 15:20:42,352 - utils - INFO - [api.py:<module>:48] - CORSミドルウェアが設定されました: すべてのオリジンを許可
+2025-07-27 15:22:12,903 - utils - INFO - [api.py:get_stocks:90] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 15:22:12,903 - utils - INFO - [api.py:get_db_connection:65] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 15:22:12,921 - utils - INFO - [api.py:get_db_connection:69] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 15:22:12,924 - utils - INFO - [api.py:get_stocks:153] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 15:22:12,924 - utils - INFO - [api.py:get_stocks:154] - 検索パラメータ: ()
+2025-07-27 15:22:12,994 - utils - INFO - [api.py:get_stocks:165] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 15:22:12,994 - utils - INFO - [api.py:get_stocks:167] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 15:22:12,995 - utils - INFO - [api.py:get_stocks:185] - データベース接続をクローズしました
+2025-07-27 15:22:12,998 - utils - INFO - [api.py:get_stocks:90] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 15:22:12,998 - utils - INFO - [api.py:get_db_connection:65] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 15:22:13,021 - utils - INFO - [api.py:get_db_connection:69] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 15:22:13,023 - utils - INFO - [api.py:get_stocks:153] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 15:22:13,024 - utils - INFO - [api.py:get_stocks:154] - 検索パラメータ: ()
+2025-07-27 15:22:13,089 - utils - INFO - [api.py:get_stocks:165] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 15:22:13,089 - utils - INFO - [api.py:get_stocks:167] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 15:22:13,090 - utils - INFO - [api.py:get_stocks:185] - データベース接続をクローズしました
+2025-07-27 15:22:30,684 - utils - INFO - [api.py:get_chart:221] - 受信リクエスト: GET /chart/1308.T
+2025-07-27 15:22:30,684 - utils - INFO - [api.py:get_db_connection:65] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 15:22:30,709 - utils - INFO - [api.py:get_db_connection:69] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 15:22:30,721 - utils - INFO - [api.py:get_chart:246] - チャートデータ:
+                         date       open       high        low      close  volume
+0   2022-07-27 15:00:00+00:00  1864.9507  1866.3540  1849.9825  1855.5956  109800
+1   2022-07-28 15:00:00+00:00  1860.7408  1860.7408  1845.7726  1849.9824  148200
+2   2022-07-31 15:00:00+00:00  1851.8535  1868.6929  1845.3049  1867.2896  240200
+3   2022-08-01 15:00:00+00:00  1855.5956  1855.5956  1833.6110  1834.0787  142500
+4   2022-08-02 15:00:00+00:00  1839.6918  1843.9016  1835.4819  1838.7562   47800
+..                        ...        ...        ...        ...        ...     ...
+729 2025-07-17 15:00:00+00:00  2923.0000  2924.0000  2906.0000  2909.0000  279594
+730 2025-07-21 15:00:00+00:00  2911.0000  2939.0000  2895.0000  2911.0000  335175
+731 2025-07-22 15:00:00+00:00  2953.0000  3015.0000  2952.0000  3004.0000  668900
+732 2025-07-23 15:00:00+00:00  3035.0000  3065.0000  3030.0000  3056.0000  233910
+733 2025-07-24 15:00:00+00:00  3044.0000  3048.0000  3023.0000  3028.0000  224448
+
+[734 rows x 6 columns]
+2025-07-27 15:22:31,743 - utils - INFO - [api.py:get_chart:221] - 受信リクエスト: GET /chart/1306.T
+2025-07-27 15:22:31,744 - utils - INFO - [api.py:get_db_connection:65] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 15:22:31,761 - utils - INFO - [api.py:get_db_connection:69] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 15:22:31,777 - utils - INFO - [api.py:get_chart:246] - チャートデータ:
+                         date       open       high        low      close   volume
+0   2022-07-27 15:00:00+00:00  1888.2416  1889.6458  1871.3906  1878.8799  1560200
+1   2022-07-28 15:00:00+00:00  1884.4970  1884.9651  1866.7098  1870.9226  1812110
+2   2022-07-31 15:00:00+00:00  1873.2630  1891.5182  1869.0502  1890.1139  1645480
+3   2022-08-01 15:00:00+00:00  1879.3480  1880.7522  1855.4758  1860.1566  4724750
+4   2022-08-02 15:00:00+00:00  1863.4332  1867.1779  1857.3481  1861.5609  1389140
+..                        ...        ...        ...        ...        ...      ...
+729 2025-07-17 15:00:00+00:00  2958.5000  2960.0000  2941.0000  2944.0000  1699470
+730 2025-07-21 15:00:00+00:00  2945.5000  2973.0000  2929.0000  2943.5000  1469560
+731 2025-07-22 15:00:00+00:00  2989.5000  3052.0000  2986.0000  3040.0000  3750000
+732 2025-07-23 15:00:00+00:00  3073.0000  3102.0000  3068.0000  3093.0000  1644240
+733 2025-07-24 15:00:00+00:00  3082.0000  3085.0000  3060.0000  3062.0000   843430
+
+[734 rows x 6 columns]
+2025-07-27 15:22:34,750 - utils - INFO - [api.py:get_chart:221] - 受信リクエスト: GET /chart/1309.T
+2025-07-27 15:22:34,751 - utils - INFO - [api.py:get_db_connection:65] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 15:22:34,773 - utils - INFO - [api.py:get_db_connection:69] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 15:22:34,789 - utils - INFO - [api.py:get_chart:246] - チャートデータ:
+                         date     open     high      low    close  volume
+0   2022-07-27 15:00:00+00:00  43520.0  43800.0  43200.0  43500.0     167
+1   2022-07-28 15:00:00+00:00  43130.0  43130.0  41370.0  42000.0     345
+2   2022-07-31 15:00:00+00:00  42840.0  43100.0  42210.0  42780.0      87
+3   2022-08-01 15:00:00+00:00  42780.0  42780.0  40600.0  40950.0     510
+4   2022-08-02 15:00:00+00:00  40950.0  41800.0  40950.0  41480.0     160
+..                        ...      ...      ...      ...      ...     ...
+729 2025-07-17 15:00:00+00:00  45100.0  45990.0  45100.0  45990.0     136
+730 2025-07-21 15:00:00+00:00  45970.0  46080.0  45680.0  45910.0     175
+731 2025-07-22 15:00:00+00:00  46310.0  46730.0  45850.0  46480.0     251
+732 2025-07-23 15:00:00+00:00  46480.0  46480.0  46010.0  46180.0      49
+733 2025-07-24 15:00:00+00:00  46010.0  46280.0  45940.0  45940.0     141
+
+[734 rows x 6 columns]
+2025-07-27 15:22:53,228 - utils - INFO - [api.py:get_recommendations:198] - 受信リクエスト: POST /api/recommend - {'principal': 1000000.0, 'risk_tolerance': 'medium', 'strategy': 'growth', 'symbols': None}
+2025-07-27 15:22:53,889 - httpx - INFO - [_client.py:_send_single_request:1740] - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 401 Unauthorized"
+2025-07-27 15:22:53,890 - utils - ERROR - [api.py:get_recommendations:211] - 推奨生成エラー: 500: API呼び出し失敗
+Traceback (most recent call last):
+  File "C:\Dev\stock-analyzer\backend\api.py", line 204, in get_recommendations
+    raise HTTPException(
+    ...<2 lines>...
+    )
+fastapi.exceptions.HTTPException: 500: API呼び出し失敗

@@ -9,8 +9,9 @@ from dotenv import load_dotenv
 from utils import setup_backend_logger
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from typing import Optional
+from typing import Optional, List  # Listを追加
 from technical_indicators import calculate_moving_average
+from stock_recommender import recommend_stocks  # recommend_stocksをインポート
 
 # ロギング設定の初期化（バックエンド全体で共通）
 logger = setup_backend_logger()
@@ -182,6 +183,36 @@ async def get_stocks(
         if conn:
             conn.close()
             logger.info("データベース接続をクローズしました")
+
+# 推奨リクエストモデル
+class RecommendationRequest(BaseModel):
+    principal: float
+    risk_tolerance: str  # 例: "低", "中", "高"
+    strategy: str  # 例: "成長株", "配当株", "バランス"
+    symbols: Optional[List[str]] = None  # 特定銘柄指定（オプション）
+
+@app.post("/api/recommend", response_model=dict)
+async def get_recommendations(request: RecommendationRequest):
+    """AIによる銘柄推奨を取得"""
+    try:
+        logger.info(f"受信リクエスト: POST /api/recommend - {request.dict()}")
+        
+        # 推奨生成
+        result = await recommend_stocks(request.dict())
+        
+        if "error" in result.get("data", {}):
+            raise HTTPException(
+                status_code=500,
+                detail=result["data"]["error"]
+            )
+            
+        return result
+    except Exception as e:
+        logger.exception(f"推奨生成エラー: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"推奨生成エラー: {str(e)}"
+        )
 
 @app.get("/chart/{symbol}", response_model=dict)
 async def get_chart(symbol: str):

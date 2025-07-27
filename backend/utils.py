@@ -8,6 +8,12 @@ from matplotlib.font_manager import FontProperties
 # 環境変数の読み込み
 load_dotenv()
 
+def db_connector():
+    """データベース接続を返す"""
+    return {
+        "query": lambda q: print(f"Query executed: {q}")
+    }
+
 def setup_backend_logger():
     """
     バックエンド全体のロガー設定（1回だけ実行）
