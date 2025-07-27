@@ -2,8 +2,9 @@ import os
 import asyncio
 import json
 import httpx
+import pandas as pd
 from typing import Dict, List
-from utils import db_connector
+from utils import get_db_engine
 
 DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
 DEEPSEEK_MODEL = "deepseek-chat"
@@ -11,7 +12,7 @@ DEEPSEEK_MODEL = "deepseek-chat"
 class StockRecommender:
     def __init__(self):
         self.api_key = os.getenv("DEEPSEEK_API_KEY")
-        self.db = db_connector()
+        self.engine = get_db_engine()
     
     async def generate_recommendations(self, params: Dict) -> Dict:
         """銘柄推奨を生成"""
@@ -65,7 +66,7 @@ class StockRecommender:
             ORDER BY date DESC
             LIMIT 30
         """
-        return self.db.query(query)
+        return pd.read_sql_query(query, self.engine).to_dict('records')
     
     def _fetch_price_history(self, symbols: List[str]) -> List[Dict]:
         """DBから株価履歴取得"""
@@ -78,7 +79,7 @@ class StockRecommender:
             ORDER BY date DESC
             LIMIT 90
         """
-        return self.db.query(query)
+        return pd.read_sql_query(query, self.engine).to_dict('records')
     
     async def _call_deepseek(self, params: Dict, data: Dict) -> Dict:
         """DeepSeek APIを呼び出し"""
