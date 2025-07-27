@@ -1,4 +1,4 @@
-@import './styles/common.css';
+@import './styles/common/common.css';
 
 /* 基本リセットとフォント設定 */
 body {

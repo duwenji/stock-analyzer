@@ -10,6 +10,7 @@ import {
   HeaderGroup
 } from 'react-table';
 import './styles/components/StockList.css';
+import './styles/common/common.css'; // 共通スタイルをインポート
 
 interface Stock {
   symbol: string;
@@ -284,7 +285,7 @@ const StockList: React.FC = () => {
 
   return (
     <div className="container">
-      <h2 className="text-center">銘柄一覧</h2>
+      <h2 className="text-center title-header" style={{ color: '#333', fontSize: '24px', display: 'block', backgroundColor: '#fff' }}>銘柄一覧</h2>
       
       {/* 検索バー */}
       <div className="search-container">

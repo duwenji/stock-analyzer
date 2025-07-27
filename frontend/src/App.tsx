@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StockList from './StockList';
 import RecommendationForm from './RecommendationForm';
 import RecommendationResults from './RecommendationResults';
-import './styles/common.css';
+import './styles/common/common.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState<'list' | 'recommend'>('list');

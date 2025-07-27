@@ -22,14 +22,22 @@
 
 /* テーブルヘッダー */
 .stock-table-header {
-  background: linear-gradient(to right, #2563eb, #1d4ed8);
   color: white;
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
+/* ヘッダーセル内コンテンツ */
+.header-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
 .stock-table-header th {
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
   padding: 12px 15px;
   text-align: center;
   font-weight: 600;
@@ -176,6 +184,14 @@
 
 .modal-close:hover {
   color: #1e293b;
+}
+
+/* タイトルヘッダー */
+.title-header {
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+  font-size: 1.8rem;
+  font-weight: 600;
 }
 
 /* レスポンシブ対応 */
