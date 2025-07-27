@@ -9,6 +9,7 @@ import {
   Cell,
   HeaderGroup
 } from 'react-table';
+import './styles/components/StockList.css';
 
 interface Stock {
   symbol: string;
@@ -171,11 +172,7 @@ const StockList: React.FC = () => {
         <button
           key={i}
           onClick={() => setCurrentPage(i)}
-          className={`px-3 py-1 mx-1 border rounded transition-colors ${
-            currentPage === i 
-              ? 'bg-indigo-500 text-white' 
-              : 'bg-white hover:bg-indigo-50'
-          }`}
+          className={`pagination-button ${currentPage === i ? 'active' : ''}`}
         >
           {i}
         </button>
@@ -183,18 +180,18 @@ const StockList: React.FC = () => {
     }
     
     return (
-      <div className="mt-4 flex justify-center">
+      <div className="pagination-container">
         <button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage(1)}
-          className="px-3 py-1 mx-1 border rounded disabled:opacity-50"
+          className="pagination-button"
         >
           最初
         </button>
         <button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage(currentPage - 1)}
-          className="px-3 py-1 mx-1 border rounded disabled:opacity-50"
+          className="pagination-button"
         >
           前へ
         </button>
@@ -204,14 +201,14 @@ const StockList: React.FC = () => {
         <button
           disabled={currentPage === totalPages}
           onClick={() => setCurrentPage(currentPage + 1)}
-          className="px-3 py-1 mx-1 border rounded disabled:opacity-50"
+          className="pagination-button"
         >
           次へ
         </button>
         <button
           disabled={currentPage === totalPages}
           onClick={() => setCurrentPage(totalPages)}
-          className="px-3 py-1 mx-1 border rounded disabled:opacity-50"
+          className="pagination-button"
         >
           最後
         </button>
@@ -223,13 +220,13 @@ const StockList: React.FC = () => {
     if (!isModalOpen || !chartImage) return null;
     
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white p-4 rounded-lg max-w-3xl max-h-screen overflow-auto">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-lg font-bold">{selectedSymbol} チャート</h3>
+      <div className="chart-modal">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h3 className="modal-title">{selectedSymbol} チャート</h3>
             <button 
               onClick={closeModal}
-              className="text-gray-500 hover:text-gray-700"
+              className="modal-close"
             >
               ✕
             </button>
@@ -237,12 +234,11 @@ const StockList: React.FC = () => {
           <img 
             src={chartImage} 
             alt={`${selectedSymbol} チャート`} 
-            className="max-w-full max-h-[70vh]"
           />
-          <div className="mt-2 text-center">
+          <div className="modal-footer">
             <button
               onClick={closeModal}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="modal-button"
             >
               閉じる
             </button>
@@ -253,34 +249,33 @@ const StockList: React.FC = () => {
   };
 
   if (loading) return <div>読み込み中...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="text-center">
-      <h2 className="text-xl font-bold mb-4">銘柄一覧</h2>
+    <div className="container">
+      <h2 className="text-center">銘柄一覧</h2>
       
       {renderPagination()}
       
-      <div className="inline-block overflow-x-auto w-full my-4 relative max-h-[70vh]">
+      <div className="stock-table-container">
         <table 
           {...getTableProps()} 
-          className="bg-white border border-gray-300 w-full"
+          className="stock-table"
         >
           <thead>
             {headerGroups.map((headerGroup: HeaderGroup<Stock>) => (
               <tr 
                 {...headerGroup.getHeaderGroupProps()} 
-                className="bg-gradient-to-r from-indigo-700 to-indigo-800 text-white sticky top-0 z-10 shadow-md"
+                className="stock-table-header"
               >
                 {headerGroup.headers.map((column: HeaderGroup<Stock>) => (
                   <th 
                     {...column.getHeaderProps()}
-                    className="py-3 px-4 border-r border-indigo-500 cursor-pointer hover:bg-indigo-600 transition-colors"
                   >
-                    <div className="flex items-center justify-center font-bold">
+                    <div className="header-cell">
                       {column.render('Header')}
                       {(column as any).isSorted && (
-                        <span className="ml-1 text-yellow-300">
+                        <span className="sort-indicator">
                           {(column as any).isSortedDesc ? '▼' : '▲'}
                         </span>
                       )}
@@ -290,19 +285,19 @@ const StockList: React.FC = () => {
               </tr>
             ))}
           </thead>
-          <tbody {...getTableBodyProps()} className="divide-y divide-gray-200">
+          <tbody {...getTableBodyProps()}>
             {rows.map((row: Row<Stock>) => {
               prepareRow(row);
               return (
                 <tr 
                   {...row.getRowProps()}
-                  className="hover:bg-indigo-100 cursor-pointer transition-colors duration-200"
+                  className="table-row"
                   onClick={() => handleRowClick(row.original.symbol)}
                 >
                   {row.cells.map((cell: Cell<Stock>) => (
                     <td 
                       {...cell.getCellProps()}
-                      className="py-3 px-4 border-r border-gray-300"
+                      className="table-cell"
                     >
                       {cell.render('Cell')}
                     </td>

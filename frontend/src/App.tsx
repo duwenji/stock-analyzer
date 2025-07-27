@@ -1,6 +1,6 @@
 import React from 'react';
 import StockList from './StockList';
-import './App.css';
+import './styles/common.css';
 
 function App() {
   return (
