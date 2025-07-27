@@ -5159,3 +5159,2009 @@ freq         1                  1       12           20         20        1     
 2025-07-27 14:24:15,478 - utils - INFO - [api.py:get_stocks:140] - 20件の銘柄データを取得しました (ページ 1/6)
 2025-07-27 14:24:15,479 - utils - INFO - [api.py:get_stocks:158] - データベース接続をクローズしました
 2025-07-27 14:27:17,345 - utils - INFO - [api.py:<module>:47] - CORSミドルウェアが設定されました: すべてのオリジンを許可
+2025-07-27 14:27:24,910 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:27:24,910 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:24,927 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:24,930 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:24,931 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:24,998 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:27:25,000 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:27:25,001 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:25,003 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:27:25,003 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:25,025 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:25,027 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:25,028 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:25,092 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:27:25,093 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:27:25,093 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:29,549 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=desc
+2025-07-27 14:27:29,549 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:29,570 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:29,572 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:29,573 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:29,643 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   9997.T                                  Belluna Co., Ltd.  ...    20.9967      19.1180
+1   9994.T                                 Yamaya Corporation  ...    17.5466     -20.2133
+2   9857.T                                   Eiwa Corporation  ...    14.2204      25.4591
+3   9791.T                           Biken Techno Corporation  ...    -7.7922      -6.0071
+4   9766.T                           Konami Group Corporation  ...  -156.3623    -117.2003
+5   9536.T                        Saibu Gas Holdings Co.,Ltd.  ...    18.8185      10.7152
+6   9433.T                                   KDDI Corporation  ...     6.4506      -1.1789
+7   9337.T                                      toridori Inc.  ...    33.5025      27.0068
+8   9286.T  Enex Infrastructure Investment Corporation - I...  ...   292.0191     262.8811
+9   9249.T                          Japan Ecosystem Co., Ltd.  ...     0.1078      -0.9105
+10  9022.T                      Central Japan Railway Company  ...    64.0594      53.7524
+11  8928.T                                 Anabuki Kosan Inc.  ...   -15.5423     -17.2563
+12  8886.T                              Wood Friends Co.,Ltd.  ...     7.8545      11.1944
+13  8860.T                           Fuji Corporation Limited  ...     1.0825       0.6613
+14  8425.T                    Mizuho Leasing Company, Limited  ...    15.6087      11.7170
+15  8399.T                       Bank of The Ryukyus, Limited  ...    24.2741      20.2229
+16  8346.T                                The Toho Bank, Ltd.  ...     8.3842       5.3831
+17  8081.T                                Kanaden Corporation  ...    25.2684      40.4877
+18  8070.T                             Tokyo Sangyo Co., Ltd.  ...     9.7595       6.4526
+19  8051.T                                Yamazen Corporation  ...    -0.0486      -9.8121
+
+[20 rows x 8 columns]
+2025-07-27 14:27:29,643 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:27:29,644 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:30,538 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:27:30,538 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:30,564 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:30,567 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:30,567 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:30,637 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...      macd  signal_line
+0   3726.T                                   4Cs HD Co., Ltd.  ...  -23.4266     -12.7629
+1   3719.T                                 AI storm Co., Ltd.  ...   -1.5483      -2.4149
+2   8928.T                                 Anabuki Kosan Inc.  ...  -15.5423     -17.2563
+3   3662.T                           Ateam Holdings Co., Ltd.  ...   33.2175      31.7577
+4   3377.T                              BIKE O & COMPANY Ltd.  ...   -1.4627      -0.8264
+5   5015.T                                    BP Castrol K.K.  ...   -0.3506       0.1927
+6   8399.T                       Bank of The Ryukyus, Limited  ...   24.2741      20.2229
+7   9997.T                                  Belluna Co., Ltd.  ...   20.9967      19.1180
+8   3048.T                                    Bic Camera Inc.  ...    3.5538      15.7441
+9   9791.T                           Biken Techno Corporation  ...   -7.7922      -6.0071
+10  9022.T                      Central Japan Railway Company  ...   64.0594      53.7524
+11  1573.T                           China Bear -1x HSCEI ETF  ...  -91.4731     -55.2384
+12  4246.T                        DaikyoNishikawa Corporation  ...   17.3490      14.0597
+13  2816.T                                    Daisho Co.,Ltd.  ...    0.4406      -0.0749
+14  4324.T                                  Dentsu Group Inc.  ...  -23.8547     -31.3325
+15  9857.T                                   Eiwa Corporation  ...   14.2204      25.4591
+16  9286.T  Enex Infrastructure Investment Corporation - I...  ...  292.0191     262.8811
+17  6093.T                           Escrow Agent Japan, Inc.  ...   -1.2395      -1.4088
+18  5571.T                          Excite Holdings Co., Ltd.  ...   27.5542      23.2936
+19  8860.T                           Fuji Corporation Limited  ...    1.0825       0.6613
+
+[20 rows x 8 columns]
+2025-07-27 14:27:30,637 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:27:30,638 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:31,279 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=name&sort_order=desc
+2025-07-27 14:27:31,280 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:31,303 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:31,305 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:31,306 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:31,374 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                             name                         industry  ...      rsi      macd signal_line
+0   130A.T                                Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ                    Biotechnology  ...  61.9529    0.2772     -1.5570
+1   150A.T                                              ＪＳＨ                    Conglomerates  ...  44.2105  -11.2916    -12.3952
+2   131A.T                                          ＣＣＮグループ                                   ...      NaN    0.0363      0.0533
+3   148A.T                                          ハッチ・ワーク      Specialty Business Services  ...  63.9759   42.5622     31.8332
+4   317A.T                                  エス・エム・エス・データテック  Information Technology Services  ...      NaN    0.0000      0.0000
+5   9337.T                                    toridori Inc.           Software - Application  ...  63.2267   33.5025     27.0068
+6   5132.T                                   pluszero, Inc.        Software - Infrastructure  ...  50.7530  -63.8709    -52.9713
+7   2857.T   iShares Germany Government Bond JPY Hedged ETF                                   ...  33.5247   -1.2154     -1.1743
+8   381A.T  iFreeETF US Treasury Bond 3-5 Year (NON HEDGED)                                   ...  71.3043    8.2518      6.2154
+9   1305.T            iFreeETF TOPIX (Yearly Dividend Type)                                   ...  68.8643   38.4821     24.7051
+10  1320.T        iFreeETF Nikkei225 (Yearly Dividend Type)                                   ...  67.7833  658.8843    514.0663
+11  6576.T                                Youkosha Co.,Ltd.                                   ...     None      None        None
+12  7294.T                               Yorozu Corporation                       Auto Parts  ...  60.0000    5.1047      2.3236
+13  8051.T                              Yamazen Corporation   Specialty Industrial Machinery  ...  84.8000   -0.0486     -9.8121
+14  9994.T                               Yamaya Corporation              Beverages - Brewers  ...  71.0335   17.5466    -20.2133
+15  8886.T                            Wood Friends Co.,Ltd.        Real Estate - Development  ...  51.7241    7.8545     11.1944
+16  6089.T                                 Will Group, Inc.   Staffing & Employment Services  ...  74.5455    8.0694      5.3278
+17  7995.T                                     Valqua, Ltd.   Specialty Industrial Machinery  ...  89.7436   72.0968     44.8225
+18  5071.T                                    VIS Co., Ltd.      Specialty Business Services  ...  72.7273   11.1304      7.5649
+19  7203.T                         Toyota Motor Corporation               Auto Manufacturers  ...  74.3755   47.2065      4.3285
+
+[20 rows x 8 columns]
+2025-07-27 14:27:31,374 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:27:31,375 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:32,054 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:27:32,054 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:32,078 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:32,081 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:32,081 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:32,151 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...      macd  signal_line
+0   3726.T                                   4Cs HD Co., Ltd.  ...  -23.4266     -12.7629
+1   3719.T                                 AI storm Co., Ltd.  ...   -1.5483      -2.4149
+2   8928.T                                 Anabuki Kosan Inc.  ...  -15.5423     -17.2563
+3   3662.T                           Ateam Holdings Co., Ltd.  ...   33.2175      31.7577
+4   3377.T                              BIKE O & COMPANY Ltd.  ...   -1.4627      -0.8264
+5   5015.T                                    BP Castrol K.K.  ...   -0.3506       0.1927
+6   8399.T                       Bank of The Ryukyus, Limited  ...   24.2741      20.2229
+7   9997.T                                  Belluna Co., Ltd.  ...   20.9967      19.1180
+8   3048.T                                    Bic Camera Inc.  ...    3.5538      15.7441
+9   9791.T                           Biken Techno Corporation  ...   -7.7922      -6.0071
+10  9022.T                      Central Japan Railway Company  ...   64.0594      53.7524
+11  1573.T                           China Bear -1x HSCEI ETF  ...  -91.4731     -55.2384
+12  4246.T                        DaikyoNishikawa Corporation  ...   17.3490      14.0597
+13  2816.T                                    Daisho Co.,Ltd.  ...    0.4406      -0.0749
+14  4324.T                                  Dentsu Group Inc.  ...  -23.8547     -31.3325
+15  9857.T                                   Eiwa Corporation  ...   14.2204      25.4591
+16  9286.T  Enex Infrastructure Investment Corporation - I...  ...  292.0191     262.8811
+17  6093.T                           Escrow Agent Japan, Inc.  ...   -1.2395      -1.4088
+18  5571.T                          Excite Holdings Co., Ltd.  ...   27.5542      23.2936
+19  8860.T                           Fuji Corporation Limited  ...    1.0825       0.6613
+
+[20 rows x 8 columns]
+2025-07-27 14:27:32,151 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:27:32,152 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:32,767 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=name&sort_order=desc
+2025-07-27 14:27:32,768 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:32,789 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:32,792 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:32,792 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:32,863 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                             name                         industry  ...      rsi      macd signal_line
+0   130A.T                                Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ                    Biotechnology  ...  61.9529    0.2772     -1.5570
+1   150A.T                                              ＪＳＨ                    Conglomerates  ...  44.2105  -11.2916    -12.3952
+2   131A.T                                          ＣＣＮグループ                                   ...      NaN    0.0363      0.0533
+3   148A.T                                          ハッチ・ワーク      Specialty Business Services  ...  63.9759   42.5622     31.8332
+4   317A.T                                  エス・エム・エス・データテック  Information Technology Services  ...      NaN    0.0000      0.0000
+5   9337.T                                    toridori Inc.           Software - Application  ...  63.2267   33.5025     27.0068
+6   5132.T                                   pluszero, Inc.        Software - Infrastructure  ...  50.7530  -63.8709    -52.9713
+7   2857.T   iShares Germany Government Bond JPY Hedged ETF                                   ...  33.5247   -1.2154     -1.1743
+8   381A.T  iFreeETF US Treasury Bond 3-5 Year (NON HEDGED)                                   ...  71.3043    8.2518      6.2154
+9   1305.T            iFreeETF TOPIX (Yearly Dividend Type)                                   ...  68.8643   38.4821     24.7051
+10  1320.T        iFreeETF Nikkei225 (Yearly Dividend Type)                                   ...  67.7833  658.8843    514.0663
+11  6576.T                                Youkosha Co.,Ltd.                                   ...     None      None        None
+12  7294.T                               Yorozu Corporation                       Auto Parts  ...  60.0000    5.1047      2.3236
+13  8051.T                              Yamazen Corporation   Specialty Industrial Machinery  ...  84.8000   -0.0486     -9.8121
+14  9994.T                               Yamaya Corporation              Beverages - Brewers  ...  71.0335   17.5466    -20.2133
+15  8886.T                            Wood Friends Co.,Ltd.        Real Estate - Development  ...  51.7241    7.8545     11.1944
+16  6089.T                                 Will Group, Inc.   Staffing & Employment Services  ...  74.5455    8.0694      5.3278
+17  7995.T                                     Valqua, Ltd.   Specialty Industrial Machinery  ...  89.7436   72.0968     44.8225
+18  5071.T                                    VIS Co., Ltd.      Specialty Business Services  ...  72.7273   11.1304      7.5649
+19  7203.T                         Toyota Motor Corporation               Auto Manufacturers  ...  74.3755   47.2065      4.3285
+
+[20 rows x 8 columns]
+2025-07-27 14:27:32,863 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:27:32,863 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:33,835 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:27:33,835 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:33,853 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:33,856 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:33,856 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:33,934 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...      macd  signal_line
+0   3726.T                                   4Cs HD Co., Ltd.  ...  -23.4266     -12.7629
+1   3719.T                                 AI storm Co., Ltd.  ...   -1.5483      -2.4149
+2   8928.T                                 Anabuki Kosan Inc.  ...  -15.5423     -17.2563
+3   3662.T                           Ateam Holdings Co., Ltd.  ...   33.2175      31.7577
+4   3377.T                              BIKE O & COMPANY Ltd.  ...   -1.4627      -0.8264
+5   5015.T                                    BP Castrol K.K.  ...   -0.3506       0.1927
+6   8399.T                       Bank of The Ryukyus, Limited  ...   24.2741      20.2229
+7   9997.T                                  Belluna Co., Ltd.  ...   20.9967      19.1180
+8   3048.T                                    Bic Camera Inc.  ...    3.5538      15.7441
+9   9791.T                           Biken Techno Corporation  ...   -7.7922      -6.0071
+10  9022.T                      Central Japan Railway Company  ...   64.0594      53.7524
+11  1573.T                           China Bear -1x HSCEI ETF  ...  -91.4731     -55.2384
+12  4246.T                        DaikyoNishikawa Corporation  ...   17.3490      14.0597
+13  2816.T                                    Daisho Co.,Ltd.  ...    0.4406      -0.0749
+14  4324.T                                  Dentsu Group Inc.  ...  -23.8547     -31.3325
+15  9857.T                                   Eiwa Corporation  ...   14.2204      25.4591
+16  9286.T  Enex Infrastructure Investment Corporation - I...  ...  292.0191     262.8811
+17  6093.T                           Escrow Agent Japan, Inc.  ...   -1.2395      -1.4088
+18  5571.T                          Excite Holdings Co., Ltd.  ...   27.5542      23.2936
+19  8860.T                           Fuji Corporation Limited  ...    1.0825       0.6613
+
+[20 rows x 8 columns]
+2025-07-27 14:27:33,934 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:27:33,934 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:35,440 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=3&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:27:35,441 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:35,450 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:35,452 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:35,453 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:35,526 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   2503.T                    Kirin Holdings Company, Limited  ...    -6.9434      -9.2594
+1   9766.T                           Konami Group Corporation  ...  -156.3623    -117.2003
+2   7997.T                            Kurogane Kosakusho Ltd.  ...    19.7433      17.5979
+3   7914.T                           Kyodo Printing Co., Ltd.  ...    19.7453      16.1862
+4   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+5   1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+6   181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+7   2839.T  MAXIS US Treasury Bond 7-10 Year ETF (JPY Hedged)  ...    -1.1649      -0.3133
+8   4436.T                         MINKABU THE INFONOID, Inc.  ...    -3.8650      -3.5246
+9   3299.T                              MUGEN ESTATE Co.,Ltd.  ...   -19.5895     -23.7337
+10  8002.T                               Marubeni Corporation  ...    47.8184      38.8334
+11  6969.T                           Matsuo Electric Co.,Ltd.  ...    18.9898      25.2816
+12  3611.T                               Matsuoka Corporation  ...     4.5984       3.5850
+13  3645.T                                  Medical Net, Inc.  ...     1.7854       0.3603
+14  6787.T                        Meiko Electronics Co., Ltd.  ...   166.1699     152.6170
+15  6159.T                         Micron Machinery Co., Ltd.  ...   -22.8371       7.0629
+16  3169.T                                  Misawa & Co.,Ltd.  ...    -1.8368      -1.7610
+17  8425.T                    Mizuho Leasing Company, Limited  ...    15.6087      11.7170
+18  4534.T                   Mochida Pharmaceutical Co., Ltd.  ...    20.1065       3.3129
+19  1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+
+[20 rows x 8 columns]
+2025-07-27 14:27:35,527 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 3/6)
+2025-07-27 14:27:35,527 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:36,958 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=3&limit=20&search=&sort_by=name&sort_order=desc
+2025-07-27 14:27:36,958 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:36,977 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:36,979 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:36,980 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:37,049 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...      macd  signal_line
+0   7419.T                                 Nojima Corporation  ...   36.6675      70.7670
+1   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...   38.5959      25.0341
+2   1330.T               Nikko Exchange Traded Index Fund 225  ...  671.1416     527.7553
+3   6788.T                               Nihon Trim Co., Ltd.  ...   79.3383      88.4493
+4   5252.T                            Nihon Knowledge Co,Ltd.  ...    3.1222       4.9428
+5   3992.T                                    Needs Well Inc.  ...    4.2646      -2.7752
+6   6471.T                                           NSK Ltd.  ...   14.1059      12.9208
+7   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...   38.5558      24.7335
+8   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...   21.5434      11.6175
+9   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...    6.6639       4.4082
+10  1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...  767.4815     676.5489
+11  4534.T                   Mochida Pharmaceutical Co., Ltd.  ...   20.1065       3.3129
+12  8425.T                    Mizuho Leasing Company, Limited  ...   15.6087      11.7170
+13  3169.T                                  Misawa & Co.,Ltd.  ...   -1.8368      -1.7610
+14  6159.T                         Micron Machinery Co., Ltd.  ...  -22.8371       7.0629
+15  6787.T                        Meiko Electronics Co., Ltd.  ...  166.1699     152.6170
+16  3645.T                                  Medical Net, Inc.  ...    1.7854       0.3603
+17  3611.T                               Matsuoka Corporation  ...    4.5984       3.5850
+18  6969.T                           Matsuo Electric Co.,Ltd.  ...   18.9898      25.2816
+19  8002.T                               Marubeni Corporation  ...   47.8184      38.8334
+
+[20 rows x 8 columns]
+2025-07-27 14:27:37,050 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 3/6)
+2025-07-27 14:27:37,050 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:37,797 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=3&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:27:37,797 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:37,809 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:37,811 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:37,812 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:37,878 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   2503.T                    Kirin Holdings Company, Limited  ...    -6.9434      -9.2594
+1   9766.T                           Konami Group Corporation  ...  -156.3623    -117.2003
+2   7997.T                            Kurogane Kosakusho Ltd.  ...    19.7433      17.5979
+3   7914.T                           Kyodo Printing Co., Ltd.  ...    19.7453      16.1862
+4   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+5   1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+6   181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+7   2839.T  MAXIS US Treasury Bond 7-10 Year ETF (JPY Hedged)  ...    -1.1649      -0.3133
+8   4436.T                         MINKABU THE INFONOID, Inc.  ...    -3.8650      -3.5246
+9   3299.T                              MUGEN ESTATE Co.,Ltd.  ...   -19.5895     -23.7337
+10  8002.T                               Marubeni Corporation  ...    47.8184      38.8334
+11  6969.T                           Matsuo Electric Co.,Ltd.  ...    18.9898      25.2816
+12  3611.T                               Matsuoka Corporation  ...     4.5984       3.5850
+13  3645.T                                  Medical Net, Inc.  ...     1.7854       0.3603
+14  6787.T                        Meiko Electronics Co., Ltd.  ...   166.1699     152.6170
+15  6159.T                         Micron Machinery Co., Ltd.  ...   -22.8371       7.0629
+16  3169.T                                  Misawa & Co.,Ltd.  ...    -1.8368      -1.7610
+17  8425.T                    Mizuho Leasing Company, Limited  ...    15.6087      11.7170
+18  4534.T                   Mochida Pharmaceutical Co., Ltd.  ...    20.1065       3.3129
+19  1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+
+[20 rows x 8 columns]
+2025-07-27 14:27:37,879 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 3/6)
+2025-07-27 14:27:37,879 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:38,423 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=3&limit=20&search=&sort_by=name&sort_order=desc
+2025-07-27 14:27:38,423 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:38,451 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:38,454 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:38,454 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:38,521 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...      macd  signal_line
+0   7419.T                                 Nojima Corporation  ...   36.6675      70.7670
+1   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...   38.5959      25.0341
+2   1330.T               Nikko Exchange Traded Index Fund 225  ...  671.1416     527.7553
+3   6788.T                               Nihon Trim Co., Ltd.  ...   79.3383      88.4493
+4   5252.T                            Nihon Knowledge Co,Ltd.  ...    3.1222       4.9428
+5   3992.T                                    Needs Well Inc.  ...    4.2646      -2.7752
+6   6471.T                                           NSK Ltd.  ...   14.1059      12.9208
+7   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...   38.5558      24.7335
+8   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...   21.5434      11.6175
+9   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...    6.6639       4.4082
+10  1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...  767.4815     676.5489
+11  4534.T                   Mochida Pharmaceutical Co., Ltd.  ...   20.1065       3.3129
+12  8425.T                    Mizuho Leasing Company, Limited  ...   15.6087      11.7170
+13  3169.T                                  Misawa & Co.,Ltd.  ...   -1.8368      -1.7610
+14  6159.T                         Micron Machinery Co., Ltd.  ...  -22.8371       7.0629
+15  6787.T                        Meiko Electronics Co., Ltd.  ...  166.1699     152.6170
+16  3645.T                                  Medical Net, Inc.  ...    1.7854       0.3603
+17  3611.T                               Matsuoka Corporation  ...    4.5984       3.5850
+18  6969.T                           Matsuo Electric Co.,Ltd.  ...   18.9898      25.2816
+19  8002.T                               Marubeni Corporation  ...   47.8184      38.8334
+
+[20 rows x 8 columns]
+2025-07-27 14:27:38,521 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 3/6)
+2025-07-27 14:27:38,522 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:39,154 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=3&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:27:39,154 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:39,166 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:39,168 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:39,169 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:39,244 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   2503.T                    Kirin Holdings Company, Limited  ...    -6.9434      -9.2594
+1   9766.T                           Konami Group Corporation  ...  -156.3623    -117.2003
+2   7997.T                            Kurogane Kosakusho Ltd.  ...    19.7433      17.5979
+3   7914.T                           Kyodo Printing Co., Ltd.  ...    19.7453      16.1862
+4   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+5   1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+6   181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+7   2839.T  MAXIS US Treasury Bond 7-10 Year ETF (JPY Hedged)  ...    -1.1649      -0.3133
+8   4436.T                         MINKABU THE INFONOID, Inc.  ...    -3.8650      -3.5246
+9   3299.T                              MUGEN ESTATE Co.,Ltd.  ...   -19.5895     -23.7337
+10  8002.T                               Marubeni Corporation  ...    47.8184      38.8334
+11  6969.T                           Matsuo Electric Co.,Ltd.  ...    18.9898      25.2816
+12  3611.T                               Matsuoka Corporation  ...     4.5984       3.5850
+13  3645.T                                  Medical Net, Inc.  ...     1.7854       0.3603
+14  6787.T                        Meiko Electronics Co., Ltd.  ...   166.1699     152.6170
+15  6159.T                         Micron Machinery Co., Ltd.  ...   -22.8371       7.0629
+16  3169.T                                  Misawa & Co.,Ltd.  ...    -1.8368      -1.7610
+17  8425.T                    Mizuho Leasing Company, Limited  ...    15.6087      11.7170
+18  4534.T                   Mochida Pharmaceutical Co., Ltd.  ...    20.1065       3.3129
+19  1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+
+[20 rows x 8 columns]
+2025-07-27 14:27:39,245 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 3/6)
+2025-07-27 14:27:39,245 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:40,772 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:27:40,772 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:40,795 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:40,798 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:40,799 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:40,869 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                              name                        industry  ...      rsi      macd signal_line
+0   1319.T  NEXT FUNDS Nikkei 300 Index Exchange Traded Fund                                  ...  71.3029    6.6639      4.4082
+1   1311.T     NEXT FUNDS TOPIX Core 30 Exchange Traded Fund                                  ...  70.3842   21.5434     11.6175
+2   1306.T             NEXT FUNDS TOPIX Exchange Traded Fund                                  ...  66.8538   38.5558     24.7335
+3   6471.T                                          NSK Ltd.                      Auto Parts  ...  60.1695   14.1059     12.9208
+4   3992.T                                   Needs Well Inc.       Software - Infrastructure  ...  87.7551    4.2646     -2.7752
+5   5252.T                           Nihon Knowledge Co,Ltd.          Software - Application  ...  54.1096    3.1222      4.9428
+6   6788.T                              Nihon Trim Co., Ltd.  Pollution & Treatment Controls  ...  63.0435   79.3383     88.4493
+7   1330.T              Nikko Exchange Traded Index Fund 225                                  ...  65.9800  671.1416    527.7553
+8   1308.T            Nikko Exchange Traded Index Fund TOPIX                                  ...  65.4765   38.5959     25.0341
+9   7419.T                                Nojima Corporation                Specialty Retail  ...  43.9716   36.6675     70.7670
+10  3922.T                              PR TIMES Corporation  Internet Content & Information  ...  83.4371  160.0002    126.9985
+11  6752.T                    Panasonic Holdings Corporation            Consumer Electronics  ...  40.5063  -18.8727    -25.2248
+12  2557.T                                   SMDAM TOPIX ETF                                  ...  71.6724   37.0464     23.9367
+13  9536.T                       Saibu Gas Holdings Co.,Ltd.       Utilities - Regulated Gas  ...  71.0784   18.8185     10.7152
+14  5189.T                           Sakura Rubber Co., Ltd.                      Auto Parts  ...  69.6721   21.3983     19.2826
+15  6444.T                                Sanden Corporation                      Auto Parts  ...  55.5556   -0.2615     -0.5164
+16  1972.T                  Sanko Metal Industrial Co., Ltd.   Building Products & Equipment  ...  81.0811  215.8824    187.8402
+17  4264.T                                      Secure, Inc.  Security & Protection Services  ...  67.7656   -9.1282    -20.5591
+18  4178.T                          Sharing Innovations Inc.       Software - Infrastructure  ...  58.7156    2.7750      3.3226
+19  6753.T                                 Sharp Corporation            Consumer Electronics  ...  48.3557   -7.8857    -13.0111
+
+[20 rows x 8 columns]
+2025-07-27 14:27:40,869 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:40,870 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:42,202 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=name&sort_order=desc
+2025-07-27 14:27:42,203 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:42,214 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:42,217 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:42,217 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:42,284 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   3299.T                              MUGEN ESTATE Co.,Ltd.  ...   -19.5895     -23.7337
+1   4436.T                         MINKABU THE INFONOID, Inc.  ...    -3.8650      -3.5246
+2   2839.T  MAXIS US Treasury Bond 7-10 Year ETF (JPY Hedged)  ...    -1.1649      -0.3133
+3   181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+4   1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+5   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+6   7914.T                           Kyodo Printing Co., Ltd.  ...    19.7453      16.1862
+7   7997.T                            Kurogane Kosakusho Ltd.  ...    19.7433      17.5979
+8   9766.T                           Konami Group Corporation  ...  -156.3623    -117.2003
+9   2503.T                    Kirin Holdings Company, Limited  ...    -6.9434      -9.2594
+10  7012.T                    Kawasaki Heavy Industries, Ltd.  ...   105.7503      46.5619
+11  8081.T                                Kanaden Corporation  ...    25.2684      40.4877
+12  4170.T                              Kaizen Platform, Inc.  ...     4.4737       4.4955
+13  6231.T                              KIMURA KOHKI Co.,Ltd.  ...    54.3625     119.4401
+14  9433.T                                   KDDI Corporation  ...     6.4506      -1.1789
+15  9249.T                          Japan Ecosystem Co., Ltd.  ...     0.1078      -0.9105
+16  7187.T                                   J-Lease Co.,Ltd.  ...    19.1516      20.5539
+17  6237.T                                    Iwaki Co., Ltd.  ...    83.3002      49.1727
+18  6336.T                              Ishii Hyoki Co., Ltd.  ...     9.4195      11.2675
+19  3791.T                                      IG Port, Inc.  ...   -88.2178     -73.6805
+
+[20 rows x 8 columns]
+2025-07-27 14:27:42,285 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:42,285 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:43,041 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:27:43,041 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:43,070 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:43,073 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:43,073 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:43,138 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                              name                        industry  ...      rsi      macd signal_line
+0   1319.T  NEXT FUNDS Nikkei 300 Index Exchange Traded Fund                                  ...  71.3029    6.6639      4.4082
+1   1311.T     NEXT FUNDS TOPIX Core 30 Exchange Traded Fund                                  ...  70.3842   21.5434     11.6175
+2   1306.T             NEXT FUNDS TOPIX Exchange Traded Fund                                  ...  66.8538   38.5558     24.7335
+3   6471.T                                          NSK Ltd.                      Auto Parts  ...  60.1695   14.1059     12.9208
+4   3992.T                                   Needs Well Inc.       Software - Infrastructure  ...  87.7551    4.2646     -2.7752
+5   5252.T                           Nihon Knowledge Co,Ltd.          Software - Application  ...  54.1096    3.1222      4.9428
+6   6788.T                              Nihon Trim Co., Ltd.  Pollution & Treatment Controls  ...  63.0435   79.3383     88.4493
+7   1330.T              Nikko Exchange Traded Index Fund 225                                  ...  65.9800  671.1416    527.7553
+8   1308.T            Nikko Exchange Traded Index Fund TOPIX                                  ...  65.4765   38.5959     25.0341
+9   7419.T                                Nojima Corporation                Specialty Retail  ...  43.9716   36.6675     70.7670
+10  3922.T                              PR TIMES Corporation  Internet Content & Information  ...  83.4371  160.0002    126.9985
+11  6752.T                    Panasonic Holdings Corporation            Consumer Electronics  ...  40.5063  -18.8727    -25.2248
+12  2557.T                                   SMDAM TOPIX ETF                                  ...  71.6724   37.0464     23.9367
+13  9536.T                       Saibu Gas Holdings Co.,Ltd.       Utilities - Regulated Gas  ...  71.0784   18.8185     10.7152
+14  5189.T                           Sakura Rubber Co., Ltd.                      Auto Parts  ...  69.6721   21.3983     19.2826
+15  6444.T                                Sanden Corporation                      Auto Parts  ...  55.5556   -0.2615     -0.5164
+16  1972.T                  Sanko Metal Industrial Co., Ltd.   Building Products & Equipment  ...  81.0811  215.8824    187.8402
+17  4264.T                                      Secure, Inc.  Security & Protection Services  ...  67.7656   -9.1282    -20.5591
+18  4178.T                          Sharing Innovations Inc.       Software - Infrastructure  ...  58.7156    2.7750      3.3226
+19  6753.T                                 Sharp Corporation            Consumer Electronics  ...  48.3557   -7.8857    -13.0111
+
+[20 rows x 8 columns]
+2025-07-27 14:27:43,138 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:43,138 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:43,780 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=industry&sort_order=asc
+2025-07-27 14:27:43,780 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:43,798 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:43,800 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY industry ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:43,800 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:43,868 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   3662.T                           Ateam Holdings Co., Ltd.  ...    33.2175      31.7577
+1   3645.T                                  Medical Net, Inc.  ...     1.7854       0.3603
+2   6026.T                                     GMO TECH, Inc.  ...  -175.1311    -193.6701
+3   4436.T                         MINKABU THE INFONOID, Inc.  ...    -3.8650      -3.5246
+4   3922.T                               PR TIMES Corporation  ...   160.0002     126.9985
+5   3961.T                    Silver Egg Technology Co., Ltd.  ...    -0.3663      -0.9292
+6   3726.T                                   4Cs HD Co., Ltd.  ...   -23.4266     -12.7629
+7   7847.T                               Graphite Design Inc.  ...     1.7963      -0.8028
+8   2340.T                      Gokurakuyu Holdings Co., Ltd.  ...     0.1706      -0.1829
+9   7815.T                   Tokyo Board Industries Co., Ltd.  ...     4.3365       5.4057
+10  6433.T                                 HEPHAIST Co., Ltd.  ...     9.3570       8.3144
+11  5015.T                                    BP Castrol K.K.  ...    -0.3506       0.1927
+12  1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+13  6071.T                                          IBJ, Inc.  ...     6.7540      11.0175
+14  6788.T                               Nihon Trim Co., Ltd.  ...    79.3383      88.4493
+15  9286.T  Enex Infrastructure Investment Corporation - I...  ...   292.0191     262.8811
+16  9022.T                      Central Japan Railway Company  ...    64.0594      53.7524
+17  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+18  3299.T                              MUGEN ESTATE Co.,Ltd.  ...   -19.5895     -23.7337
+19  8886.T                              Wood Friends Co.,Ltd.  ...     7.8545      11.1944
+
+[20 rows x 8 columns]
+2025-07-27 14:27:43,868 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:43,869 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:44,570 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=industry&sort_order=desc
+2025-07-27 14:27:44,570 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:44,583 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:44,586 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY industry DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:44,586 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:44,654 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                               name                                  industry  ...      rsi       macd signal_line
+0   6231.T              KIMURA KOHKI Co.,Ltd.              Electrical Equipment & Parts  ...  47.3684    54.3625    119.4401
+1   9857.T                   Eiwa Corporation              Electrical Equipment & Parts  ...  32.0930    14.2204     25.4591
+2   4597.T                Solasia Pharma K.K.  Drug Manufacturers - Specialty & Generic  ...  64.0000     2.4116      2.2183
+3   4534.T   Mochida Pharmaceutical Co., Ltd.  Drug Manufacturers - Specialty & Generic  ...  71.7514    20.1065      3.3129
+4   3169.T                  Misawa & Co.,Ltd.                         Department Stores  ...  26.6667    -1.8368     -1.7610
+5   8425.T    Mizuho Leasing Company, Limited                           Credit Services  ...  75.3623    15.6087     11.7170
+6   6753.T                  Sharp Corporation                      Consumer Electronics  ...  48.3557    -7.8857    -13.0111
+7   6752.T     Panasonic Holdings Corporation                      Consumer Electronics  ...  40.5063   -18.8727    -25.2248
+8   3719.T                 AI storm Co., Ltd.                       Consulting Services  ...  60.2740    -1.5483     -2.4149
+9   150A.T                                ＪＳＨ                             Conglomerates  ...  44.2105   -11.2916    -12.3952
+10  8002.T               Marubeni Corporation                             Conglomerates  ...  70.8075    47.8184     38.8334
+11  8081.T                Kanaden Corporation                             Conglomerates  ...  51.4950    25.2684     40.4877
+12  8070.T             Tokyo Sangyo Co., Ltd.                             Conglomerates  ...  64.4068     9.7595      6.4526
+13  4274.T  Hosoya Pyro-Engineering Co., Ltd.                                 Chemicals  ...  56.8627    -3.9401     -5.0663
+14  1972.T   Sanko Metal Industrial Co., Ltd.             Building Products & Equipment  ...  81.0811   215.8824    187.8402
+15  130A.T                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ                             Biotechnology  ...  61.9529     0.2772     -1.5570
+16  2160.T                     GNI Group Ltd.                             Biotechnology  ...  24.2511  -137.5830   -111.6464
+17  2503.T    Kirin Holdings Company, Limited                       Beverages - Brewers  ...  43.8692    -6.9434     -9.2594
+18  9994.T                 Yamaya Corporation                       Beverages - Brewers  ...  71.0335    17.5466    -20.2133
+19  8399.T       Bank of The Ryukyus, Limited                          Banks - Regional  ...  74.0506    24.2741     20.2229
+
+[20 rows x 8 columns]
+2025-07-27 14:27:44,654 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:44,655 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:45,625 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=golden_cross&sort_order=asc
+2025-07-27 14:27:45,626 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:45,638 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:45,640 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY golden_cross ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:45,641 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:45,709 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                             name                        industry  ...      rsi      macd signal_line
+0   6071.T                        IBJ, Inc.               Personal Services  ...  49.0000    6.7540     11.0175
+1   6089.T                 Will Group, Inc.  Staffing & Employment Services  ...  74.5455    8.0694      5.3278
+2   6093.T         Escrow Agent Japan, Inc.     Specialty Business Services  ...  47.0588   -1.2395     -1.4088
+3   6159.T       Micron Machinery Co., Ltd.  Specialty Industrial Machinery  ...  20.0000  -22.8371      7.0629
+4   6203.T             Howa Machinery, Ltd.  Specialty Industrial Machinery  ...  58.9928   -7.6295    -13.0974
+5   6231.T            KIMURA KOHKI Co.,Ltd.    Electrical Equipment & Parts  ...  47.3684   54.3625    119.4401
+6   6237.T                  Iwaki Co., Ltd.  Specialty Industrial Machinery  ...  88.4685   83.3002     49.1727
+7   6336.T            Ishii Hyoki Co., Ltd.  Specialty Industrial Machinery  ...  53.5714    9.4195     11.2675
+8   6433.T               HEPHAIST Co., Ltd.               Metal Fabrication  ...  78.3784    9.3570      8.3144
+9   6444.T               Sanden Corporation                      Auto Parts  ...  55.5556   -0.2615     -0.5164
+10  6471.T                         NSK Ltd.                      Auto Parts  ...  60.1695   14.1059     12.9208
+11  6752.T   Panasonic Holdings Corporation            Consumer Electronics  ...  40.5063  -18.8727    -25.2248
+12  6753.T                Sharp Corporation            Consumer Electronics  ...  48.3557   -7.8857    -13.0111
+13  6787.T      Meiko Electronics Co., Ltd.           Electronic Components  ...  59.2593  166.1699    152.6170
+14  6788.T             Nihon Trim Co., Ltd.  Pollution & Treatment Controls  ...  63.0435   79.3383     88.4493
+15  6969.T         Matsuo Electric Co.,Ltd.           Electronic Components  ...  51.0791   18.9898     25.2816
+16  7012.T  Kawasaki Heavy Industries, Ltd.  Specialty Industrial Machinery  ...  69.6954  105.7503     46.5619
+17  7187.T                 J-Lease Co.,Ltd.            Real Estate Services  ...  60.8563   19.1516     20.5539
+18  7203.T         Toyota Motor Corporation              Auto Manufacturers  ...  74.3755   47.2065      4.3285
+19  7282.T           Toyoda Gosei Co., Ltd.                      Auto Parts  ...  68.2692  103.5528     83.9730
+
+[20 rows x 8 columns]
+2025-07-27 14:27:45,709 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:45,710 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:46,383 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=golden_cross&sort_order=desc
+2025-07-27 14:27:46,384 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:46,405 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:46,407 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY golden_cross DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:46,408 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:46,474 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                             name                        industry  ...      rsi      macd signal_line
+0   6071.T                        IBJ, Inc.               Personal Services  ...  49.0000    6.7540     11.0175
+1   6089.T                 Will Group, Inc.  Staffing & Employment Services  ...  74.5455    8.0694      5.3278
+2   6093.T         Escrow Agent Japan, Inc.     Specialty Business Services  ...  47.0588   -1.2395     -1.4088
+3   6159.T       Micron Machinery Co., Ltd.  Specialty Industrial Machinery  ...  20.0000  -22.8371      7.0629
+4   6203.T             Howa Machinery, Ltd.  Specialty Industrial Machinery  ...  58.9928   -7.6295    -13.0974
+5   6231.T            KIMURA KOHKI Co.,Ltd.    Electrical Equipment & Parts  ...  47.3684   54.3625    119.4401
+6   6237.T                  Iwaki Co., Ltd.  Specialty Industrial Machinery  ...  88.4685   83.3002     49.1727
+7   6336.T            Ishii Hyoki Co., Ltd.  Specialty Industrial Machinery  ...  53.5714    9.4195     11.2675
+8   6433.T               HEPHAIST Co., Ltd.               Metal Fabrication  ...  78.3784    9.3570      8.3144
+9   6444.T               Sanden Corporation                      Auto Parts  ...  55.5556   -0.2615     -0.5164
+10  6471.T                         NSK Ltd.                      Auto Parts  ...  60.1695   14.1059     12.9208
+11  6752.T   Panasonic Holdings Corporation            Consumer Electronics  ...  40.5063  -18.8727    -25.2248
+12  6753.T                Sharp Corporation            Consumer Electronics  ...  48.3557   -7.8857    -13.0111
+13  6787.T      Meiko Electronics Co., Ltd.           Electronic Components  ...  59.2593  166.1699    152.6170
+14  6788.T             Nihon Trim Co., Ltd.  Pollution & Treatment Controls  ...  63.0435   79.3383     88.4493
+15  6969.T         Matsuo Electric Co.,Ltd.           Electronic Components  ...  51.0791   18.9898     25.2816
+16  7012.T  Kawasaki Heavy Industries, Ltd.  Specialty Industrial Machinery  ...  69.6954  105.7503     46.5619
+17  7187.T                 J-Lease Co.,Ltd.            Real Estate Services  ...  60.8563   19.1516     20.5539
+18  7203.T         Toyota Motor Corporation              Auto Manufacturers  ...  74.3755   47.2065      4.3285
+19  7282.T           Toyoda Gosei Co., Ltd.                      Auto Parts  ...  68.2692  103.5528     83.9730
+
+[20 rows x 8 columns]
+2025-07-27 14:27:46,474 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:46,475 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:46,973 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=dead_cross&sort_order=asc
+2025-07-27 14:27:46,973 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:46,996 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:46,999 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY dead_cross ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:46,999 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:47,066 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                             name                        industry  ...      rsi       macd signal_line
+0   6026.T                   GMO TECH, Inc.  Internet Content & Information  ...  51.2000  -175.1311   -193.6701
+1   6071.T                        IBJ, Inc.               Personal Services  ...  49.0000     6.7540     11.0175
+2   6089.T                 Will Group, Inc.  Staffing & Employment Services  ...  74.5455     8.0694      5.3278
+3   6093.T         Escrow Agent Japan, Inc.     Specialty Business Services  ...  47.0588    -1.2395     -1.4088
+4   6159.T       Micron Machinery Co., Ltd.  Specialty Industrial Machinery  ...  20.0000   -22.8371      7.0629
+5   6203.T             Howa Machinery, Ltd.  Specialty Industrial Machinery  ...  58.9928    -7.6295    -13.0974
+6   6231.T            KIMURA KOHKI Co.,Ltd.    Electrical Equipment & Parts  ...  47.3684    54.3625    119.4401
+7   6237.T                  Iwaki Co., Ltd.  Specialty Industrial Machinery  ...  88.4685    83.3002     49.1727
+8   6336.T            Ishii Hyoki Co., Ltd.  Specialty Industrial Machinery  ...  53.5714     9.4195     11.2675
+9   6433.T               HEPHAIST Co., Ltd.               Metal Fabrication  ...  78.3784     9.3570      8.3144
+10  6444.T               Sanden Corporation                      Auto Parts  ...  55.5556    -0.2615     -0.5164
+11  6471.T                         NSK Ltd.                      Auto Parts  ...  60.1695    14.1059     12.9208
+12  6752.T   Panasonic Holdings Corporation            Consumer Electronics  ...  40.5063   -18.8727    -25.2248
+13  6753.T                Sharp Corporation            Consumer Electronics  ...  48.3557    -7.8857    -13.0111
+14  6787.T      Meiko Electronics Co., Ltd.           Electronic Components  ...  59.2593   166.1699    152.6170
+15  6788.T             Nihon Trim Co., Ltd.  Pollution & Treatment Controls  ...  63.0435    79.3383     88.4493
+16  6969.T         Matsuo Electric Co.,Ltd.           Electronic Components  ...  51.0791    18.9898     25.2816
+17  7012.T  Kawasaki Heavy Industries, Ltd.  Specialty Industrial Machinery  ...  69.6954   105.7503     46.5619
+18  7187.T                 J-Lease Co.,Ltd.            Real Estate Services  ...  60.8563    19.1516     20.5539
+19  7203.T         Toyota Motor Corporation              Auto Manufacturers  ...  74.3755    47.2065      4.3285
+
+[20 rows x 8 columns]
+2025-07-27 14:27:47,066 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:47,066 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:47,677 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=dead_cross&sort_order=desc
+2025-07-27 14:27:47,678 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:47,710 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:47,712 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY dead_cross DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:47,712 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:47,778 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                             name                        industry  ...      rsi      macd signal_line
+0   6093.T         Escrow Agent Japan, Inc.     Specialty Business Services  ...  47.0588   -1.2395     -1.4088
+1   6159.T       Micron Machinery Co., Ltd.  Specialty Industrial Machinery  ...  20.0000  -22.8371      7.0629
+2   6203.T             Howa Machinery, Ltd.  Specialty Industrial Machinery  ...  58.9928   -7.6295    -13.0974
+3   6231.T            KIMURA KOHKI Co.,Ltd.    Electrical Equipment & Parts  ...  47.3684   54.3625    119.4401
+4   6237.T                  Iwaki Co., Ltd.  Specialty Industrial Machinery  ...  88.4685   83.3002     49.1727
+5   6336.T            Ishii Hyoki Co., Ltd.  Specialty Industrial Machinery  ...  53.5714    9.4195     11.2675
+6   6433.T               HEPHAIST Co., Ltd.               Metal Fabrication  ...  78.3784    9.3570      8.3144
+7   6444.T               Sanden Corporation                      Auto Parts  ...  55.5556   -0.2615     -0.5164
+8   6471.T                         NSK Ltd.                      Auto Parts  ...  60.1695   14.1059     12.9208
+9   6752.T   Panasonic Holdings Corporation            Consumer Electronics  ...  40.5063  -18.8727    -25.2248
+10  6753.T                Sharp Corporation            Consumer Electronics  ...  48.3557   -7.8857    -13.0111
+11  6787.T      Meiko Electronics Co., Ltd.           Electronic Components  ...  59.2593  166.1699    152.6170
+12  6788.T             Nihon Trim Co., Ltd.  Pollution & Treatment Controls  ...  63.0435   79.3383     88.4493
+13  6969.T         Matsuo Electric Co.,Ltd.           Electronic Components  ...  51.0791   18.9898     25.2816
+14  7012.T  Kawasaki Heavy Industries, Ltd.  Specialty Industrial Machinery  ...  69.6954  105.7503     46.5619
+15  7187.T                 J-Lease Co.,Ltd.            Real Estate Services  ...  60.8563   19.1516     20.5539
+16  7203.T         Toyota Motor Corporation              Auto Manufacturers  ...  74.3755   47.2065      4.3285
+17  7282.T           Toyoda Gosei Co., Ltd.                      Auto Parts  ...  68.2692  103.5528     83.9730
+18  7294.T               Yorozu Corporation                      Auto Parts  ...  60.0000    5.1047      2.3236
+19  7419.T               Nojima Corporation                Specialty Retail  ...  43.9716   36.6675     70.7670
+
+[20 rows x 8 columns]
+2025-07-27 14:27:47,778 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:47,778 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:50,345 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:27:50,345 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:50,376 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:50,380 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:50,381 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:50,451 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                              name                        industry  ...      rsi      macd signal_line
+0   1319.T  NEXT FUNDS Nikkei 300 Index Exchange Traded Fund                                  ...  71.3029    6.6639      4.4082
+1   1311.T     NEXT FUNDS TOPIX Core 30 Exchange Traded Fund                                  ...  70.3842   21.5434     11.6175
+2   1306.T             NEXT FUNDS TOPIX Exchange Traded Fund                                  ...  66.8538   38.5558     24.7335
+3   6471.T                                          NSK Ltd.                      Auto Parts  ...  60.1695   14.1059     12.9208
+4   3992.T                                   Needs Well Inc.       Software - Infrastructure  ...  87.7551    4.2646     -2.7752
+5   5252.T                           Nihon Knowledge Co,Ltd.          Software - Application  ...  54.1096    3.1222      4.9428
+6   6788.T                              Nihon Trim Co., Ltd.  Pollution & Treatment Controls  ...  63.0435   79.3383     88.4493
+7   1330.T              Nikko Exchange Traded Index Fund 225                                  ...  65.9800  671.1416    527.7553
+8   1308.T            Nikko Exchange Traded Index Fund TOPIX                                  ...  65.4765   38.5959     25.0341
+9   7419.T                                Nojima Corporation                Specialty Retail  ...  43.9716   36.6675     70.7670
+10  3922.T                              PR TIMES Corporation  Internet Content & Information  ...  83.4371  160.0002    126.9985
+11  6752.T                    Panasonic Holdings Corporation            Consumer Electronics  ...  40.5063  -18.8727    -25.2248
+12  2557.T                                   SMDAM TOPIX ETF                                  ...  71.6724   37.0464     23.9367
+13  9536.T                       Saibu Gas Holdings Co.,Ltd.       Utilities - Regulated Gas  ...  71.0784   18.8185     10.7152
+14  5189.T                           Sakura Rubber Co., Ltd.                      Auto Parts  ...  69.6721   21.3983     19.2826
+15  6444.T                                Sanden Corporation                      Auto Parts  ...  55.5556   -0.2615     -0.5164
+16  1972.T                  Sanko Metal Industrial Co., Ltd.   Building Products & Equipment  ...  81.0811  215.8824    187.8402
+17  4264.T                                      Secure, Inc.  Security & Protection Services  ...  67.7656   -9.1282    -20.5591
+18  4178.T                          Sharing Innovations Inc.       Software - Infrastructure  ...  58.7156    2.7750      3.3226
+19  6753.T                                 Sharp Corporation            Consumer Electronics  ...  48.3557   -7.8857    -13.0111
+
+[20 rows x 8 columns]
+2025-07-27 14:27:50,451 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:50,452 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:51,307 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=4&limit=20&search=&sort_by=name&sort_order=desc
+2025-07-27 14:27:51,307 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:51,328 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:51,331 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:51,331 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:51,397 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   3299.T                              MUGEN ESTATE Co.,Ltd.  ...   -19.5895     -23.7337
+1   4436.T                         MINKABU THE INFONOID, Inc.  ...    -3.8650      -3.5246
+2   2839.T  MAXIS US Treasury Bond 7-10 Year ETF (JPY Hedged)  ...    -1.1649      -0.3133
+3   181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+4   1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+5   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+6   7914.T                           Kyodo Printing Co., Ltd.  ...    19.7453      16.1862
+7   7997.T                            Kurogane Kosakusho Ltd.  ...    19.7433      17.5979
+8   9766.T                           Konami Group Corporation  ...  -156.3623    -117.2003
+9   2503.T                    Kirin Holdings Company, Limited  ...    -6.9434      -9.2594
+10  7012.T                    Kawasaki Heavy Industries, Ltd.  ...   105.7503      46.5619
+11  8081.T                                Kanaden Corporation  ...    25.2684      40.4877
+12  4170.T                              Kaizen Platform, Inc.  ...     4.4737       4.4955
+13  6231.T                              KIMURA KOHKI Co.,Ltd.  ...    54.3625     119.4401
+14  9433.T                                   KDDI Corporation  ...     6.4506      -1.1789
+15  9249.T                          Japan Ecosystem Co., Ltd.  ...     0.1078      -0.9105
+16  7187.T                                   J-Lease Co.,Ltd.  ...    19.1516      20.5539
+17  6237.T                                    Iwaki Co., Ltd.  ...    83.3002      49.1727
+18  6336.T                              Ishii Hyoki Co., Ltd.  ...     9.4195      11.2675
+19  3791.T                                      IG Port, Inc.  ...   -88.2178     -73.6805
+
+[20 rows x 8 columns]
+2025-07-27 14:27:51,398 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 4/6)
+2025-07-27 14:27:51,398 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:53,672 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=3&limit=20&search=&sort_by=name&sort_order=desc
+2025-07-27 14:27:53,673 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:53,681 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:53,684 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:53,684 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:53,757 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...      macd  signal_line
+0   7419.T                                 Nojima Corporation  ...   36.6675      70.7670
+1   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...   38.5959      25.0341
+2   1330.T               Nikko Exchange Traded Index Fund 225  ...  671.1416     527.7553
+3   6788.T                               Nihon Trim Co., Ltd.  ...   79.3383      88.4493
+4   5252.T                            Nihon Knowledge Co,Ltd.  ...    3.1222       4.9428
+5   3992.T                                    Needs Well Inc.  ...    4.2646      -2.7752
+6   6471.T                                           NSK Ltd.  ...   14.1059      12.9208
+7   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...   38.5558      24.7335
+8   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...   21.5434      11.6175
+9   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...    6.6639       4.4082
+10  1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...  767.4815     676.5489
+11  4534.T                   Mochida Pharmaceutical Co., Ltd.  ...   20.1065       3.3129
+12  8425.T                    Mizuho Leasing Company, Limited  ...   15.6087      11.7170
+13  3169.T                                  Misawa & Co.,Ltd.  ...   -1.8368      -1.7610
+14  6159.T                         Micron Machinery Co., Ltd.  ...  -22.8371       7.0629
+15  6787.T                        Meiko Electronics Co., Ltd.  ...  166.1699     152.6170
+16  3645.T                                  Medical Net, Inc.  ...    1.7854       0.3603
+17  3611.T                               Matsuoka Corporation  ...    4.5984       3.5850
+18  6969.T                           Matsuo Electric Co.,Ltd.  ...   18.9898      25.2816
+19  8002.T                               Marubeni Corporation  ...   47.8184      38.8334
+
+[20 rows x 8 columns]
+2025-07-27 14:27:53,757 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 3/6)
+2025-07-27 14:27:53,758 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:54,364 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=name&sort_order=desc
+2025-07-27 14:27:54,364 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:54,387 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:54,390 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:27:54,390 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:27:54,461 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                             name                         industry  ...      rsi      macd signal_line
+0   130A.T                                Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ                    Biotechnology  ...  61.9529    0.2772     -1.5570
+1   150A.T                                              ＪＳＨ                    Conglomerates  ...  44.2105  -11.2916    -12.3952
+2   131A.T                                          ＣＣＮグループ                                   ...      NaN    0.0363      0.0533
+3   148A.T                                          ハッチ・ワーク      Specialty Business Services  ...  63.9759   42.5622     31.8332
+4   317A.T                                  エス・エム・エス・データテック  Information Technology Services  ...      NaN    0.0000      0.0000
+5   9337.T                                    toridori Inc.           Software - Application  ...  63.2267   33.5025     27.0068
+6   5132.T                                   pluszero, Inc.        Software - Infrastructure  ...  50.7530  -63.8709    -52.9713
+7   2857.T   iShares Germany Government Bond JPY Hedged ETF                                   ...  33.5247   -1.2154     -1.1743
+8   381A.T  iFreeETF US Treasury Bond 3-5 Year (NON HEDGED)                                   ...  71.3043    8.2518      6.2154
+9   1305.T            iFreeETF TOPIX (Yearly Dividend Type)                                   ...  68.8643   38.4821     24.7051
+10  1320.T        iFreeETF Nikkei225 (Yearly Dividend Type)                                   ...  67.7833  658.8843    514.0663
+11  6576.T                                Youkosha Co.,Ltd.                                   ...     None      None        None
+12  7294.T                               Yorozu Corporation                       Auto Parts  ...  60.0000    5.1047      2.3236
+13  8051.T                              Yamazen Corporation   Specialty Industrial Machinery  ...  84.8000   -0.0486     -9.8121
+14  9994.T                               Yamaya Corporation              Beverages - Brewers  ...  71.0335   17.5466    -20.2133
+15  8886.T                            Wood Friends Co.,Ltd.        Real Estate - Development  ...  51.7241    7.8545     11.1944
+16  6089.T                                 Will Group, Inc.   Staffing & Employment Services  ...  74.5455    8.0694      5.3278
+17  7995.T                                     Valqua, Ltd.   Specialty Industrial Machinery  ...  89.7436   72.0968     44.8225
+18  5071.T                                    VIS Co., Ltd.      Specialty Business Services  ...  72.7273   11.1304      7.5649
+19  7203.T                         Toyota Motor Corporation               Auto Manufacturers  ...  74.3755   47.2065      4.3285
+
+[20 rows x 8 columns]
+2025-07-27 14:27:54,462 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:27:54,463 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:27:55,657 - utils - INFO - [api.py:get_chart:190] - 受信リクエスト: GET /chart/2857.T
+2025-07-27 14:27:55,657 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:55,690 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:55,710 - utils - INFO - [api.py:get_chart:215] - チャートデータ:
+                         date       open       high        low      close  volume
+0   2022-07-27 15:00:00+00:00  768.81647  768.81647  762.05330  763.00586     240
+1   2022-07-28 15:00:00+00:00  770.15010  776.34180  768.62604  776.34180  124850
+2   2022-07-31 15:00:00+00:00  777.29430  777.29430  771.57890  771.57890     130
+3   2022-08-01 15:00:00+00:00  783.67660  783.67660  782.91455  782.91455      20
+4   2022-08-02 15:00:00+00:00  777.29443  779.67584  777.19920  779.67584     400
+..                        ...        ...        ...        ...        ...     ...
+729 2025-07-17 15:00:00+00:00  656.40000  656.40000  655.10000  655.10000     220
+730 2025-07-21 15:00:00+00:00  658.60000  658.60000  658.30000  658.30000      40
+731 2025-07-22 15:00:00+00:00  660.00000  660.00000  657.90000  657.90000     120
+732 2025-07-23 15:00:00+00:00  654.80000  655.80000  654.80000  655.60000     190
+733 2025-07-24 15:00:00+00:00  655.50000  655.50000  653.50000  653.50000     510
+
+[734 rows x 6 columns]
+2025-07-27 14:27:57,280 - utils - INFO - [api.py:get_chart:190] - 受信リクエスト: GET /chart/2857.T
+2025-07-27 14:27:57,280 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:27:57,292 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:27:57,309 - utils - INFO - [api.py:get_chart:215] - チャートデータ:
+                         date       open       high        low      close  volume
+0   2022-07-27 15:00:00+00:00  768.81647  768.81647  762.05330  763.00586     240
+1   2022-07-28 15:00:00+00:00  770.15010  776.34180  768.62604  776.34180  124850
+2   2022-07-31 15:00:00+00:00  777.29430  777.29430  771.57890  771.57890     130
+3   2022-08-01 15:00:00+00:00  783.67660  783.67660  782.91455  782.91455      20
+4   2022-08-02 15:00:00+00:00  777.29443  779.67584  777.19920  779.67584     400
+..                        ...        ...        ...        ...        ...     ...
+729 2025-07-17 15:00:00+00:00  656.40000  656.40000  655.10000  655.10000     220
+730 2025-07-21 15:00:00+00:00  658.60000  658.60000  658.30000  658.30000      40
+731 2025-07-22 15:00:00+00:00  660.00000  660.00000  657.90000  657.90000     120
+732 2025-07-23 15:00:00+00:00  654.80000  655.80000  654.80000  655.60000     190
+733 2025-07-24 15:00:00+00:00  655.50000  655.50000  653.50000  653.50000     510
+
+[734 rows x 6 columns]
+2025-07-27 14:28:05,292 - utils - INFO - [api.py:get_chart:190] - 受信リクエスト: GET /chart/148A.T
+2025-07-27 14:28:05,292 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:28:05,304 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:28:05,317 - utils - INFO - [api.py:get_chart:215] - チャートデータ:
+                         date    open    high     low   close   volume
+0   2024-03-25 15:00:00+00:00  2815.0  3315.0  2781.0  3315.0  2713000
+1   2024-03-26 15:00:00+00:00  3805.0  4015.0  2891.0  2919.0  3857400
+2   2024-03-27 15:00:00+00:00  2960.0  3020.0  2525.0  2567.0   502800
+3   2024-03-28 15:00:00+00:00  2617.0  2727.0  2431.0  2440.0   171100
+4   2024-03-31 15:00:00+00:00  2523.0  2637.0  2426.0  2637.0   115400
+..                        ...     ...     ...     ...     ...      ...
+323 2025-07-17 15:00:00+00:00  2295.0  2297.0  2208.0  2208.0    12400
+324 2025-07-21 15:00:00+00:00  2230.0  2231.0  2126.0  2224.0    13400
+325 2025-07-22 15:00:00+00:00  2244.0  2296.0  2196.0  2282.0    16000
+326 2025-07-23 15:00:00+00:00  2298.0  2441.0  2280.0  2428.0    32000
+327 2025-07-24 15:00:00+00:00  2403.0  2417.0  2367.0  2367.0     6600
+
+[328 rows x 6 columns]
+2025-07-27 14:28:22,709 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:28:22,709 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:28:22,722 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:28:22,724 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:28:22,725 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:28:22,788 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:28:22,789 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:28:22,789 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:28:23,358 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=index&sort_order=asc
+2025-07-27 14:28:45,302 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:28:45,303 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:28:45,327 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:28:45,329 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:28:45,329 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:28:45,396 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:28:45,396 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:28:45,396 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:28:45,398 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:28:45,398 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:28:45,422 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:28:45,424 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:28:45,425 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:28:45,491 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:28:45,492 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:28:45,492 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:28:47,750 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=index&sort_order=asc
+2025-07-27 14:28:52,218 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:28:52,218 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:28:52,253 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:28:52,255 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:28:52,255 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:28:52,323 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:28:52,324 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:28:52,324 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:28:52,327 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:28:52,328 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:28:52,348 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:28:52,351 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:28:52,351 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:28:52,420 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:28:52,420 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:28:52,420 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:30:40,317 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:30:40,317 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:30:40,328 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:30:40,332 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:30:40,332 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:30:40,399 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:30:40,399 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:30:40,399 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:30:40,401 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:30:40,401 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:30:40,434 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:30:40,437 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:30:40,437 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:30:40,503 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:30:40,503 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:30:40,503 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:30:42,581 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=desc
+2025-07-27 14:30:42,581 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:30:42,608 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:30:42,611 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:30:42,611 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:30:42,680 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   9997.T                                  Belluna Co., Ltd.  ...    20.9967      19.1180
+1   9994.T                                 Yamaya Corporation  ...    17.5466     -20.2133
+2   9857.T                                   Eiwa Corporation  ...    14.2204      25.4591
+3   9791.T                           Biken Techno Corporation  ...    -7.7922      -6.0071
+4   9766.T                           Konami Group Corporation  ...  -156.3623    -117.2003
+5   9536.T                        Saibu Gas Holdings Co.,Ltd.  ...    18.8185      10.7152
+6   9433.T                                   KDDI Corporation  ...     6.4506      -1.1789
+7   9337.T                                      toridori Inc.  ...    33.5025      27.0068
+8   9286.T  Enex Infrastructure Investment Corporation - I...  ...   292.0191     262.8811
+9   9249.T                          Japan Ecosystem Co., Ltd.  ...     0.1078      -0.9105
+10  9022.T                      Central Japan Railway Company  ...    64.0594      53.7524
+11  8928.T                                 Anabuki Kosan Inc.  ...   -15.5423     -17.2563
+12  8886.T                              Wood Friends Co.,Ltd.  ...     7.8545      11.1944
+13  8860.T                           Fuji Corporation Limited  ...     1.0825       0.6613
+14  8425.T                    Mizuho Leasing Company, Limited  ...    15.6087      11.7170
+15  8399.T                       Bank of The Ryukyus, Limited  ...    24.2741      20.2229
+16  8346.T                                The Toho Bank, Ltd.  ...     8.3842       5.3831
+17  8081.T                                Kanaden Corporation  ...    25.2684      40.4877
+18  8070.T                             Tokyo Sangyo Co., Ltd.  ...     9.7595       6.4526
+19  8051.T                                Yamazen Corporation  ...    -0.0486      -9.8121
+
+[20 rows x 8 columns]
+2025-07-27 14:30:42,680 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:30:42,680 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:30:43,306 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=symbol&sort_order=asc
+2025-07-27 14:30:43,307 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:30:43,318 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:30:43,321 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY symbol ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:30:43,322 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:30:43,382 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...       macd  signal_line
+0   1301.T                                  Kyokuyo Co., Ltd.  ...    50.4712      38.1063
+1   1305.T              iFreeETF TOPIX (Yearly Dividend Type)  ...    38.4821      24.7051
+2   1306.T              NEXT FUNDS TOPIX Exchange Traded Fund  ...    38.5558      24.7335
+3   1308.T             Nikko Exchange Traded Index Fund TOPIX  ...    38.5959      25.0341
+4   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...  ...   767.4815     676.5489
+5   130A.T                                  Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ  ...     0.2772      -1.5570
+6   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund  ...    21.5434      11.6175
+7   1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund  ...     6.6639       4.4082
+8   131A.T                                            ＣＣＮグループ  ...     0.0363       0.0533
+9   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)  ...   658.8843     514.0663
+10  1330.T               Nikko Exchange Traded Index Fund 225  ...   671.1416     527.7553
+11  148A.T                                            ハッチ・ワーク  ...    42.5622      31.8332
+12  150A.T                                                ＪＳＨ  ...   -11.2916     -12.3952
+13  1566.T                    Listed Index Fund Emerging Bond  ...   440.1158     455.4455
+14  1573.T                           China Bear -1x HSCEI ETF  ...   -91.4731     -55.2384
+15  1757.T                               Souken Ace Co., Ltd.  ...    -1.5323      -1.6301
+16  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)  ...     2.9299       2.2029
+17  1835.T                            Totetsu Kogyo Co., Ltd.  ...    99.5051     109.9019
+18  1972.T                   Sanko Metal Industrial Co., Ltd.  ...   215.8824     187.8402
+19  2160.T                                     GNI Group Ltd.  ...  -137.5830    -111.6464
+
+[20 rows x 8 columns]
+2025-07-27 14:30:43,383 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:30:43,383 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:30:44,526 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=name&sort_order=asc
+2025-07-27 14:30:44,526 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:30:44,538 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:30:44,541 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:30:44,541 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:30:44,608 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name  ...      macd  signal_line
+0   3726.T                                   4Cs HD Co., Ltd.  ...  -23.4266     -12.7629
+1   3719.T                                 AI storm Co., Ltd.  ...   -1.5483      -2.4149
+2   8928.T                                 Anabuki Kosan Inc.  ...  -15.5423     -17.2563
+3   3662.T                           Ateam Holdings Co., Ltd.  ...   33.2175      31.7577
+4   3377.T                              BIKE O & COMPANY Ltd.  ...   -1.4627      -0.8264
+5   5015.T                                    BP Castrol K.K.  ...   -0.3506       0.1927
+6   8399.T                       Bank of The Ryukyus, Limited  ...   24.2741      20.2229
+7   9997.T                                  Belluna Co., Ltd.  ...   20.9967      19.1180
+8   3048.T                                    Bic Camera Inc.  ...    3.5538      15.7441
+9   9791.T                           Biken Techno Corporation  ...   -7.7922      -6.0071
+10  9022.T                      Central Japan Railway Company  ...   64.0594      53.7524
+11  1573.T                           China Bear -1x HSCEI ETF  ...  -91.4731     -55.2384
+12  4246.T                        DaikyoNishikawa Corporation  ...   17.3490      14.0597
+13  2816.T                                    Daisho Co.,Ltd.  ...    0.4406      -0.0749
+14  4324.T                                  Dentsu Group Inc.  ...  -23.8547     -31.3325
+15  9857.T                                   Eiwa Corporation  ...   14.2204      25.4591
+16  9286.T  Enex Infrastructure Investment Corporation - I...  ...  292.0191     262.8811
+17  6093.T                           Escrow Agent Japan, Inc.  ...   -1.2395      -1.4088
+18  5571.T                          Excite Holdings Co., Ltd.  ...   27.5542      23.2936
+19  8860.T                           Fuji Corporation Limited  ...    1.0825       0.6613
+
+[20 rows x 8 columns]
+2025-07-27 14:30:44,608 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:30:44,608 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:30:45,226 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=name&sort_order=desc
+2025-07-27 14:30:45,226 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:30:45,247 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:30:45,250 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY name DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:30:45,251 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:30:45,320 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                             name                         industry  ...      rsi      macd signal_line
+0   130A.T                                Ｖｅｒｉｔａｓ　Ｉｎ　Ｓｉｌｉｃｏ                    Biotechnology  ...  61.9529    0.2772     -1.5570
+1   150A.T                                              ＪＳＨ                    Conglomerates  ...  44.2105  -11.2916    -12.3952
+2   131A.T                                          ＣＣＮグループ                                   ...      NaN    0.0363      0.0533
+3   148A.T                                          ハッチ・ワーク      Specialty Business Services  ...  63.9759   42.5622     31.8332
+4   317A.T                                  エス・エム・エス・データテック  Information Technology Services  ...      NaN    0.0000      0.0000
+5   9337.T                                    toridori Inc.           Software - Application  ...  63.2267   33.5025     27.0068
+6   5132.T                                   pluszero, Inc.        Software - Infrastructure  ...  50.7530  -63.8709    -52.9713
+7   2857.T   iShares Germany Government Bond JPY Hedged ETF                                   ...  33.5247   -1.2154     -1.1743
+8   381A.T  iFreeETF US Treasury Bond 3-5 Year (NON HEDGED)                                   ...  71.3043    8.2518      6.2154
+9   1305.T            iFreeETF TOPIX (Yearly Dividend Type)                                   ...  68.8643   38.4821     24.7051
+10  1320.T        iFreeETF Nikkei225 (Yearly Dividend Type)                                   ...  67.7833  658.8843    514.0663
+11  6576.T                                Youkosha Co.,Ltd.                                   ...     None      None        None
+12  7294.T                               Yorozu Corporation                       Auto Parts  ...  60.0000    5.1047      2.3236
+13  8051.T                              Yamazen Corporation   Specialty Industrial Machinery  ...  84.8000   -0.0486     -9.8121
+14  9994.T                               Yamaya Corporation              Beverages - Brewers  ...  71.0335   17.5466    -20.2133
+15  8886.T                            Wood Friends Co.,Ltd.        Real Estate - Development  ...  51.7241    7.8545     11.1944
+16  6089.T                                 Will Group, Inc.   Staffing & Employment Services  ...  74.5455    8.0694      5.3278
+17  7995.T                                     Valqua, Ltd.   Specialty Industrial Machinery  ...  89.7436   72.0968     44.8225
+18  5071.T                                    VIS Co., Ltd.      Specialty Business Services  ...  72.7273   11.1304      7.5649
+19  7203.T                         Toyota Motor Corporation               Auto Manufacturers  ...  74.3755   47.2065      4.3285
+
+[20 rows x 8 columns]
+2025-07-27 14:30:45,321 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:30:45,321 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:30:46,221 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=industry&sort_order=asc
+2025-07-27 14:30:46,221 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:30:46,242 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:30:46,244 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY industry ASC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:30:46,244 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:30:46,316 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                                               name              industry  ...      rsi      macd signal_line
+0   6576.T                                  Youkosha Co.,Ltd.                        ...     None      None        None
+1   1320.T          iFreeETF Nikkei225 (Yearly Dividend Type)                        ...  67.7833  658.8843    514.0663
+2   2557.T                                    SMDAM TOPIX ETF                        ...  71.6724   37.0464     23.9367
+3   2857.T     iShares Germany Government Bond JPY Hedged ETF                        ...  33.5247   -1.2154     -1.1743
+4   381A.T    iFreeETF US Treasury Bond 3-5 Year (NON HEDGED)                        ...  71.3043    8.2518      6.2154
+5   1311.T      NEXT FUNDS TOPIX Core 30 Exchange Traded Fund                        ...  70.3842   21.5434     11.6175
+6   1308.T             Nikko Exchange Traded Index Fund TOPIX                        ...  65.4765   38.5959     25.0341
+7   2516.T                                 TSE Growth 250 ETF                        ...  71.0388    3.7515      1.7417
+8   1309.T  NEXT FUNDS ChinaAMC SSE50 Index Exchange Trade...                        ...  69.1076  767.4815    676.5489
+9   1330.T               Nikko Exchange Traded Index Fund 225                        ...  65.9800  671.1416    527.7553
+10  1306.T              NEXT FUNDS TOPIX Exchange Traded Fund                        ...  66.8538   38.5558     24.7335
+11  2839.T  MAXIS US Treasury Bond 7-10 Year ETF (JPY Hedged)                        ...  43.7086   -1.1649     -0.3133
+12  1566.T                    Listed Index Fund Emerging Bond                        ...  73.2020  440.1158    455.4455
+13  1573.T                           China Bear -1x HSCEI ETF                        ...  34.5133  -91.4731    -55.2384
+14  1319.T   NEXT FUNDS Nikkei 300 Index Exchange Traded Fund                        ...  71.3029    6.6639      4.4082
+15  181A.T     MAXIS US Treasury Bond 1-3 Year ETF (Unhedged)                        ...  51.6710    2.9299      2.2029
+16  131A.T                                            ＣＣＮグループ                        ...      NaN    0.0363      0.0533
+17  1305.T              iFreeETF TOPIX (Yearly Dividend Type)                        ...  68.8643   38.4821     24.7051
+18  4324.T                                  Dentsu Group Inc.  Advertising Agencies  ...  46.3340  -23.8547    -31.3325
+19  4170.T                              Kaizen Platform, Inc.  Advertising Agencies  ...  66.1017    4.4737      4.4955
+
+[20 rows x 8 columns]
+2025-07-27 14:30:46,317 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:30:46,317 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
+2025-07-27 14:30:46,930 - utils - INFO - [api.py:get_stocks:89] - 受信リクエスト: GET /stocks?page=1&limit=20&search=&sort_by=industry&sort_order=desc
+2025-07-27 14:30:46,930 - utils - INFO - [api.py:get_db_connection:64] - データベース接続を試行します: {'dbname': 'stock_analyzer', 'user': 'stock_user', 'password': '******', 'host': 'localhost', 'port': '5432'}
+2025-07-27 14:30:46,960 - utils - INFO - [api.py:get_db_connection:68] - データベース接続成功: stock_analyzer@localhost:5432
+2025-07-27 14:30:46,962 - utils - INFO - [api.py:get_stocks:152] - クエリを実行します: 
+            SELECT 
+                s.symbol, 
+                s.name, 
+                s.industry,
+                ti.golden_cross,
+                ti.dead_cross,
+                ti.rsi,
+                ti.macd,
+                ti.signal_line
+            FROM stocks s
+            LEFT JOIN (
+                SELECT DISTINCT ON (symbol) *
+                FROM technical_indicators
+                ORDER BY symbol, date DESC
+            ) ti ON s.symbol = ti.symbol
+            
+            ORDER BY industry DESC
+            LIMIT %s OFFSET %s
+        
+2025-07-27 14:30:46,962 - utils - INFO - [api.py:get_stocks:153] - 検索パラメータ: ()
+2025-07-27 14:30:47,031 - utils - INFO - [api.py:get_stocks:164] - 銘柄データ:
+    symbol                             name                        industry  ...      rsi      macd signal_line
+0   9536.T      Saibu Gas Holdings Co.,Ltd.       Utilities - Regulated Gas  ...  71.0784   18.8185     10.7152
+1   9433.T                 KDDI Corporation                Telecom Services  ...  52.5151    6.4506     -1.1789
+2   6089.T                 Will Group, Inc.  Staffing & Employment Services  ...  74.5455    8.0694      5.3278
+3   3048.T                  Bic Camera Inc.                Specialty Retail  ...  33.0116    3.5538     15.7441
+4   9997.T                Belluna Co., Ltd.                Specialty Retail  ...  75.5102   20.9967     19.1180
+5   7419.T               Nojima Corporation                Specialty Retail  ...  43.9716   36.6675     70.7670
+6   6336.T            Ishii Hyoki Co., Ltd.  Specialty Industrial Machinery  ...  53.5714    9.4195     11.2675
+7   6159.T       Micron Machinery Co., Ltd.  Specialty Industrial Machinery  ...  20.0000  -22.8371      7.0629
+8   6203.T             Howa Machinery, Ltd.  Specialty Industrial Machinery  ...  58.9928   -7.6295    -13.0974
+9   7995.T                     Valqua, Ltd.  Specialty Industrial Machinery  ...  89.7436   72.0968     44.8225
+10  8051.T              Yamazen Corporation  Specialty Industrial Machinery  ...  84.8000   -0.0486     -9.8121
+11  6237.T                  Iwaki Co., Ltd.  Specialty Industrial Machinery  ...  88.4685   83.3002     49.1727
+12  7012.T  Kawasaki Heavy Industries, Ltd.  Specialty Industrial Machinery  ...  69.6954  105.7503     46.5619
+13  148A.T                          ハッチ・ワーク     Specialty Business Services  ...  63.9759   42.5622     31.8332
+14  5071.T                    VIS Co., Ltd.     Specialty Business Services  ...  72.7273   11.1304      7.5649
+15  9791.T         Biken Techno Corporation     Specialty Business Services  ...  30.4348   -7.7922     -6.0071
+16  7914.T         Kyodo Printing Co., Ltd.     Specialty Business Services  ...  73.4568   19.7453     16.1862
+17  6093.T         Escrow Agent Japan, Inc.     Specialty Business Services  ...  47.0588   -1.2395     -1.4088
+18  3992.T                  Needs Well Inc.       Software - Infrastructure  ...  87.7551    4.2646     -2.7752
+19  5132.T                   pluszero, Inc.       Software - Infrastructure  ...  50.7530  -63.8709    -52.9713
+
+[20 rows x 8 columns]
+2025-07-27 14:30:47,031 - utils - INFO - [api.py:get_stocks:166] - 20件の銘柄データを取得しました (ページ 1/6)
+2025-07-27 14:30:47,031 - utils - INFO - [api.py:get_stocks:184] - データベース接続をクローズしました
