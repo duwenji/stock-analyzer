@@ -75,19 +75,56 @@ def get_db_connection():
         )
 
 @app.get("/stocks", response_model=dict)
-async def get_stocks(page: int = 1, limit: int = 20):
-    """銘柄一覧を取得するエンドポイント（ページネーション対応）"""
+async def get_stocks(
+    page: int = 1, 
+    limit: int = 20, 
+    search: Optional[str] = None,
+    sort_by: Optional[str] = "symbol",
+    sort_order: Optional[str] = "asc"
+):
+    """銘柄一覧を取得するエンドポイント（ページネーション・ソート対応）"""
     conn = None
     try:
         # リクエスト情報をログに出力
-        logger.info(f"受信リクエスト: GET /stocks?page={page}&limit={limit}")
+        logger.info(f"受信リクエスト: GET /stocks?page={page}&limit={limit}&search={search}&sort_by={sort_by}&sort_order={sort_order}")
+        
+        # 有効なソートカラムのリスト
+        valid_columns = ["symbol", "name", "industry", "golden_cross", "dead_cross", "rsi", "macd", "signal_line"]
+        
+        # ソートカラムの検証
+        if sort_by and sort_by not in valid_columns:
+            raise HTTPException(
+                status_code=400,
+                detail=f"無効なソートカラム: {sort_by}"
+            )
+            
+        # ソート順の検証
+        if sort_order.lower() not in ["asc", "desc"]:
+            raise HTTPException(
+                status_code=400,
+                detail=f"無効なソート順: {sort_order}"
+            )
+            
+        # ソート順の正規化
+        sort_order = sort_order.upper()
         
         conn = get_db_connection()
         cursor = conn.cursor()
         
+        # 検索条件の構築
+        search_condition = ""
+        search_params = ()
+        if search and search.strip():
+            search_term = f"%{search.strip().lower()}%"
+            search_condition = "WHERE LOWER(s.symbol) LIKE %s OR LOWER(s.name) LIKE %s"
+            search_params = (search_term, search_term)
+        
         # 総件数取得
-        count_query = "SELECT COUNT(*) FROM stocks"
-        cursor.execute(count_query)
+        count_query = f"SELECT COUNT(*) FROM stocks s {search_condition}"
+        if search and search.strip():
+            cursor.execute(count_query, search_params)
+        else:
+            cursor.execute(count_query)
         total = cursor.fetchone()['count']
         
         # データ取得（オフセット計算）
@@ -108,16 +145,22 @@ async def get_stocks(page: int = 1, limit: int = 20):
                 FROM technical_indicators
                 ORDER BY symbol, date DESC
             ) ti ON s.symbol = ti.symbol
-            ORDER BY s.symbol
-            LIMIT {limit} OFFSET {offset}
+            {search_condition}
+            ORDER BY {sort_by} {sort_order}
+            LIMIT %s OFFSET %s
         """
         logger.info(f"クエリを実行します: {data_query}")
+        logger.info(f"検索パラメータ: {search_params}")
         
-        cursor.execute(data_query)
+        # クエリ実行
+        if search and search.strip():
+            cursor.execute(data_query, search_params + (limit, offset))
+        else:
+            cursor.execute(data_query, (limit, offset))
+        
         stocks = cursor.fetchall()
         # 銘柄データをログ出力
         df = pd.DataFrame(stocks)
-        logger.info(f"銘柄データ各列の要約統計量:\n{df.describe()}")
         logger.info(f"銘柄データ:\n{df}")
         
         logger.info(f"{len(stocks)}件の銘柄データを取得しました (ページ {page}/{total//limit + 1})")

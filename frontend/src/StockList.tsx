@@ -32,6 +32,9 @@ const StockList: React.FC = () => {
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [chartImage, setChartImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>(''); // 検索用state
+  const [sortBy, setSortBy] = useState<string>('symbol'); // ソート用state
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc'); // ソート順state
 
   // カラム定義
   const columns: Column<Stock>[] = React.useMemo(() => [
@@ -125,9 +128,10 @@ const StockList: React.FC = () => {
     usePagination
   );
 
-  const fetchStocks = async (page: number, limit: number) => {
+  const fetchStocks = async (page: number, limit: number, term: string = '', sortField: string = sortBy, order: 'asc' | 'desc' = sortOrder) => {
     try {
-      const response = await axios.get(`http://localhost:8000/stocks?page=${page}&limit=${limit}`);
+      const url = `http://localhost:8000/stocks?page=${page}&limit=${limit}&search=${encodeURIComponent(term)}&sort_by=${sortField}&sort_order=${order}`;
+      const response = await axios.get(url);
       setStocks(response.data.stocks);
       setTotalItems(response.data.total);
       setLoading(false);
@@ -138,8 +142,22 @@ const StockList: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchStocks(currentPage, itemsPerPage);
-  }, [currentPage, itemsPerPage]);
+    fetchStocks(currentPage, itemsPerPage, searchTerm, sortBy, sortOrder);
+  }, [currentPage, itemsPerPage, searchTerm, sortBy, sortOrder]);
+  
+  // ソートハンドラ（No.列はソート対象外）
+  const handleSort = (columnId: string) => {
+    if (columnId === 'index') return; // No.列はソートしない
+    
+    if (sortBy === columnId) {
+      // 同じカラムの場合はソート順をトグル
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      // 新しいカラムの場合はデフォルトで昇順
+      setSortBy(columnId);
+      setSortOrder('asc');
+    }
+  };
 
   const handleRowClick = async (symbol: string) => {
     try {
@@ -150,6 +168,19 @@ const StockList: React.FC = () => {
     } catch (err) {
       setError('チャートの取得に失敗しました');
     }
+  };
+
+  // 検索実行ハンドラ
+  const handleSearch = () => {
+    setCurrentPage(1); // 検索時はページを1にリセット
+    fetchStocks(1, itemsPerPage, searchTerm);
+  };
+
+  // 検索リセットハンドラ
+  const handleReset = () => {
+    setSearchTerm('');
+    setCurrentPage(1);
+    fetchStocks(1, itemsPerPage, '');
   };
 
   const closeModal = () => {
@@ -255,6 +286,23 @@ const StockList: React.FC = () => {
     <div className="container">
       <h2 className="text-center">銘柄一覧</h2>
       
+      {/* 検索バー */}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="銘柄コード・企業名で検索..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+        />
+        <button onClick={handleSearch} className="search-button">
+          検索
+        </button>
+        <button onClick={handleReset} className="reset-button">
+          リセット
+        </button>
+      </div>
+      
       {renderPagination()}
       
       <div className="stock-table-container">
@@ -271,12 +319,14 @@ const StockList: React.FC = () => {
                 {headerGroup.headers.map((column: HeaderGroup<Stock>) => (
                   <th 
                     {...column.getHeaderProps()}
+                    onClick={() => handleSort(column.id)}
+                    className={column.id !== 'index' ? 'sortable-header' : ''}
                   >
                     <div className="header-cell">
                       {column.render('Header')}
-                      {(column as any).isSorted && (
+                      {column.id !== 'index' && sortBy === column.id && (
                         <span className="sort-indicator">
-                          {(column as any).isSortedDesc ? '▼' : '▲'}
+                          {sortOrder === 'asc' ? '▲' : '▼'}
                         </span>
                       )}
                     </div>

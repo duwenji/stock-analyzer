@@ -76,6 +76,43 @@
   transition: all 0.2s;
 }
 
+/* 検索バー */
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 10px;
+}
+
+.search-container input {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  width: 300px;
+}
+
+.search-container button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-container button:hover {
+  background-color: #1d4ed8;
+}
+
+.search-container .reset-button {
+  background-color: #64748b;
+}
+
+.search-container .reset-button:hover {
+  background-color: #475569;
+}
+
 .pagination-button:hover {
   background-color: #e2e8f0;
 }
