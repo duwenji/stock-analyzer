@@ -22,10 +22,6 @@ def plot_candlestick(symbol_df, symbol, company_name, output_dir='reports'):
         str: 保存された画像ファイルパス
     """
     try:
-        # データフレームの先頭と末尾をログ出力
-        logger.info(f"チャートデータ (head):\n{symbol_df.head()}")
-        logger.info(f"チャートデータ (tail):\n{symbol_df.tail()}")
-        
         # 出力ディレクトリ作成
         os.makedirs(output_dir, exist_ok=True)
         

@@ -2,6 +2,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
+import pandas as pd
+from chart_plotter import plot_candlestick
+import base64
 from dotenv import load_dotenv
 from utils import setup_backend_logger
 import psycopg2
@@ -112,6 +115,10 @@ async def get_stocks(page: int = 1, limit: int = 20):
         
         cursor.execute(data_query)
         stocks = cursor.fetchall()
+        # 銘柄データをログ出力
+        df = pd.DataFrame(stocks)
+        logger.info(f"銘柄データ各列の要約統計量:\n{df.describe()}")
+        logger.info(f"銘柄データ:\n{df}")
         
         logger.info(f"{len(stocks)}件の銘柄データを取得しました (ページ {page}/{total//limit + 1})")
         return {
@@ -161,17 +168,14 @@ async def get_chart(symbol: str):
         chart_data = cursor.fetchall()
         
         # 3. チャート生成
-        import pandas as pd
-        from chart_plotter import plot_candlestick
-        from io import BytesIO
-        import base64
-        
         df = pd.DataFrame(chart_data)
+        logger.info(f"チャートデータ:\n{df}")
+
         df['date'] = pd.to_datetime(df['date'])
         df.set_index('date', inplace=True)
         # 移動平均計算
         df['MA30'] = calculate_moving_average(df['close'])
-                        
+        
         # チャート生成
         output_path = plot_candlestick(df, symbol, company_name)
         

@@ -31,9 +31,26 @@ def fetch_jpx_tickers():
 jpx_df = fetch_jpx_tickers()
 print(f"JPXから {len(jpx_df)} 件の銘柄情報を取得しました")
 
-# テスト用に先頭10件のみに制限
-jpx_df = jpx_df.head(10)
-print("テストモード: 先頭10件のみ処理します")
+# トヨタ(7203.T)とシャープ(6753.T)を必ず含めつつ、ランダムに100件を選択
+required_tickers = ['7203.T', '6753.T']
+
+# 必ず含める銘柄を抽出
+required_rows = jpx_df[jpx_df['ticker'].isin(required_tickers)]
+
+# それ以外の銘柄からランダムにサンプリング (100 - 必須銘柄数)
+sample_size = 100 - len(required_rows)
+other_rows = jpx_df[~jpx_df['ticker'].isin(required_tickers)]
+
+# サンプリング可能な件数が不足する場合の処理
+if len(other_rows) < sample_size:
+    sample_size = len(other_rows)
+    print(f"警告: サンプリング可能な銘柄が不足しています。取得件数: {len(required_rows) + sample_size}件")
+
+sampled_rows = other_rows.sample(n=sample_size, random_state=42)
+
+# 必須銘柄とサンプリング銘柄を結合
+jpx_df = pd.concat([required_rows, sampled_rows])
+print(f"ランダムサンプリング: 必須銘柄{len(required_rows)}件 + ランダム{sample_size}件 = 合計{len(jpx_df)}件を処理します")
 
 # PostgreSQLデータベースに接続
 conn = psycopg2.connect(

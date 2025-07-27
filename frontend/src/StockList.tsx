@@ -29,6 +29,8 @@ const StockList: React.FC = () => {
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [chartImage, setChartImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // ソート状態管理
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Stock; direction: 'asc' | 'desc' } | null>(null);
 
   const fetchStocks = async (page: number, limit: number) => {
     try {
@@ -51,6 +53,38 @@ const StockList: React.FC = () => {
   useEffect(() => {
     fetchStocks(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
+
+  // ソート処理関数（undefined値対応）
+  const sortedStocks = React.useMemo(() => {
+    if (!sortConfig) return stocks;
+    
+    return [...stocks].sort((a, b) => {
+      const valA = a[sortConfig.key];
+      const valB = b[sortConfig.key];
+      
+      // undefined値を適切に扱う
+      if (valA === undefined && valB === undefined) return 0;
+      if (valA === undefined) return 1;
+      if (valB === undefined) return -1;
+      
+      if (valA < valB) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (valA > valB) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [stocks, sortConfig]);
+
+  // ソートハンドラー
+  const handleSort = (key: keyof Stock) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
 
   const handleRowClick = async (symbol: string) => {
     try {
@@ -93,10 +127,10 @@ const StockList: React.FC = () => {
         <button
           key={i}
           onClick={() => setCurrentPage(i)}
-          className={`px-3 py-1 mx-1 border rounded ${
+          className={`px-3 py-1 mx-1 border rounded transition-colors ${
             currentPage === i 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-white hover:bg-gray-100'
+              ? 'bg-indigo-500 text-white' 
+              : 'bg-white hover:bg-indigo-50'
           }`}
         >
           {i}
@@ -185,40 +219,53 @@ const StockList: React.FC = () => {
       {/* ページネーションコントロール（上部） */}
       {renderPagination()}
       
-      <div className="inline-block overflow-x-auto">
-        <table className="bg-white border border-gray-300">
+<div className="inline-block overflow-x-auto w-full my-4 relative max-h-[70vh]">
+        <table className="bg-white border border-gray-300 w-full">
         <thead>
-          <tr className="bg-gray-100">
-            <th className="py-2 px-4 border-b text-center">シンボル</th>
-            <th className="py-2 px-4 border-b text-center" style={{ textAlign: 'left' }}>企業名</th>
-            <th className="py-2 px-4 border-b text-center" style={{ textAlign: 'left' }}>業種</th>
-            <th className="py-2 px-4 border-b text-center">ゴールデンクロス</th>
-            <th className="py-2 px-4 border-b text-center">デッドクロス</th>
-            <th className="py-2 px-4 border-b text-center">RSI</th>
-            <th className="py-2 px-4 border-b text-center">MACD</th>
-            <th className="py-2 px-4 border-b text-center">シグナル</th>
+          <tr className="bg-indigo-600 text-white sticky top-0 z-10">
+            <th className="py-3 px-4 border-r border-gray-300 text-center w-16">No.</th>
+            <th 
+              className="py-3 px-4 border-r border-gray-300 text-center cursor-pointer hover:bg-indigo-700 transition-colors"
+              onClick={() => handleSort('symbol')}
+            >
+              シンボル {sortConfig?.key === 'symbol' && (
+                <span className="font-bold">
+                  {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                </span>
+              )}
+            </th>
+            <th className="py-3 px-4 border-r border-gray-300 text-left">企業名</th>
+            <th className="py-3 px-4 border-r border-gray-300 text-left">業種</th>
+            <th className="py-3 px-4 border-r border-gray-300 text-center">ゴールデンクロス</th>
+            <th className="py-3 px-4 border-r border-gray-300 text-center">デッドクロス</th>
+            <th className="py-3 px-4 border-r border-gray-300 text-center">RSI</th>
+            <th className="py-3 px-4 border-r border-gray-300 text-center">MACD</th>
+            <th className="py-3 px-4 text-center">シグナル</th>
           </tr>
         </thead>
-        <tbody>
-          {stocks.map((stock) => (
+        <tbody className="divide-y divide-gray-200">
+          {sortedStocks.map((stock, index) => (
             <tr 
               key={stock.symbol} 
-              className="hover:bg-gray-50 cursor-pointer"
+              className="hover:bg-indigo-50 cursor-pointer transition-colors"
               onClick={() => handleRowClick(stock.symbol)}
             >
-              <td className="py-2 px-4 border-b text-center">{stock.symbol}</td>
-              <td className="py-2 px-4 border-b" style={{ textAlign: 'left' }}>{stock.name}</td>
-              <td className="py-2 px-4 border-b" style={{ textAlign: 'left' }}>{stock.industry}</td>
-              <td className="py-2 px-4 border-b text-center">{stock.golden_cross ? "✓" : ""}</td>
-              <td className="py-2 px-4 border-b text-center">{stock.dead_cross ? "✓" : ""}</td>
-              <td className="py-2 px-4 border-b text-center">
-                {typeof stock.rsi === 'number' ? stock.rsi.toFixed(2) : '-'}
+              <td className="py-3 px-4 text-center border-r border-gray-300 font-medium">
+                {(currentPage - 1) * itemsPerPage + index + 1}
               </td>
-              <td className="py-2 px-4 border-b text-center">
-                {typeof stock.macd === 'number' ? stock.macd.toFixed(4) : '-'}
+              <td className="py-3 px-4 text-center border-r border-gray-300">{stock.symbol}</td>
+              <td className="py-3 px-4 text-left border-r border-gray-300">{stock.name}</td>
+              <td className="py-3 px-4 text-left border-r border-gray-300">{stock.industry}</td>
+              <td className="py-3 px-4 text-center border-r border-gray-300">{stock.golden_cross ? "✓" : ""}</td>
+              <td className="py-3 px-4 text-center border-r border-gray-300">{stock.dead_cross ? "✓" : ""}</td>
+              <td className="py-3 px-4 text-center border-r border-gray-300">
+                {typeof stock.rsi === 'number' ? stock.rsi.toFixed(2) : stock.rsi}
               </td>
-              <td className="py-2 px-4 border-b text-center">
-                {typeof stock.signal_line === 'number' ? stock.signal_line.toFixed(4) : '-'}
+              <td className="py-3 px-4 text-center border-r border-gray-300">
+                {typeof stock.macd === 'number' ? stock.macd.toFixed(4) : stock.macd}
+              </td>
+              <td className="py-3 px-4 text-center">
+                {typeof stock.signal_line === 'number' ? stock.signal_line.toFixed(4) : stock.signal_line}
               </td>
             </tr>
           ))}
