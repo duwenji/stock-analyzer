@@ -6,7 +6,10 @@ interface RecommendationParams {
   riskTolerance: string;
   strategy: string;
   symbols: string;
-  search: string;  // 検索条件フィールドを追加
+  search: string;
+  technical_filters?: {
+    [key: string]: [string, any];
+  };
 }
 
 const RecommendationForm: React.FC<{ onSubmit: (params: RecommendationParams) => void }> = ({ onSubmit }) => {
@@ -15,17 +18,41 @@ const RecommendationForm: React.FC<{ onSubmit: (params: RecommendationParams) =>
     riskTolerance: 'medium',
     strategy: 'growth',
     symbols: '',
-    search: ''  // 検索条件の初期値を追加
+    search: ''
   });
+  
+  // テクニカルフィルターの状態管理
+  const [rsiOperator, setRsiOperator] = useState<string>('');
+  const [rsiValue, setRsiValue] = useState<string>('');
+  const [goldenCross, setGoldenCross] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+  
+  // テクニカルフィルターの更新関数
+  const setTechFilter = () => {
+    const filters: {[key: string]: [string, any]} = {};
+    
+    if (rsiOperator && rsiValue) {
+      filters['rsi'] = [rsiOperator, parseFloat(rsiValue)];
+    }
+    
+    if (goldenCross) {
+      filters['golden_cross'] = ['==', 'true'];
+    }
+    
+    return filters;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    const params = {
+      ...formData,
+      technical_filters: setTechFilter()
+    };
+    onSubmit(params);
   };
 
   return (
@@ -94,6 +121,39 @@ const RecommendationForm: React.FC<{ onSubmit: (params: RecommendationParams) =>
             onChange={handleChange}
             placeholder="銘柄コードまたは会社名で検索"
           />
+        </div>
+        
+        <div className="form-group">
+          <h3>テクニカルフィルター</h3>
+          <div className="tech-filter">
+            <div>
+              <label>RSI: </label>
+              <select 
+                value={rsiOperator}
+                onChange={(e) => setRsiOperator(e.target.value)}
+              >
+                <option value="">選択</option>
+                <option value="<">以下</option>
+                <option value=">">以上</option>
+              </select>
+              <input 
+                type="number" 
+                min="0" 
+                max="100"
+                value={rsiValue}
+                onChange={(e) => setRsiValue(e.target.value)}
+                placeholder="値"
+              />
+            </div>
+            <div>
+              <label>ゴールデンクロス: </label>
+              <input 
+                type="checkbox"
+                checked={goldenCross}
+                onChange={(e) => setGoldenCross(e.target.checked)}
+              />
+            </div>
+          </div>
         </div>
         
         <button type="submit" className="submit-btn">推奨を生成</button>

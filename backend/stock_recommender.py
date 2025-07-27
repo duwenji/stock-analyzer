@@ -16,8 +16,18 @@ class StockRecommender:
     
     async def generate_recommendations(self, params: Dict) -> Dict:
         """銘柄推奨を生成"""
+        # テクニカル指標による銘柄フィルタリング
+        symbols = await self._filter_symbols_by_technical_indicators(
+            params.get("technical_filters", {})
+        )
+        
+        # ユーザー指定銘柄がある場合は上書き
+        user_symbols = params.get("symbols", [])
+        if user_symbols:
+            symbols = user_symbols
+        
         # データ取得
-        data = await self._fetch_data(params.get("symbols", []))
+        data = await self._fetch_data(symbols)
         
         # DeepSeek API呼び出し
         recommendations = await self._call_deepseek(params, data)
@@ -26,6 +36,36 @@ class StockRecommender:
             "status": "success",
             "data": recommendations
         }
+        
+    async def _filter_symbols_by_technical_indicators(self, filters: Dict) -> List[str]:
+        """テクニカル指標に基づき銘柄をフィルタリング"""
+        if not filters:
+            return []
+            
+        # 最新のテクニカル指標を取得
+        query = """
+            SELECT DISTINCT ON (symbol) symbol, *
+            FROM technical_indicators
+            ORDER BY symbol, date DESC
+        """
+        tech_data = pd.read_sql_query(query, self.engine)
+        
+        # フィルタリング条件を適用
+        filtered_symbols = []
+        for _, row in tech_data.iterrows():
+            meets_conditions = True
+            for indicator, (operator, value) in filters.items():
+                if operator == "<" and not (row[indicator] < value):
+                    meets_conditions = False
+                elif operator == ">" and not (row[indicator] > value):
+                    meets_conditions = False
+                elif operator == "==" and not (row[indicator] == value):
+                    meets_conditions = False
+                    
+            if meets_conditions:
+                filtered_symbols.append(row["symbol"])
+                
+        return filtered_symbols
     
     async def _fetch_data(self, symbols: List[str]) -> Dict:
         """マルチソースからデータ取得"""

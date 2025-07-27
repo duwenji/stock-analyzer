@@ -12632,3 +12632,4 @@ TypeError: tuple indices must be integers or slices, not str
 
 [20 rows x 8 columns]
 2025-07-27 21:26:21,877 - utils - INFO - [api.py:get_stocks:131] - 20件の銘柄データを取得しました (ページ 3/6)
+2025-07-27 21:55:23,628 - utils - INFO - [api.py:<module>:48] - CORSミドルウェアが設定されました: すべてのオリジンを許可
