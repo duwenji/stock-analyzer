@@ -5,6 +5,7 @@
   margin: 20px auto;
   overflow-x: auto;
   max-width: 100%;
+  width: 100%; /* コンテナ幅を100%に設定 */
 }
 
 /* テーブル本体 */
@@ -15,6 +16,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
+  margin: 0 auto; /* 中央寄せを保証 */
+  max-width: 1200px; /* 最大幅を設定 */
 }
 
 /* テーブルヘッダー */
