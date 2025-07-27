@@ -31,6 +31,10 @@ def fetch_jpx_tickers():
 jpx_df = fetch_jpx_tickers()
 print(f"JPXから {len(jpx_df)} 件の銘柄情報を取得しました")
 
+# テスト用に先頭10件のみに制限
+jpx_df = jpx_df.head(10)
+print("テストモード: 先頭10件のみ処理します")
+
 # PostgreSQLデータベースに接続
 conn = psycopg2.connect(
     host="localhost",

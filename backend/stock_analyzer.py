@@ -1,7 +1,7 @@
 import argparse
 import pandas as pd
 import os
-from .utils import get_db_engine, get_company_names
+from utils import get_db_engine, get_company_names
 from technical_indicators import calculate_and_store, calculate_moving_average
 from chart_plotter import plot_candlestick
 from report_generator import init_xml_report, finalize_xml_report, generate_stock_entry
