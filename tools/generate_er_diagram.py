@@ -1,6 +1,6 @@
 import os
 from sqlalchemy import inspect
-from utils import get_db_engine
+from ..backend.utils import get_db_engine
 
 def generate_er_diagram():
     # docsディレクトリ作成

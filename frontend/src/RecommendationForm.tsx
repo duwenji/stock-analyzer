@@ -6,6 +6,7 @@ interface RecommendationParams {
   riskTolerance: string;
   strategy: string;
   symbols: string;
+  search: string;  // 検索条件フィールドを追加
 }
 
 const RecommendationForm: React.FC<{ onSubmit: (params: RecommendationParams) => void }> = ({ onSubmit }) => {
@@ -13,7 +14,8 @@ const RecommendationForm: React.FC<{ onSubmit: (params: RecommendationParams) =>
     principal: '1000000',
     riskTolerance: 'medium',
     strategy: 'growth',
-    symbols: ''
+    symbols: '',
+    search: ''  // 検索条件の初期値を追加
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -80,6 +82,17 @@ const RecommendationForm: React.FC<{ onSubmit: (params: RecommendationParams) =>
             value={formData.symbols}
             onChange={handleChange}
             placeholder="例: 7203,9984,9432"
+          />
+        </div>
+        
+        <div className="form-group">
+          <label>検索条件:</label>
+          <input
+            type="text"
+            name="search"
+            value={formData.search}
+            onChange={handleChange}
+            placeholder="銘柄コードまたは会社名で検索"
           />
         </div>
         

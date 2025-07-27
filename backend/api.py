@@ -163,6 +163,7 @@ class RecommendationRequest(BaseModel):
     risk_tolerance: str  # 例: "低", "中", "高"
     strategy: str  # 例: "成長株", "配当株", "バランス"
     symbols: Optional[List[str]] = None  # 特定銘柄指定（オプション）
+    search: Optional[str] = None  # 検索条件（追加）
 
 @app.post("/api/recommend", response_model=dict)
 async def get_recommendations(request: RecommendationRequest):
@@ -170,8 +171,30 @@ async def get_recommendations(request: RecommendationRequest):
     try:
         logger.info(f"受信リクエスト: POST /api/recommend - {request.dict()}")
         
-        # 推奨生成
-        result = await recommend_stocks(request.dict())
+        # 検索条件が指定された場合、対象銘柄を取得
+        symbols = request.symbols
+        if request.search:
+            engine = get_db_engine()
+            with engine.connect() as conn:
+                search_condition = ""
+                search_params = {}
+                if request.search.strip():
+                    search_term = f"%{request.search.strip().lower()}%"
+                    search_condition = "WHERE LOWER(s.symbol) LIKE :search_term OR LOWER(s.name) LIKE :search_term"
+                    search_params = {"search_term": search_term}
+                
+                query = f"""
+                    SELECT s.symbol
+                    FROM stocks s
+                    {search_condition}
+                """
+                result = conn.execute(text(query), search_params)
+                symbols = [row.symbol for row in result]
+        
+        # 推奨生成（検索条件を適用）
+        params = request.dict()
+        params['symbols'] = symbols
+        result = await recommend_stocks(params)
         
         if "error" in result.get("data", {}):
             raise HTTPException(
