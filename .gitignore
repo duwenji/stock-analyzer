@@ -2,4 +2,5 @@
 /sample
 reports/
 __pycache__/
-backend/logs/stock-analyzer-backend.log
+backend/private/.env
+backend/logs

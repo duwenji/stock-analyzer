@@ -5,7 +5,6 @@ import os
 import pandas as pd
 from chart_plotter import plot_candlestick
 import base64
-from dotenv import load_dotenv
 from utils import setup_backend_logger, get_db_engine  # get_db_engineを追加インポート
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
@@ -15,9 +14,6 @@ from stock_recommender import recommend_stocks
 
 # ロギング設定の初期化（バックエンド全体で共通）
 logger = setup_backend_logger()
-
-# 環境変数の読み込み
-load_dotenv()
 
 # レスポンスモデルの定義
 class StockResponse(BaseModel):
@@ -195,7 +191,8 @@ async def get_recommendations(request: RecommendationRequest):
         params = request.dict()
         params['symbols'] = symbols
         result = await recommend_stocks(params)
-        
+        logger.info(f"推奨生成結果: {result}")
+
         if "error" in result.get("data", {}):
             raise HTTPException(
                 status_code=500,
@@ -290,4 +287,8 @@ async def get_chart(symbol: str):
 
 if __name__ == "__main__":
     import uvicorn
+    from utils import initialize_environment
+
+    # 環境初期化
+    initialize_environment()
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -3,10 +3,10 @@ import psycopg2
 import os
 import pandas as pd
 import requests
-from dotenv import load_dotenv
+from utils import initialize_environment
 
-# 環境変数の読み込み
-load_dotenv()
+# 環境初期化
+initialize_environment()
 
 # JPXから全上場銘柄リストを取得（正しいURL使用）
 def fetch_jpx_tickers():

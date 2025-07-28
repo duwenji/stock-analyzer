@@ -3,10 +3,11 @@ import psycopg2
 import pandas as pd
 from datetime import datetime, timedelta, timezone
 import os
-from dotenv import load_dotenv
 
-# 環境変数の読み込み
-load_dotenv()
+from utils import initialize_environment
+
+# 環境初期化
+initialize_environment()
 
 # PostgreSQLデータベースに接続
 conn = psycopg2.connect(

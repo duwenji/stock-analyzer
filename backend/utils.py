@@ -5,8 +5,17 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from matplotlib.font_manager import FontProperties
 
-# 環境変数の読み込み
-load_dotenv()
+_env_loaded = False
+
+def initialize_environment():
+    """環境変数を初期化する（アプリケーション起動時に1回だけ呼び出す）"""
+    global _env_loaded
+    if not _env_loaded:
+        load_dotenv()
+        _env_loaded = True
+        logging.info("環境変数を初期化しました")
+
+# 環境変数の読み込みはinitialize_environment()で一元管理
 
 def setup_backend_logger():
     """

@@ -1,21 +1,29 @@
 import os
-import asyncio
 import json
 import httpx
 import pandas as pd
 from typing import Dict, List
-from utils import get_db_engine
+from openai import OpenAI
 
-DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
-DEEPSEEK_MODEL = "deepseek-chat"
+from utils import get_db_engine, setup_backend_logger
+
+logger = setup_backend_logger()
+
+DEEPSEEK_API_URL = "https://api.deepseek.com"
+DEEPSEEK_MODEL = "deepseek-reasoner"
 
 class StockRecommender:
     def __init__(self):
         self.api_key = os.getenv("DEEPSEEK_API_KEY")
         self.engine = get_db_engine()
+
+        logger.info(f"Calling DeepSeek API with masked API key: {self.api_key[:2]}***")
+        self.ai_client = OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"), base_url=DEEPSEEK_API_URL)
     
     async def generate_recommendations(self, params: Dict) -> Dict:
         """銘柄推奨を生成"""
+        logger.info(f"Starting generate_recommendations with params: {params}")
+        
         # テクニカル指標による銘柄フィルタリング
         symbols = await self._filter_symbols_by_technical_indicators(
             params.get("technical_filters", {})
@@ -31,7 +39,8 @@ class StockRecommender:
         
         # DeepSeek API呼び出し
         recommendations = await self._call_deepseek(params, data)
-        
+        logger.info(f"Completed generate_recommendations: {recommendations}")
+
         return {
             "status": "success",
             "data": recommendations
@@ -39,7 +48,9 @@ class StockRecommender:
         
     async def _filter_symbols_by_technical_indicators(self, filters: Dict) -> List[str]:
         """テクニカル指標に基づき銘柄をフィルタリング"""
+        logger.debug(f"Filtering symbols with technical filters: {filters}")
         if not filters:
+            logger.debug("No filters provided, returning empty list")
             return []
             
         # 最新のテクニカル指標を取得
@@ -65,6 +76,7 @@ class StockRecommender:
             if meets_conditions:
                 filtered_symbols.append(row["symbol"])
                 
+        logger.info(f"Filtered {len(filtered_symbols)} symbols matching criteria")
         return filtered_symbols
     
     async def _fetch_data(self, symbols: List[str]) -> Dict:
@@ -122,37 +134,24 @@ class StockRecommender:
         return pd.read_sql_query(query, self.engine).to_dict('records')
     
     async def _call_deepseek(self, params: Dict, data: Dict) -> Dict:
-        """DeepSeek APIを呼び出し"""
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
-        
         prompt = self._build_prompt(params, data)
-        
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                DEEPSEEK_API_URL,
-                headers=headers,
-                json={
-                    "model": DEEPSEEK_MODEL,
-                    "messages": [{"role": "user", "content": prompt}],
-                    "temperature": 0.7,
-                    "max_tokens": 2000
-                }
-            )
-            
-            if response.status_code != 200:
-                return {"error": "API呼び出し失敗"}
-            
-            result = response.json()
-            return self._parse_response(result)
+        logger.info(f"prompt: {prompt}")
+
+        response = self.ai_client.chat.completions.create(
+            model=DEEPSEEK_MODEL,
+            messages=[
+                {"role": "system", "content": "あなたはプロの株式アナリストです。ユーザが提供された要素に基づき投資銘柄を推奨してください。"},
+                {"role": "user", "content": prompt},
+            ],
+            stream=False
+        )
+
+        # logger.info(f"response: {response}")
+        return self._parse_response(response)
     
     def _build_prompt(self, params: Dict, data: Dict) -> str:
         """プロンプトを構築"""
         return f"""
-あなたはプロの株式アナリストです。以下の要素に基づき投資銘柄を推奨してください：
-
 ### ユーザー情報:
 - 元金: {params.get('principal', 'N/A')}円
 - リスク許容度: {params.get('risk_tolerance', '中')}
@@ -181,9 +180,12 @@ class StockRecommender:
     def _parse_response(self, api_response: Dict) -> Dict:
         """APIレスポンスを解析"""
         try:
-            content = api_response["choices"][0]["message"]["content"]
+            content = api_response.choices[0].message.content
+            logger.info(f"推奨コンテンツ: {content}")
+            
             return json.loads(content)
-        except (KeyError, json.JSONDecodeError):
+        except (KeyError, json.JSONDecodeError) as e:
+            logger.error(f"Failed to parse API response: {str(e)}. Response: {api_response}")
             return {"error": "レスポンス解析エラー"}
 
 # 非同期実行ヘルパー

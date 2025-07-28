@@ -1,13 +1,16 @@
 import argparse
 import pandas as pd
 import os
-from utils import get_db_engine, get_company_names
+from utils import get_db_engine, get_company_names, initialize_environment
 from technical_indicators import calculate_and_store, calculate_moving_average
 from chart_plotter import plot_candlestick
 from report_generator import init_xml_report, finalize_xml_report, generate_stock_entry
 
 def main():
     try:
+        # 環境初期化
+        initialize_environment()
+        
         # 引数解析
         parser = argparse.ArgumentParser(description='株価分析ツール')
         parser.add_argument('--plot-charts', action='store_true', help='チャートを描画する')
