@@ -73,7 +73,7 @@ const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data })
                     </div>
                   </div>
                 </td>
-                <td>{item.allocation}%</td>
+                <td>{item.allocation}</td>
                 <td className="reason">{item.reason}</td>
               </tr>
             ))}
