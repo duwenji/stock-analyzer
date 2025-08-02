@@ -191,7 +191,6 @@ async def get_recommendations(request: RecommendationRequest):
         params = request.dict()
         params['symbols'] = symbols
         result = await recommend_stocks(params)
-        logger.info(f"推奨生成結果: {result}")
 
         if "error" in result.get("data", {}):
             raise HTTPException(
@@ -199,6 +198,7 @@ async def get_recommendations(request: RecommendationRequest):
                 detail=result["data"]["error"]
             )
             
+        logger.info(f"推奨生成結果: {result}")
         return result
     except Exception as e:
         logger.exception(f"推奨生成エラー: {str(e)}")

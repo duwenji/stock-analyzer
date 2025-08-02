@@ -161,7 +161,37 @@ class DeepSeekDirectRecommender(IStockRecommender):
         """APIレスポンスを解析"""
         try:
             content = response.choices[0].message.content
-            return json.loads(content)
+            
+            # Check for empty/invalid response
+            if not content or not content.strip():
+                logger.error("Empty response received from API")
+                return {"error": "Empty API response"}
+                
+            # Extract JSON from Markdown code block if present
+            if '```json' in content:
+                json_start = content.find('{', content.find('```json'))
+                json_end = content.rfind('}') + 1
+                json_str = content[json_start:json_end]
+            else:
+                # Try to find the first { and last } as fallback
+                json_start = content.find('{')
+                json_end = content.rfind('}') + 1
+                json_str = content[json_start:json_end] if json_start != -1 and json_end != 0 else content
+                
+            # Remove any comments or non-JSON content
+            json_str = '\n'.join(line for line in json_str.split('\n') 
+                         if not line.strip().startswith('//') and line.strip())
+                
+            # Validate JSON structure
+            if not (json_str.startswith('{') and json_str.endswith('}')):
+                logger.error(f"Invalid JSON structure in response: {json_str[:200]}...")
+                return {"error": "Invalid JSON structure"}
+                
+            return json.loads(json_str)
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parse error: {str(e)}")
+            logger.error(f"Response Content (truncated): {content[:200]}...")
+            return {"error": f"JSON parse error: {str(e)}"}
         except Exception as e:
-            logger.error(f"Response parse error: {str(e)}")
+            logger.exception(f"Unexpected error parsing response: {str(e)}")
             return {"error": str(e)}

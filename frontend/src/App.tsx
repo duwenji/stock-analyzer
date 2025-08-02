@@ -40,6 +40,7 @@ function App() {
       }
       
       const data = await response.json();
+      console.log("API response data:", JSON.stringify(data, null, 2));
       setRecommendationData(data);
     } catch (err) {
       setError('推奨生成中にエラーが発生しました。詳細はコンソールを確認してください。');
@@ -80,7 +81,7 @@ function App() {
             {isLoading && <div className="loading">推奨を生成中...</div>}
             {error && <div className="error">{error}</div>}
             
-            <RecommendationResults data={recommendationData?.data} />
+            <RecommendationResults data={recommendationData} />
           </div>
         )}
       </main>
