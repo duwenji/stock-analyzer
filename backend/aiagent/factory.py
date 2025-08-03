@@ -1,5 +1,6 @@
 from .interface import IStockRecommender
 from .deepseek_direct import DeepSeekDirectRecommender
+from .mcp_agent import McpAgent
 import os
 
 class RecommenderFactory:
@@ -10,12 +11,11 @@ class RecommenderFactory:
         Returns:
             IStockRecommender: 推奨クラスのインスタンス
         """
-        mode = os.getenv('RECOMMENDER_MODE', 'direct').lower()
+        mode = os.getenv('AGENT_TYPE', 'direct').lower()
         
         if mode == 'direct':
             return DeepSeekDirectRecommender()
-        # 将来のMCP実装用
-        # elif mode == 'mcp':
-        #     return MCPRecommender()
+        elif mode == 'mcpagent':
+            return McpAgent()
         
         raise ValueError(f"Unknown recommender mode: {mode}")
