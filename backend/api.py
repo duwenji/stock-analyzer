@@ -13,7 +13,7 @@ from technical_indicators import calculate_moving_average
 from stock_recommender import recommend_stocks
 
 # ロギング設定の初期化（バックエンド全体で共通）
-logger = setup_backend_logger()
+logger = setup_backend_logger(__name__)
 
 # レスポンスモデルの定義
 class StockResponse(BaseModel):
@@ -188,7 +188,7 @@ async def get_recommendations(request: RecommendationRequest):
                 symbols = [row.symbol for row in result]
         
         # 推奨生成（検索条件を適用）
-        params = request.dict()
+        params = request.model_dump()
         params['symbols'] = symbols
         result = await recommend_stocks(params)
 

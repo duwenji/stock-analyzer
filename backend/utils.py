@@ -17,21 +17,24 @@ def initialize_environment():
 
 # 環境変数の読み込みはinitialize_environment()で一元管理
 
-def setup_backend_logger():
+def setup_backend_logger(name=__name__):
     """
     バックエンド全体のロガー設定（1回だけ実行）
     ファイル名、関数名、行番号を含む詳細なログフォーマット
+    
+    Args:
+        name (str): ロガー名 (デフォルトはモジュール名 __name__)
     """
     if not logging.getLogger().hasHandlers():
         logging.basicConfig(
-            level=logging.INFO,
+            level=logging.DEBUG,
             format='%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(funcName)s:%(lineno)d] - %(message)s',
             handlers=[
                 logging.FileHandler("logs/stock-analyzer-backend.log"),
                 logging.StreamHandler()
             ]
         )
-    return logging.getLogger(__name__)
+    return logging.getLogger(name)
 
 def get_db_engine():
     """

@@ -7,7 +7,7 @@ from openai import OpenAI
 from .interface import IStockRecommender
 from utils import get_db_engine, setup_backend_logger
 
-logger = setup_backend_logger()
+logger = setup_backend_logger(__name__)
 
 DEEPSEEK_API_URL = "https://api.deepseek.com"
 DEEPSEEK_MODEL = "deepseek-reasoner"
@@ -41,33 +41,32 @@ class DeepSeekDirectRecommender(IStockRecommender):
         logger.debug(f"Filtering symbols with params: {params}")
         filters = params.get("technical_filters", {})
         
-        if not filters:
-            logger.debug("No filters provided, returning empty list")
-            return []
-            
         # 最新のテクニカル指標を取得
         query = """
-            SELECT DISTINCT ON (symbol) symbol, *
+            SELECT DISTINCT ON (symbol) symbol
             FROM technical_indicators
-            ORDER BY symbol, date DESC
+            ORDER BY symbol DESC
         """
+        logger.debug(query)
         tech_data = pd.read_sql_query(query, self.engine)
+        # logger.debug("tech_data:", tech_data)
         
         # フィルタリング条件を適用
         filtered_symbols = []
         for _, row in tech_data.iterrows():
             meets_conditions = True
-            for indicator, (operator, value) in filters.items():
-                if operator == "<" and not (row[indicator] < value):
-                    meets_conditions = False
-                elif operator == ">" and not (row[indicator] > value):
-                    meets_conditions = False
-                elif operator == "==" and not (row[indicator] == value):
-                    meets_conditions = False
+            if filters:
+                for indicator, (operator, value) in filters.items():
+                    if operator == "<" and not (row[indicator] < value):
+                        meets_conditions = False
+                    elif operator == ">" and not (row[indicator] > value):
+                        meets_conditions = False
+                    elif operator == "==" and not (row[indicator] == value):
+                        meets_conditions = False
                     
             if meets_conditions:
                 filtered_symbols.append(row["symbol"])
-                
+        
         logger.info(f"Filtered {len(filtered_symbols)} symbols matching criteria")
         return filtered_symbols
 
@@ -75,8 +74,8 @@ class DeepSeekDirectRecommender(IStockRecommender):
         """必要なデータを取得"""
         return {
             "news": await self._fetch_news(),
-            "technical_indicators": self._fetch_technical_indicators(symbols),
-            "price_history": self._fetch_price_history(symbols)
+            "technical_indicators": self._fetch_technical_indicators(symbols, limit=3),
+            "price_history": self._fetch_price_history(symbols, limit=3)
         }
 
     async def _fetch_news(self) -> List[Dict]:
@@ -87,30 +86,32 @@ class DeepSeekDirectRecommender(IStockRecommender):
             "source": "Bloomberg"
         }]
 
-    def _fetch_technical_indicators(self, symbols: List[str]) -> List[Dict]:
+    def _fetch_technical_indicators(self, symbols: List[str], limit=10) -> List[Dict]:
         """テクニカル指標を取得"""
         if not symbols:
             return []
             
         query = f"""
-            SELECT * FROM technical_indicators
+            SELECT symbol, to_char(date, 'YYYY/MM/DD') as date, golden_cross, dead_cross, rsi, macd, signal_line FROM technical_indicators
             WHERE symbol IN ({','.join([f"'{s}'" for s in symbols])})
             ORDER BY date DESC
-            LIMIT 30
+            LIMIT {limit}
         """
+        logger.debug(query)
         return pd.read_sql_query(query, self.engine).to_dict('records')
 
-    def _fetch_price_history(self, symbols: List[str]) -> List[Dict]:
+    def _fetch_price_history(self, symbols: List[str], limit=100) -> List[Dict]:
         """株価履歴を取得"""
         if not symbols:
             return []
             
         query = f"""
-            SELECT * FROM stock_prices
+            SELECT symbol, to_char(date, 'YYYY/MM/DD') as date, open, high, low, close, volume FROM stock_prices
             WHERE symbol IN ({','.join([f"'{s}'" for s in symbols])})
-            ORDER BY date DESC
-            LIMIT 90
+            ORDER BY symbol, date DESC
+            LIMIT {limit}
         """
+        logger.debug(query)
         return pd.read_sql_query(query, self.engine).to_dict('records')
 
     async def _call_deepseek(self, params: Dict, data: Dict) -> Dict:
@@ -138,9 +139,9 @@ class DeepSeekDirectRecommender(IStockRecommender):
 - 投資方針: {params.get('strategy', '成長株重視')}
 
 ### 利用可能データ:
-1. ニュース: {json.dumps(data.get('news', []), ensure_ascii=False, indent=2)}
-2. テクニカル指標: {json.dumps(data.get('technical_indicators', []), ensure_ascii=False, indent=2)}
-3. 過去価格: {json.dumps(data.get('price_history', []), ensure_ascii=False, indent=2)}
+1. ニュース: {json.dumps(data.get('news', []), ensure_ascii=False)}
+2. テクニカル指標: {json.dumps(data.get('technical_indicators', []), ensure_ascii=False)}
+3. 過去価格: {json.dumps(data.get('price_history', []), ensure_ascii=False)}
 
 ### 出力形式:
 {{
