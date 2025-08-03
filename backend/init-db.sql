@@ -8,8 +8,15 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS stocks (
     id SERIAL PRIMARY KEY,
     symbol TEXT NOT NULL UNIQUE,
-    name TEXT,
-    industry TEXT,
+    code TEXT NOT NULL,
+    name TEXT NOT NULL,
+    market_category TEXT,
+    industry_code_33 TEXT,
+    industry_name_33 TEXT,
+    industry_code_17 TEXT,
+    industry_name_17 TEXT,
+    scale_code TEXT,
+    scale_name TEXT,
     last_fetched TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
