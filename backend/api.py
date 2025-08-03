@@ -97,7 +97,7 @@ async def get_stocks(
                 SELECT 
                     s.symbol, 
                     s.name, 
-                    s.industry,
+                    industry_name_33 as industry,
                     ti.golden_cross,
                     ti.dead_cross,
                     ti.rsi,

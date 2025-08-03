@@ -30,7 +30,7 @@ def setup_backend_logger(name=__name__):
             level=logging.DEBUG,
             format='%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(funcName)s:%(lineno)d] - %(message)s',
             handlers=[
-                logging.FileHandler("logs/stock-analyzer-backend.log"),
+                logging.FileHandler(f"logs/stock-analyzer-{__name__}.log"),
                 logging.StreamHandler()
             ]
         )
