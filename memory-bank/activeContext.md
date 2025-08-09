@@ -7,19 +7,23 @@
 - プロトタイプの安定化と改善
 - 日本語フォント表示問題の解決
 - レポート自動更新システムの設計
+- AIエージェントシステムの設計
+  - Evaluator-Optimizerワークフローの実装
+  - DeepSeek API統合の完成
 
 ## 直近の変更
-- stock_data_importer.py: データ取得ロジックの最適化
-- stock_analyzer.py: RSI指標の追加実装
-- レポート生成: 複数銘柄比較機能の追加
-- メモリバンクファイルの整合性向上
-- requirements.txt: 依存関係の更新（certifi, fonttools, multitasking, numpy）
+- stock_analyzer.py: Evaluator-Optimizerワークフローの統合
+- report_generator.py: AI推奨表示機能の追加
+- evaluator_optimizer.py: 株式分析用Evaluator-Optimizerの実装
+- deepseek_augmented.py: DeepSeek LLMラッパーの実装
+- .env.example: APIキー設定テンプレートの追加
 
 ## 次のステップ
-1. matplotlibの日本語フォント設定を修正
-2. タスクスケジューラによる定期実行機能の実装
-3. 新しいテクニカル指標（MACD）の追加
-4. レポートテンプレートのカスタマイズ機能開発
+1. Evaluator-Optimizerワークフローのテストと調整
+2. レポートのAI推奨表示の改善
+3. タスクスケジューラによる定期実行機能の実装
+4. 新しいテクニカル指標（MACD）の追加
+5. レポートテンプレートのカスタマイズ機能開発
 
 ## 検討事項
 - データ更新戦略（リアルタイム vs バッチ）

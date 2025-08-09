@@ -12,12 +12,16 @@
 - データ処理: pandas
 - 可視化: matplotlib
 - データベース: PostgreSQL
+- AIエージェント: Anthropic API, LangChain
+- プロンプトエンジニアリング: 構造化プロンプトテンプレート
 
 ## 主要ライブラリ
 - yfinance: 株価データ取得
 - pandas: データ分析と処理
 - matplotlib: チャート生成
 - psycopg2: データベース管理
+- anthropic: Anthropic APIクライアント
+- langchain: エージェントフレームワーク
 
 ## テストツール
 - 単体テスト: pytest

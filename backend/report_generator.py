@@ -23,7 +23,7 @@ def finalize_xml_report(file_path):
         print(f"レポート終了処理エラー: {str(e)}")
         return False
 
-def generate_stock_entry(symbol_df, symbol, company_name, chart_path):
+def generate_stock_entry(symbol_df, symbol, company_name, chart_path, ai_recommendation=None):
     """
     銘柄ごとのXML要素を生成
     
@@ -32,6 +32,7 @@ def generate_stock_entry(symbol_df, symbol, company_name, chart_path):
         symbol (str): 銘柄シンボル
         company_name (str): 企業名
         chart_path (str): チャート画像パス
+        ai_recommendation (dict): AI分析結果
     
     Returns:
         str: XML文字列
@@ -70,6 +71,25 @@ def generate_stock_entry(symbol_df, symbol, company_name, chart_path):
         # クロス判定
         ET.SubElement(indicators_elem, "GoldenCross").text = '有' if symbol_df['golden_cross'].iloc[-1] else '無'
         ET.SubElement(indicators_elem, "DeadCross").text = '有' if symbol_df['dead_cross'].iloc[-1] else '無'
+        
+        # AI推奨要素（存在する場合）
+        if ai_recommendation:
+            ai_elem = ET.SubElement(stock_elem, "AIRecommendation")
+            
+            # リスク評価
+            risk_elem = ET.SubElement(ai_elem, "RiskAssessment")
+            risk_elem.set("score", str(ai_recommendation.get('risk_score', 0)))
+            risk_elem.set("level", ai_recommendation.get('risk_level', 'N/A'))
+            
+            # 収益評価
+            return_elem = ET.SubElement(ai_elem, "ReturnAssessment")
+            return_elem.set("score", str(ai_recommendation.get('return_score', 0)))
+            return_elem.set("level", ai_recommendation.get('return_level', 'N/A'))
+            
+            # 総合評価
+            ET.SubElement(ai_elem, "OverallRating").text = ai_recommendation.get('overall_rating', 'N/A')
+            ET.SubElement(ai_elem, "Recommendation").text = ai_recommendation.get('recommendation', 'N/A')
+            ET.SubElement(ai_elem, "Reasoning").text = ai_recommendation.get('reasoning', 'N/A')
         
         return ET.tostring(stock_elem, encoding='unicode')
     

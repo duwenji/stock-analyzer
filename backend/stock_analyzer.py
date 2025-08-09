@@ -1,12 +1,14 @@
 import argparse
 import pandas as pd
 import os
+import asyncio
 from utils import get_db_engine, get_company_names, initialize_environment
+from aiagent.evaluator_optimizer import run_stock_analysis
 from technical_indicators import calculate_and_store, calculate_moving_average
 from chart_plotter import plot_candlestick
 from report_generator import init_xml_report, finalize_xml_report, generate_stock_entry
 
-def main():
+async def main():
     try:
         # 環境初期化
         initialize_environment()
@@ -69,12 +71,23 @@ def main():
                         print(f"チャート作成失敗: {symbol}")
                         # チャート作成に失敗しても処理は続行（指標は計算済み）
                 
-                # XMLエントリー生成
+                # AI評価-最適化ワークフロー実行
+                analysis_data = {
+                    'symbol': symbol,
+                    'company_name': company_names.get(symbol, ""),
+                    'data': symbol_df.to_dict('records'),
+                    'technical_indicators': symbol_df[['MA30']].to_dict('records')
+                }
+                
+                ai_recommendation = await run_stock_analysis(analysis_data)
+                
+                # XMLエントリー生成 (AI推奨を含む)
                 xml_entry = generate_stock_entry(
                     symbol_df, 
                     symbol, 
                     company_names.get(symbol, ""),
-                    chart_path
+                    chart_path,
+                    ai_recommendation=ai_recommendation
                 )
                 
                 if not xml_entry:
@@ -107,4 +120,4 @@ def main():
             engine.dispose()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
