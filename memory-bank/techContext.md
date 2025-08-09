@@ -7,13 +7,27 @@
 - Pythonバージョン: 3.10+
 
 ## 主要技術スタック
-- プログラミング言語: Python
-- データ取得: yfinanceライブラリ
-- データ処理: pandas
-- 可視化: matplotlib
-- データベース: PostgreSQL
-- AIエージェント: Deepseek API
-- プロンプトエンジニアリング: 構造化プロンプトテンプレート
+- バックエンド:
+  - Python 3.10+
+  - FastAPI (REST API)
+  - SQLAlchemy (ORM)
+  - yfinance (データ取得)
+  - pandas (データ処理)
+  - matplotlib (可視化)
+  
+- フロントエンド:
+  - React (TypeScript)
+  - Axios (API通信)
+  - Chart.js (データ可視化)
+
+- データベース:
+  - PostgreSQL
+  - psycopg2 (接続ライブラリ)
+
+- AI統合:
+  - Deepseek API (実装済み)
+  - 構造化プロンプトテンプレート
+  - Evaluator-Optimizerワークフロー
 
 ## 主要ライブラリ
 - yfinance: 株価データ取得

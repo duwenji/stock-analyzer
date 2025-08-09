@@ -15,13 +15,17 @@
 4. データベースへの保存と管理（PostgreSQL）
 
 ## 技術スタック
-- プログラミング言語: Python
-- 主要ライブラリ: pandas, yfinance, matplotlib, psycopg2
+- バックエンド: Python (FastAPI)
+- フロントエンド: React (TypeScript)
+- 主要ライブラリ: 
+  - pandas, yfinance, matplotlib, psycopg2 (バックエンド)
+  - axios, react-chartjs-2 (フロントエンド)
+- AI統合: DeepSeek API
 - データベース: PostgreSQL
 - 開発環境: VSCode, Windows/macOS/Linux
 
 ## 開発期間
-2025年7月 - 継続中
+2025年7月 - 継続中 (現在: プロトタイプ完成、機能拡張中)
 
 ## 主要関係者
 - 開発者: Fumiyoshi.To
@@ -31,7 +35,12 @@
 - 無料APIの利用制限に配慮
 - 個人利用を前提とした設計
 - 日本語表示のサポート必須
+- ローカル環境での動作保証
 
 ## その他
 - プロトタイプ開発完了（2025年7月）
-- 機械学習統合を計画中
+- AI推奨機能実装済み（DeepSeek API統合）
+- 現在進行中の作業:
+  - レポート自動更新システム
+  - テクニカル指標の拡張（MACDなど）
+  - テスト環境の構築
