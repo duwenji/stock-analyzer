@@ -12,8 +12,7 @@
   - DeepSeek API統合の完成
 
 ## 直近の変更
-- stock_analyzer.py: Evaluator-Optimizerワークフローの統合
-- report_generator.py: AI推奨表示機能の追加
+- technical_indicator_calculator.py: テクニカル指標計算機能
 - evaluator_optimizer.py: 株式分析用Evaluator-Optimizerの実装
 - deepseek_augmented.py: DeepSeek LLMラッパーの実装
 - .env.example: APIキー設定テンプレートの追加

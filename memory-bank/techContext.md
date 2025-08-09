@@ -12,7 +12,7 @@
 - データ処理: pandas
 - 可視化: matplotlib
 - データベース: PostgreSQL
-- AIエージェント: Anthropic API, LangChain
+- AIエージェント: Deepseek API
 - プロンプトエンジニアリング: 構造化プロンプトテンプレート
 
 ## 主要ライブラリ
@@ -20,8 +20,7 @@
 - pandas: データ分析と処理
 - matplotlib: チャート生成
 - psycopg2: データベース管理
-- anthropic: Anthropic APIクライアント
-- langchain: エージェントフレームワーク
+- deepseek: Deepseek APIクライアント
 
 ## テストツール
 - 単体テスト: pytest
@@ -54,12 +53,25 @@
 - SQLAlchemy: 2.0.41
 - yfinance: 0.2.65
 
+## API仕様
+### バックエンドAPI (backend/api.py)
+- 銘柄一覧取得: GET /stocks
+  - パラメータ: page, limit, search, sort_by, sort_order
+- AI銘柄推奨: POST /api/recommend
+  - パラメータ: principal, risk_tolerance, strategy, symbols
+- チャート画像取得: GET /chart/{symbol}
+
+### フロントエンド (frontend/src/App.tsx)
+- タブ切り替え: 銘柄一覧 ↔ AI銘柄推奨
+- 推奨フォーム: 元本、リスク許容度、戦略を入力
+- 推奨結果表示: AIが生成した推奨銘柄を表示
+
 ## コマンド実行ポートフォリオ
 
 ### Pythonスクリプト実行
 - メインスクリプト実行:
   ```bash
-  python stock_analyzer.py
+  python technical_indicator_calculator.py
   ```
 - テスト実行:
   ```bash

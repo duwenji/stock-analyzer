@@ -9,7 +9,7 @@
 1. データ取得モジュール（stock_data_importer.py）
    - Yahoo Finance APIからのデータ取得
    - データの正規化とクリーニング
-2. 分析エンジン（stock_analyzer.py）
+2. 分析エンジン（technical_indicator_calculator.py）
    - テクニカル指標の計算（移動平均線、RSI、ゴールデンクロス/デッドクロスなど）
    - 銘柄間の相関分析
 3. レポートジェネレータ
