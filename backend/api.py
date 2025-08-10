@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from chart_plotter import plot_candlestick
 import base64
-from utils import setup_backend_logger, get_db_engine  # get_db_engineを追加インポート
+from utils import setup_backend_logger, get_db_engine
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from typing import Optional, List
@@ -156,56 +156,91 @@ async def get_stocks(
 # 推奨リクエストモデル
 class RecommendationRequest(BaseModel):
     principal: float
-    risk_tolerance: str  # 例: "低", "中", "高"
-    strategy: str  # 例: "成長株", "配当株", "バランス"
-    symbols: Optional[List[str]] = None  # 特定銘柄指定（オプション）
-    search: Optional[str] = None  # 検索条件（追加）
+    risk_tolerance: str     # 例: "低", "中", "高"
+    strategy: str           # 例: "成長株", "配当株", "バランス"
+    symbols: Optional[List[str]] = None     # 特定銘柄指定（オプション）
+    search: Optional[str] = None        # 検索条件（追加）
+    technical_filters: Optional[dict] = None
+
+class SelectedRecommendationRequest(RecommendationRequest):
+    selected_symbols: List[str]
+
+@app.post("/api/filter-stocks", response_model=dict)
+async def filter_stocks(request: RecommendationRequest):
+    """テクニカル指標で銘柄をフィルタリング"""
+    try:
+        logger.info(f"フィルタリングリクエスト受信: {request.model_dump()}")
+
+        engine = get_db_engine()
+        with engine.connect() as conn:
+            # 検索条件で銘柄をフィルタリング
+            search_params = {}
+            where_clauses = []
+            if request.search:
+                search_term = f"%{request.search.strip().lower()}%"
+                where_clauses.append("LOWER(s.symbol) LIKE :search_term OR LOWER(s.name) LIKE :search_term")
+                search_params = {"search_term": search_term}
+
+            # テクニカル指標でフィルタリング
+            if request.technical_filters:
+                for indicator, value in request.technical_filters.items():
+                    if indicator == "rsi":
+                        op, val = value
+                        where_clauses.append(f"ti.rsi {op} {val}")
+                    elif indicator == "golden_cross":
+                        where_clauses.append("ti.golden_cross = true")
+
+            where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
+
+            query = f"""
+                SELECT 
+                    s.symbol,
+                    s.name,
+                    s.industry_name_33 as industry,
+                    ti.rsi,
+                    ti.golden_cross,
+                    TO_CHAR(ti.date, 'YYYY-MM-DD') as indicator_date
+                FROM stocks s
+                LEFT JOIN (
+                    SELECT DISTINCT ON (symbol) *
+                    FROM technical_indicators
+                    ORDER BY symbol, date DESC
+                ) ti ON s.symbol = ti.symbol
+                {where_sql}
+            """
+
+            logger.info(f"テクニカル指標取得SQL：{text(query)}")
+            result = conn.execute(text(query), search_params)
+            stocks = [dict(row._mapping) for row in result]
+            logger.info(f"銘柄件数：{len(stocks)}")
+
+            return {
+                "candidate_stocks": stocks,
+                "params": request.model_dump()
+            }
+
+    except Exception as e:
+        logger.exception(f"フィルタリングエラー: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"フィルタリングエラー: {str(e)}")
 
 @app.post("/api/recommend", response_model=dict)
-async def get_recommendations(request: RecommendationRequest):
-    """AIによる銘柄推奨を取得"""
+async def get_recommendations(request: SelectedRecommendationRequest):
+    """選択された銘柄のみで推奨生成"""
     try:
-        logger.info(f"受信リクエスト: POST /api/recommend - {request.dict()}")
-        
-        # 検索条件が指定された場合、対象銘柄を取得
-        symbols = request.symbols
-        if request.search:
-            engine = get_db_engine()
-            with engine.connect() as conn:
-                search_condition = ""
-                search_params = {}
-                if request.search.strip():
-                    search_term = f"%{request.search.strip().lower()}%"
-                    search_condition = "WHERE LOWER(s.symbol) LIKE :search_term OR LOWER(s.name) LIKE :search_term"
-                    search_params = {"search_term": search_term}
-                
-                query = f"""
-                    SELECT s.symbol
-                    FROM stocks s
-                    {search_condition}
-                """
-                result = conn.execute(text(query), search_params)
-                symbols = [row.symbol for row in result]
-        
-        # 推奨生成（検索条件を適用）
+        logger.info(f"推奨リクエスト受信 (選択銘柄: {len(request.selected_symbols)}件)")
+
         params = request.model_dump()
-        params['symbols'] = symbols
+        params['symbols'] = request.selected_symbols
         result = await recommend_stocks(params)
 
         if "error" in result.get("data", {}):
-            raise HTTPException(
-                status_code=500,
-                detail=result["data"]["error"]
-            )
-            
-        logger.info(f"推奨生成結果: {result}")
+            raise HTTPException(status_code=500, detail=result["data"]["error"])
+
         return result
+
     except Exception as e:
         logger.exception(f"推奨生成エラー: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"推奨生成エラー: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"推奨生成エラー: {str(e)}")
 
 @app.get("/chart/{symbol}", response_model=dict)
 async def get_chart(symbol: str):
