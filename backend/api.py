@@ -20,6 +20,7 @@ class StockResponse(BaseModel):
     symbol: str
     name: str
     industry: str
+    technical_date: Optional[str] = None
     golden_cross: Optional[bool] = None
     dead_cross: Optional[bool] = None
     rsi: Optional[float] = None
@@ -57,7 +58,7 @@ async def get_stocks(
         logger.info(f"受信リクエスト: GET /stocks?page={page}&limit={limit}&search={search}&sort_by={sort_by}&sort_order={sort_order}")
         
         # 有効なソートカラムのリスト
-        valid_columns = ["symbol", "name", "industry", "golden_cross", "dead_cross", "rsi", "macd", "signal_line"]
+        valid_columns = ["symbol", "name", "industry", "technical_date", "golden_cross", "dead_cross", "rsi", "macd", "signal_line"]
         
         # ソートカラムの検証
         if sort_by and sort_by not in valid_columns:
@@ -102,7 +103,8 @@ async def get_stocks(
                     ti.dead_cross,
                     ti.rsi,
                     ti.macd,
-                    ti.signal_line
+                    ti.signal_line,
+                    TO_CHAR(ti.date, 'YYYY-MM-DD') as technical_date
                 FROM stocks s
                 LEFT JOIN (
                     SELECT DISTINCT ON (symbol) *
@@ -212,7 +214,7 @@ async def filter_stocks(request: RecommendationRequest):
             logger.info(f"テクニカル指標取得SQL：{text(query)}")
             result = conn.execute(text(query), search_params)
             stocks = [dict(row._mapping) for row in result]
-            logger.info(f"銘柄件数：{len(stocks)}")
+            logger.info(f"銘柄件数：{len(stocks)} data: {stocks}")
 
             return {
                 "candidate_stocks": stocks,

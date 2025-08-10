@@ -35,56 +35,34 @@ def calculate_macd(df, fast=12, slow=26, signal=9):
     return macd, signal_line
 
 # 指標計算とDB保存
-def calculate_and_store(symbol_df, engine):
-    """銘柄データに対してテクニカル指標を計算しデータベースに保存"""
-    try:        
-        # クロス指標計算
-        golden_cross, dead_cross = calculate_crosses(symbol_df)
-        symbol_df['golden_cross'] = golden_cross
-        symbol_df['dead_cross'] = dead_cross
-        
-        # RSI計算
-        symbol_df['rsi'] = calculate_rsi(symbol_df)
-        
-        # MACD計算
-        macd, signal_line = calculate_macd(symbol_df)
-        symbol_df['macd'] = macd
-        symbol_df['signal_line'] = signal_line
-        
-        # データベース保存処理
-        with engine.connect() as conn:
-            # 既存データ削除
-            conn.execute(text("DELETE FROM technical_indicators WHERE symbol = :symbol"), 
-                        {'symbol': symbol_df['symbol'].iloc[0]})
-            
-            # バルク挿入用データ準備
-            records = []
-            for idx, row in symbol_df.iterrows():
-                records.append({
-                    'symbol': row['symbol'],
-                    'date': idx,
-                    'golden_cross': row['golden_cross'],
-                    'dead_cross': row['dead_cross'],
-                    'rsi': row['rsi'],
-                    'macd': row['macd'],
-                    'signal_line': row['signal_line']
-                })
-            
-            # バルク挿入
-            if records:
-                conn.execute(text("""
-                    INSERT INTO technical_indicators 
-                    (symbol, date, golden_cross, dead_cross, rsi, macd, signal_line)
-                    VALUES 
-                    (:symbol, :date, :golden_cross, :dead_cross, :rsi, :macd, :signal_line)
-                """), records)
-            
-            conn.commit()
+def calculate_indicators(df):
+    """DataFrameに対してテクニカル指標を一括計算"""
+    df = df.copy()
+    # クロス指標計算
+    df['golden_cross'], df['dead_cross'] = calculate_crosses(df)
+    # RSI計算
+    df['rsi'] = calculate_rsi(df)
+    # MACD計算
+    df['macd'], df['signal_line'] = calculate_macd(df)
+    return df[['symbol', 'date', 'golden_cross', 'dead_cross', 'rsi', 'macd', 'signal_line']]
+
+def batch_store_indicators(df, engine):
+    """DataFrameの内容をバッチでUPSERT"""
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("""
+                INSERT INTO technical_indicators 
+                (symbol, date, golden_cross, dead_cross, rsi, macd, signal_line)
+                VALUES 
+                (:symbol, :date, :golden_cross, :dead_cross, :rsi, :macd, :signal_line)
+                ON CONFLICT (symbol, date) DO UPDATE SET
+                    golden_cross = EXCLUDED.golden_cross,
+                    dead_cross = EXCLUDED.dead_cross,
+                    rsi = EXCLUDED.rsi,
+                    macd = EXCLUDED.macd,
+                    signal_line = EXCLUDED.signal_line
+            """), df.to_dict('records'))
         return True
-    
-    except SQLAlchemyError as e:
-        print(f"データベース保存エラー: {str(e)}")
-        return False
     except Exception as e:
-        print(f"指標計算エラー: {str(e)}")
+        print(f"バッチ保存エラー: {str(e)}")
         return False

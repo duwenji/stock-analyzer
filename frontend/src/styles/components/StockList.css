@@ -20,9 +20,9 @@
   max-width: 1200px; /* 最大幅を設定 */
 }
 
-/* テーブルヘッダー */
+/* テーブルヘッダー (暫定対応 - 文字色変更) */
 .stock-table-header {
-  color: white;
+  color: #333; /* 暫定的に濃いグレーに変更 */
   position: sticky;
   top: 0;
   z-index: 10;
@@ -36,12 +36,34 @@
   gap: 5px;
 }
 
+/* ソート関連スタイル */
+.sortable-header {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sortable-header:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.sort-indicator {
+  font-size: 0.8em;
+  margin-left: 4px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.sortable-header.active .sort-indicator {
+  color: #ffffff;
+  font-weight: bold;
+}
+
 .stock-table-header th {
-  background: linear-gradient(to right, #2563eb, #1d4ed8);
+  background: linear-gradient(to right, #1e40af, #1e3a8a);
   padding: 12px 15px;
   text-align: center;
-  font-weight: 600;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  color: black;
 }
 
 .stock-table-header th:last-child {

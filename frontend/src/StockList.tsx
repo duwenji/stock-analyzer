@@ -16,6 +16,7 @@ interface Stock {
   symbol: string;
   name: string;
   industry: string;
+  technical_date?: string;
   golden_cross?: boolean;
   dead_cross?: boolean;
   rsi?: number;
@@ -66,6 +67,13 @@ const StockList: React.FC = () => {
       accessor: 'industry',
       Cell: ({ value }: { value: string }) => (
         <div className="text-left">{value}</div>
+      )
+    },
+    {
+      Header: '指標日付',
+      accessor: 'technical_date',
+      Cell: ({ value }: { value?: string }) => (
+        <div className="text-center">{value || ''}</div>
       )
     },
     {
@@ -321,7 +329,7 @@ const StockList: React.FC = () => {
                   <th 
                     {...column.getHeaderProps()}
                     onClick={() => handleSort(column.id)}
-                    className={column.id !== 'index' ? 'sortable-header' : ''}
+                    className={`${column.id !== 'index' ? 'sortable-header' : ''} ${sortBy === column.id ? 'active' : ''}`}
                   >
                     <div className="header-cell">
                       {column.render('Header')}
