@@ -49,3 +49,25 @@ CREATE TABLE IF NOT EXISTS technical_indicators (
     PRIMARY KEY (symbol, date),
     FOREIGN KEY (symbol) REFERENCES stocks(symbol)
 );
+
+-- 推奨セッションテーブルの作成
+CREATE TABLE IF NOT EXISTS recommendation_sessions (
+    session_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    generated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    principal DECIMAL(20,4) NOT NULL,
+    risk_tolerance VARCHAR(20) NOT NULL,
+    strategy VARCHAR(50) NOT NULL,
+    symbols TEXT[] NOT NULL,
+    technical_filter TEXT
+);
+
+-- 推奨結果テーブルの作成
+CREATE TABLE IF NOT EXISTS recommendation_results (
+    id SERIAL PRIMARY KEY,
+    session_id UUID NOT NULL REFERENCES recommendation_sessions(session_id),
+    symbol TEXT NOT NULL REFERENCES stocks(symbol),
+    rating TEXT NOT NULL,
+    confidence DECIMAL(5,4),
+    reason TEXT,
+    target_price DECIMAL(20,4)
+);

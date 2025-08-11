@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/ja';
+import dayjs from 'dayjs';
 import StockList from './StockList';
 import RecommendationForm from './RecommendationForm';
 import RecommendationResults from './RecommendationResults';
+import RecommendationHistory from './RecommendationHistory';
+import RecommendationDetail from './RecommendationDetail';
 import './styles/common/common.css';
 
+dayjs.locale('ja');
+
 function App() {
-  const [activeTab, setActiveTab] = useState<'list' | 'recommend'>('list');
   const [recommendationData, setRecommendationData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,41 +59,36 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1 className="text-xl font-bold py-4">株式分析システム</h1>
-      </header>
-      
-      <div className="tabs p-4 max-w-4xl mx-auto">
-        <button 
-          className={`tab-button ${activeTab === 'list' ? 'active' : ''}`}
-          onClick={() => setActiveTab('list')}
-        >
-          銘柄一覧
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'recommend' ? 'active' : ''}`}
-          onClick={() => setActiveTab('recommend')}
-        >
-          AI銘柄推奨
-        </button>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Router>
+      <div className="App">
+        <header className="App-header">
+          <h1 className="text-xl font-bold py-4">株式分析システム</h1>
+          <nav className="tabs p-4 max-w-4xl mx-auto">
+            <Link to="/" className="tab-button">銘柄一覧</Link>
+            <Link to="/recommend" className="tab-button">AI銘柄推奨</Link>
+            <Link to="/history" className="tab-button">推奨履歴</Link>
+          </nav>
+        </header>
+        
+        <main className="p-4 max-w-4xl mx-auto">
+          <Routes>
+            <Route path="/" element={<StockList />} />
+            <Route path="/recommend" element={
+              <div className="recommendation-container">
+                <RecommendationForm onSubmit={handleRecommendationSubmit} />
+                {isLoading && <div className="loading">推奨を生成中...</div>}
+                {error && <div className="error">{error}</div>}
+                <RecommendationResults data={recommendationData} />
+              </div>
+            } />
+            <Route path="/history" element={<RecommendationHistory />} />
+            <Route path="/recommendations/:session_id" element={<RecommendationDetail />} />
+          </Routes>
+        </main>
       </div>
-      
-      <main className="p-4 max-w-4xl mx-auto">
-        {activeTab === 'list' ? (
-          <StockList />
-        ) : (
-          <div className="recommendation-container">
-            <RecommendationForm onSubmit={handleRecommendationSubmit} />
-            
-            {isLoading && <div className="loading">推奨を生成中...</div>}
-            {error && <div className="error">{error}</div>}
-            
-            <RecommendationResults data={recommendationData} />
-          </div>
-        )}
-      </main>
-    </div>
+      </Router>
+    </LocalizationProvider>
   );
 }
 

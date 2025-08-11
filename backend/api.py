@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import os
 import pandas as pd
@@ -125,7 +126,6 @@ async def get_stocks(
             
             # 銘柄データをログ出力
             df = pd.DataFrame(stocks)
-            logger.info(f"銘柄データ:\n{df}")
             logger.info(f"{len(stocks)}件の銘柄データを取得しました (ページ {page}/{total//limit + 1})")
             
             return {
@@ -188,8 +188,9 @@ async def filter_stocks(request: RecommendationRequest):
                 for indicator, value in request.technical_filters.items():
                     if indicator == "rsi":
                         op, val = value
-                        where_clauses.append(f"ti.rsi {op} {val}")
-                    elif indicator == "golden_cross":
+                        if val is not None:
+                            where_clauses.append(f"ti.rsi {op} {val}")
+                    if indicator == "golden_cross":
                         where_clauses.append("ti.golden_cross = true")
 
             where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
@@ -325,6 +326,144 @@ async def get_chart(symbol: str):
             status_code=500,
             detail=f"チャート生成エラー: {str(e)}"
         )
+
+# 推奨履歴レスポンスモデル
+class RecommendationHistoryResponse(BaseModel):
+    session_id: str
+    generated_at: str
+    principal: float
+    risk_tolerance: str
+    strategy: str
+    technical_filter: Optional[str] = None
+    symbol_count: int
+
+@app.get("/api/recommendations/history", response_model=dict)
+async def get_recommendation_history(
+    page: int = 1,
+    limit: int = 10,
+    sort: str = "date_desc",
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    strategy: Optional[str] = None
+):
+    """推奨履歴一覧を取得"""
+    try:
+        # ソート条件の解析
+        sort_field, sort_order = sort.split("_") if "_" in sort else (sort, "desc")
+        valid_sort_fields = ["generated_at", "principal", "risk_tolerance", "strategy"]
+        
+        if sort_field not in valid_sort_fields:
+            raise HTTPException(status_code=400, detail="無効なソート項目")
+
+        # クエリ構築
+        where_clauses = []
+        params = {}
+        if start_date:
+            where_clauses.append("generated_at >= :start_date")
+            params["start_date"] = start_date
+        if end_date:
+            where_clauses.append("generated_at <= :end_date")
+            params["end_date"] = end_date
+        if strategy:
+            where_clauses.append("strategy = :strategy")
+            params["strategy"] = strategy
+
+        where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
+
+        engine = get_db_engine()
+        with engine.connect() as conn:
+            # 総件数取得
+            count_query = f"SELECT COUNT(*) FROM recommendation_sessions {where_sql}"
+            total = conn.execute(text(count_query), params).scalar()
+
+            # データ取得
+            offset = (page - 1) * limit
+            query = f"""
+                SELECT 
+                    session_id,
+                    TO_CHAR(generated_at, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as generated_at,
+                    principal,
+                    risk_tolerance,
+                    strategy,
+                    technical_filter,
+                    (SELECT COUNT(*) FROM recommendation_results rr 
+                     WHERE rr.session_id = rs.session_id) as symbol_count
+                FROM recommendation_sessions rs
+                {where_sql}
+                ORDER BY {sort_field} {sort_order}
+                LIMIT :limit OFFSET :offset
+            """
+            params.update({"limit": limit, "offset": offset})
+            result = conn.execute(text(query), params)
+            sessions = [dict(row._mapping) for row in result]
+
+            return {
+                "total": total,
+                "page": page,
+                "limit": limit,
+                "sessions": sessions
+            }
+
+    except Exception as e:
+        logger.exception(f"推奨履歴取得エラー: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "推奨履歴の取得に失敗しました",
+                "detail": str(e),
+                "sessions": []  # 空配列を返す
+            }
+        )
+
+@app.get("/api/recommendations/{session_id}", response_model=dict)
+async def get_recommendation_detail(session_id: str):
+    """特定セッションの推奨詳細を取得"""
+    try:
+        engine = get_db_engine()
+        with engine.connect() as conn:
+            # セッション基本情報取得
+            session_query = """
+                SELECT 
+                    session_id,
+                    TO_CHAR(generated_at, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as generated_at,
+                    principal,
+                    risk_tolerance,
+                    strategy,
+                    technical_filter
+                FROM recommendation_sessions
+                WHERE session_id = :session_id
+            """
+            session_result = conn.execute(text(session_query), {"session_id": session_id})
+            session_info = session_result.mappings().first()
+            
+            if not session_info:
+                raise HTTPException(status_code=404, detail="セッションが見つかりません")
+
+            # 推奨結果取得
+            results_query = """
+                SELECT 
+                    rr.symbol,
+                    s.name,
+                    rr.rating,
+                    rr.confidence,
+                    rr.reason,
+                    rr.target_price
+                FROM recommendation_results rr
+                JOIN stocks s ON rr.symbol = s.symbol
+                WHERE rr.session_id = :session_id
+                ORDER BY rr.rating DESC, rr.confidence DESC
+            """
+            results = conn.execute(text(results_query), {"session_id": session_id})
+            recommendations = [dict(row._mapping) for row in results]
+
+            return {
+                "session": dict(session_info),
+                "recommendations": recommendations
+            }
+
+    except Exception as e:
+        logger.exception(f"推奨詳細取得エラー: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"推奨詳細取得エラー: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

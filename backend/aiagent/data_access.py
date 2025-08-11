@@ -1,6 +1,8 @@
 import pandas as pd
 from typing import List, Dict
 from utils import get_db_engine, setup_backend_logger
+from sqlalchemy import select, insert
+from models import RecommendationSession, RecommendationResult
 
 logger = setup_backend_logger(__name__)
 
@@ -117,3 +119,40 @@ def fetch_price_history(symbols: List[str], limit: int = 90) -> str:
         result.append(group.drop(columns=['symbol']).to_csv(index=False))
     
     return "\n".join(result)
+
+def save_recommendation(result: Dict, params: Dict) -> bool:
+    """推奨結果をデータベースに保存"""
+    try:
+        engine = get_db_engine()
+        with engine.begin() as conn:
+            # セッション作成
+            session_stmt = insert(RecommendationSession).values(
+                principal=params['principal'],
+                risk_tolerance=params['risk_tolerance'],
+                strategy=params['strategy'],
+                symbols=params['selected_symbols'],
+                technical_filter=params.get('technical_filter')
+            )
+            conn.execute(session_stmt)
+            session_id = conn.execute(
+                select([RecommendationSession.session_id])
+                .order_by(RecommendationSession.session_id.desc())
+                .limit(1)
+            ).scalar()
+            
+            # 結果保存
+            for rec in result.get('recommendations', []):
+                result_stmt = insert(RecommendationResult).values(
+                    session_id=session_id,
+                    symbol=rec['symbol'],
+                    rating=rec['rating'],
+                    confidence=rec.get('confidence'),
+                    reason=rec.get('reason'),
+                    target_price=rec.get('target_price')
+                )
+                conn.execute(result_stmt)
+            return True
+            
+    except Exception as e:
+        logger.error(f"推奨結果の保存に失敗: {str(e)}")
+        return False

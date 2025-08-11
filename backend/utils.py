@@ -2,6 +2,8 @@ import os
 import logging
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 from matplotlib.font_manager import FontProperties
 

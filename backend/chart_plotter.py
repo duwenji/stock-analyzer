@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from mpl_finance import candlestick_ohlc
-from utils import get_font_config, get_ma_settings  # 相対インポートから絶対インポートに変更
+from utils import get_font_config, get_ma_settings
 
 # ロギング設定（バックエンド全体の設定を使用）
 logger = logging.getLogger(__name__)
