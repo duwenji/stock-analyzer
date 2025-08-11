@@ -12,14 +12,16 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/react-table": "^7.7.20",
+    "@types/react-tooltip": "^3.11.0",
     "axios": "^1.11.0",
     "plotly.js": "^3.0.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-plotly.js": "^2.6.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-table": "^7.8.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "react-tooltip": "^5.29.1"
   },
   "scripts": {
     "start": "set NODE_OPTIONS=--no-deprecation && react-scripts start",
