@@ -1,5 +1,6 @@
 import React from 'react';
 import '../src/styles/components/RecommendationResults.css';
+import ChartExplanation from './components/ChartExplanation';
 
 interface Recommendation {
   symbol: string;
@@ -27,6 +28,8 @@ const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data })
   return (
     <div className="recommendation-results">
       <h3>AI推奨銘柄</h3>
+      
+      <ChartExplanation />
       
       <div className="summary">
         <p className="return-estimate">

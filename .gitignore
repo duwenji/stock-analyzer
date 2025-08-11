@@ -4,3 +4,4 @@ reports/
 __pycache__/
 backend/logs
 backend/.env
+frontend/node_modules

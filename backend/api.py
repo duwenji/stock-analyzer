@@ -9,7 +9,7 @@ from utils import setup_backend_logger, get_db_engine, get_ma_settings
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from typing import Optional, List
-from technical_indicators import calculate_moving_average
+from technical_indicators import calculate_moving_average, calculate_macd, calculate_rsi
 from stock_recommender import recommend_stocks
 
 # ロギング設定の初期化（バックエンド全体で共通）
@@ -266,7 +266,7 @@ async def get_chart(symbol: str):
                 SELECT date, open, high, low, close, volume
                 FROM stock_prices
                 WHERE symbol = :symbol
-                  AND date >= CURRENT_DATE - INTERVAL '3 years'
+                  AND date >= CURRENT_DATE - INTERVAL '1 year'
                 ORDER BY date ASC
             """), {"symbol": symbol})
             chart_data = [dict(row._mapping) for row in result]
@@ -277,10 +277,12 @@ async def get_chart(symbol: str):
 
             df['date'] = pd.to_datetime(df['date'])
             df.set_index('date', inplace=True)
-            # 移動平均計算
+            # テクニカル指標計算
             ma_settings = get_ma_settings()
             df[f'MA{ma_settings["short"]}'] = calculate_moving_average(df['close'], window=ma_settings["short"])
             df[f'MA{ma_settings["long"]}'] = calculate_moving_average(df['close'], window=ma_settings["long"])
+            df['macd'], df['signal_line'] = calculate_macd(df)  # MACD計算
+            df['rsi'] = calculate_rsi(df)  # RSI計算
             
             # チャート生成
             output_path = plot_candlestick(df, symbol, company_name)

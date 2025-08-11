@@ -1,0 +1,53 @@
+.chart-explanation {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.chart-explanation h4 {
+  color: #343a40;
+  margin-bottom: 10px;
+}
+
+.indicator-section {
+  margin-top: 15px;
+}
+
+.indicator-section h5 {
+  color: #495057;
+  margin-bottom: 8px;
+}
+
+.indicator-section ul {
+  padding-left: 20px;
+}
+
+.indicator-section li {
+  margin-bottom: 5px;
+  line-height: 1.5;
+}
+
+.indicator-section strong {
+  color: #007bff;
+  cursor: help;
+  text-decoration: underline dotted;
+}
+
+/* ツールチップスタイル */
+.react-tooltip {
+  max-width: 300px;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 10px;
+  background-color: #495057;
+  color: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 9999;
+}
+
+.react-tooltip.place-top::after {
+  border-top-color: #495057;
+}
