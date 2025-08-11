@@ -1,6 +1,6 @@
 from .interface import IStockRecommender
 from .deepseek_direct import DeepSeekDirectRecommender
-from .mcp_agent import McpAgent
+from .mcp_agent import MCPAgentRecommender
 import os
 
 class RecommenderFactory:
@@ -16,6 +16,6 @@ class RecommenderFactory:
         if mode == 'direct':
             return DeepSeekDirectRecommender()
         elif mode == 'mcpagent':
-            return McpAgent()
+            return MCPAgentRecommender()
         
         raise ValueError(f"Unknown recommender mode: {mode}")

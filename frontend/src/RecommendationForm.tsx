@@ -100,6 +100,8 @@ const RecommendationForm: React.FC<{
         technical_filters: setTechFilter()
       });
       
+      console.log(transformedData, selectedStocks)
+
       onSubmit({
         ...transformedData,
         selected_symbols: selectedStocks

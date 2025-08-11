@@ -15,17 +15,17 @@ function App() {
     setError(null);
     
     try {
-      // 特定銘柄が入力されている場合、配列に変換
-      const symbols = params.symbols 
-        ? params.symbols.split(',').map((s: string) => s.trim())
-        : undefined;
-      
+      console.log("params: ", params)
+
       const requestData = {
         principal: parseFloat(params.principal),
-        risk_tolerance: params.riskTolerance,
+        risk_tolerance: params.risk_tolerance,
         strategy: params.strategy,
-        symbols: symbols
+        technical_filters: params.technical_filters,
+        symbols: params.symbols,
+        selected_symbols: params.selected_symbols
       };
+      console.log("requestData:", requestData)
       
       const response = await fetch('/api/recommend', {
         method: 'POST',

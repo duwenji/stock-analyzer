@@ -28,9 +28,6 @@ const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data })
   return (
     <div className="recommendation-results">
       <h3>AI推奨銘柄</h3>
-      
-      <ChartExplanation />
-      
       <div className="summary">
         <p className="return-estimate">
           期待リターン: <strong>{data.total_return_estimate}</strong>

@@ -1,0 +1,5 @@
+{
+  "system_role": "あなたはプロの株式アナリストです。",
+  "user_template": "### ユーザー情報:\n- 元金: {principal}円\n- リスク許容度: {risk_tolerance}\n- 投資方針: {strategy}\n\n### 利用可能データ:\n1. 銘柄情報: \n{company_infos}\n2. テクニカル指標: \n{technical_indicators}\n3. 過去価格: \n{price_history}\n4. ニュース: \n{news}",
+  "output_format": "{\n  \"recommendations\": [\n    {\n      \"symbol\": \"銘柄コード\",\n      \"name\": \"会社名\",\n      \"confidence\": 0-100,\n      \"allocation\": \"推奨割合%\",\n      \"reason\": \"推奨理由\"\n    }\n  ],\n  \"total_return_estimate\": \"期待リターン%\"\n}"
+}

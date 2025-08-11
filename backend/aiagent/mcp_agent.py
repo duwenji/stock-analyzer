@@ -1,7 +1,7 @@
 from .interface import IStockRecommender
 from typing import Dict, Any
 
-class McpAgent(IStockRecommender):
+class MCPAgentRecommender(IStockRecommender):
     async def execute(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """MCPエージェントのダミー実装
         
