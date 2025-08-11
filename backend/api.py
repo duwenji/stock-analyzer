@@ -187,11 +187,25 @@ async def filter_stocks(request: RecommendationRequest):
             if request.technical_filters:
                 for indicator, value in request.technical_filters.items():
                     if indicator == "rsi":
+                        # RSIフィルタのバリデーション
+                        if not isinstance(value, (list, tuple)) or len(value) != 2:
+                            continue  # 不正な形式の場合はスキップ
                         op, val = value
-                        if val is not None:
+                        if not op or val in (None, ''):
+                            continue  # 演算子または値が空の場合はスキップ
+                        try:
+                            float(val)  # 数値に変換可能かチェック
                             where_clauses.append(f"ti.rsi {op} {val}")
-                    if indicator == "golden_cross":
-                        where_clauses.append("ti.golden_cross = true")
+                        except (ValueError, TypeError):
+                            continue
+                    elif indicator == "golden_cross":
+                        # golden_crossフィルタのバリデーション
+                        if value is True:
+                            where_clauses.append("ti.golden_cross = true")
+                        elif isinstance(value, (list, tuple)) and len(value) == 2 and str(value[1]).lower() == 'true':
+                            where_clauses.append("ti.golden_cross = true")
+                        elif str(value).lower() == 'true':
+                            where_clauses.append("ti.golden_cross = true")
 
             where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
 

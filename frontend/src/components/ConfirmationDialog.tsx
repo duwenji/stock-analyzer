@@ -79,8 +79,12 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         // RSIフィルターのチェック
         if (techFilters.rsi !== undefined && Array.isArray(techFilters.rsi)) {
           const [operator, val] = techFilters.rsi;
+          // 値が有効な数値かチェック
           const numVal = typeof val === 'string' ? parseFloat(val) : val;
-          if (operator && typeof numVal === 'number') {
+          const isValidNumber = typeof numVal === 'number' && !isNaN(numVal);
+          const isValidOperator = operator === '>' || operator === '<';
+          
+          if (isValidOperator && isValidNumber) {
             filters.push(`RSI ${operator === '>' ? '＞' : '＜'} ${numVal}`);
           }
         }
