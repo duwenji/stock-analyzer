@@ -139,7 +139,7 @@ const StockList: React.FC = () => {
 
   const fetchStocks = async (page: number, limit: number, term: string = '', sortField: string = sortBy, order: 'asc' | 'desc' = sortOrder) => {
     try {
-      const url = `http://localhost:8000/stocks?page=${page}&limit=${limit}&search=${encodeURIComponent(term)}&sort_by=${sortField}&sort_order=${order}`;
+      const url = `/api/stocks?page=${page}&limit=${limit}&search=${encodeURIComponent(term)}&sort_by=${sortField}&sort_order=${order}`;
       const response = await axios.get(url);
       setStocks(response.data.stocks);
       setTotalItems(response.data.total);
@@ -170,7 +170,7 @@ const StockList: React.FC = () => {
 
   const handleRowClick = async (symbol: string) => {
     try {
-      const response = await axios.get(`http://localhost:8000/chart/${symbol}`);
+      const response = await axios.get(`/api/chart/${symbol}`);
       setSelectedSymbol(symbol);
       setChartImage(response.data.image);
       setIsModalOpen(true);

@@ -44,7 +44,7 @@ app.add_middleware(
 )
 logger.info("CORSミドルウェアが設定されました: すべてのオリジンを許可")
 
-@app.get("/stocks", response_model=dict)
+@app.get("/api/stocks", response_model=dict)
 async def get_stocks(
     page: int = 1, 
     limit: int = 20, 
@@ -112,7 +112,7 @@ async def get_stocks(
                     ORDER BY symbol, date DESC
                 ) ti ON s.symbol = ti.symbol
                 {search_condition}
-                ORDER BY {sort_by} {sort_order}
+                ORDER BY {sort_by} {sort_order} NULLS LAST
                 LIMIT :limit OFFSET :offset
             """
             logger.info(f"クエリを実行します: {data_query}")
@@ -214,7 +214,7 @@ async def filter_stocks(request: RecommendationRequest):
             logger.info(f"テクニカル指標取得SQL：{text(query)}")
             result = conn.execute(text(query), search_params)
             stocks = [dict(row._mapping) for row in result]
-            logger.info(f"銘柄件数：{len(stocks)} data: {stocks}")
+            logger.info(f"銘柄件数：{len(stocks)}")
 
             return {
                 "candidate_stocks": stocks,
@@ -244,7 +244,7 @@ async def get_recommendations(request: SelectedRecommendationRequest):
         logger.exception(f"推奨生成エラー: {str(e)}")
         raise HTTPException(status_code=500, detail=f"推奨生成エラー: {str(e)}")
 
-@app.get("/chart/{symbol}", response_model=dict)
+@app.get("/api/chart/{symbol}", response_model=dict)
 async def get_chart(symbol: str):
     """銘柄のチャート画像をBase64で取得"""
     try:
