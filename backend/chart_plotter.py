@@ -3,7 +3,7 @@ import logging
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from mpl_finance import candlestick_ohlc
-from utils import get_font_config  # 相対インポートから絶対インポートに変更
+from utils import get_font_config, get_ma_settings  # 相対インポートから絶対インポートに変更
 
 # ロギング設定（バックエンド全体の設定を使用）
 logger = logging.getLogger(__name__)
@@ -47,7 +47,12 @@ def plot_candlestick(symbol_df, symbol, company_name, output_dir='reports'):
         candlestick_ohlc(ax1, ohlc_data, width=0.6, colorup='r', colordown='g', alpha=1.0)
         
         # 移動平均プロット（NaNは自動スキップ）
-        ax1.plot(dates, symbol_df['MA30'], label='30日移動平均', color='blue')
+        ma_settings = get_ma_settings()
+        ax1.plot(dates, symbol_df[f'MA{ma_settings["short"]}'], 
+                label=f'{ma_settings["short"]}日移動平均', color='blue')
+        ax1.plot(dates, symbol_df[f'MA{ma_settings["long"]}'], 
+                label=f'{ma_settings["long"]}日移動平均', color='orange')
+        logger.debug(f"移動平均をプロット: {ma_settings}")
         
         # タイトルとラベル設定
         ax1.set_title(f'{company_name} ({symbol}) ローソク足チャート', fontproperties=title_font)

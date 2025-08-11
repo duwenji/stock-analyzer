@@ -95,11 +95,14 @@ async def main():
                 # 指標計算
                 indicators_df = calculate_indicators(group_df)
                 
+                # 直近の指定日数分のみ抽出して保存
+                recent_indicators_df = indicators_df.groupby('symbol').tail(args.days)
+                
                 # バッチ保存
-                if batch_store_indicators(indicators_df, engine):
+                if batch_store_indicators(recent_indicators_df, engine):
                     # 処理済み銘柄を記録
                     processed_symbols.update(indicators_df['symbol'].unique())
-                    print(f"  {len(group_symbols)}銘柄処理済み、{len(indicators_df)}件指標が格納された。")
+                    print(f"  {len(group_symbols)}銘柄処理済み、{len(recent_indicators_df)}件指標が格納された。")
                 else:
                     print(f" グループ{i}の保存に失敗")
             

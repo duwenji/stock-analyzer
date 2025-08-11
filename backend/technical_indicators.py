@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
@@ -7,7 +8,9 @@ def calculate_moving_average(data, window=30):
     return data.rolling(window=window).mean()
 
 # ゴールデンクロス/デッドクロス計算関数
-def calculate_crosses(df, short_window=25, long_window=75):
+def calculate_crosses(df):
+    short_window = int(os.getenv('GOLDEN_DEAD_SHORT_WINDOW', 25))
+    long_window = int(os.getenv('GOLDEN_DEAD_LONG_WINDOW', 75))
     df = df.copy()
     df['short_ma'] = df['close'].rolling(window=short_window).mean()
     df['long_ma'] = df['close'].rolling(window=long_window).mean()
@@ -16,7 +19,8 @@ def calculate_crosses(df, short_window=25, long_window=75):
     return golden_cross, dead_cross
 
 # RSI計算関数
-def calculate_rsi(df, window=14):
+def calculate_rsi(df):
+    window = int(os.getenv('RSI_WINDOW', 14))
     delta = df['close'].diff()
     gain = delta.where(delta > 0, 0)
     loss = -delta.where(delta < 0, 0)
@@ -27,7 +31,10 @@ def calculate_rsi(df, window=14):
     return rsi
 
 # MACD計算関数
-def calculate_macd(df, fast=12, slow=26, signal=9):
+def calculate_macd(df):
+    fast = int(os.getenv('MACD_FAST', 12))
+    slow = int(os.getenv('MACD_SLOW', 26))
+    signal = int(os.getenv('MACD_SIGNAL', 9))
     ema_fast = df['close'].ewm(span=fast, adjust=False).mean()
     ema_slow = df['close'].ewm(span=slow, adjust=False).mean()
     macd = ema_fast - ema_slow

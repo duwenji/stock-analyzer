@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from chart_plotter import plot_candlestick
 import base64
-from utils import setup_backend_logger, get_db_engine
+from utils import setup_backend_logger, get_db_engine, get_ma_settings
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from typing import Optional, List
@@ -278,7 +278,9 @@ async def get_chart(symbol: str):
             df['date'] = pd.to_datetime(df['date'])
             df.set_index('date', inplace=True)
             # 移動平均計算
-            df['MA30'] = calculate_moving_average(df['close'])
+            ma_settings = get_ma_settings()
+            df[f'MA{ma_settings["short"]}'] = calculate_moving_average(df['close'], window=ma_settings["short"])
+            df[f'MA{ma_settings["long"]}'] = calculate_moving_average(df['close'], window=ma_settings["long"])
             
             # チャート生成
             output_path = plot_candlestick(df, symbol, company_name)

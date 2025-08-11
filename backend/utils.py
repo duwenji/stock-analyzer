@@ -88,6 +88,21 @@ def process_in_symbol_groups(df, group_size=100):
         group_df = df[df['symbol'].isin(symbol_group)].sort_values(['symbol', 'date'])
         yield group_df
 
+def get_ma_settings():
+    """
+    移動平均設定を環境変数から取得
+    
+    Returns:
+        dict: {'short': 短期移動平均期間, 'long': 長期移動平均期間}
+    """
+    settings = {
+        "short": int(os.getenv("SHORT_MA_WINDOW", 25)),
+        "long": int(os.getenv("LONG_MA_WINDOW", 75))
+    }
+    logger = setup_backend_logger(__name__)
+    logger.debug(f"移動平均設定を読み込み: {settings}")
+    return settings
+
 def get_font_config():
     """日本語フォント設定を返す"""
     font_prop = FontProperties(fname=r'C:\Windows\Fonts\msgothic.ttc', size=9)
