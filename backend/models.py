@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DECIMAL, Text, JSON, TIMESTAMP, text
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -34,3 +35,24 @@ class RecommendationResult(Base):
     allocation = Column(String(10), nullable=False)
     confidence = Column(DECIMAL(5,4))
     reason = Column(Text)
+
+class PromptTemplate(Base):
+    """プロンプトテンプレートモデル"""
+    __tablename__ = 'prompt_templates'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False, unique=True)
+    system_role = Column(Text)
+    user_template = Column(Text, nullable=False)
+    output_format = Column(Text, nullable=False)
+    created_at = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=text("CURRENT_TIMESTAMP")
+    )
+    updated_at = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=text("CURRENT_TIMESTAMP"),
+        onupdate=text("CURRENT_TIMESTAMP")
+    )

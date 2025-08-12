@@ -10,6 +10,7 @@ import RecommendationForm from './RecommendationForm';
 import RecommendationResults from './RecommendationResults';
 import RecommendationHistory from './RecommendationHistory';
 import RecommendationDetail from './RecommendationDetail';
+import PromptManagement from './PromptManagement';
 import './styles/common/common.css';
 
 dayjs.locale('ja');
@@ -73,6 +74,7 @@ function App() {
               <Link to="/" className="tab-button">銘柄一覧</Link>
               <Link to="/recommend" className="tab-button">AI銘柄推奨</Link>
               <Link to="/history" className="tab-button">推奨履歴</Link>
+              <Link to="/prompt-management" className="tab-button">プロンプト管理</Link>
             </nav>
           </header>
           
@@ -89,6 +91,7 @@ function App() {
               } />
               <Route path="/history" element={<RecommendationHistory />} />
               <Route path="/recommendations/:session_id" element={<RecommendationDetail />} />
+              <Route path="/prompt-management" element={<PromptManagement />} />
             </Routes>
           </main>
         </div>

@@ -1,0 +1,170 @@
+.prompt-management {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.create-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.create-btn:hover {
+  background-color: #45a049;
+}
+
+.prompt-list {
+  display: grid;
+  gap: 15px;
+}
+
+.prompt-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.prompt-actions button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.prompt-actions button:hover {
+  background-color: #f0f0f0;
+}
+
+.prompt-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* エラーメッセージ用スタイル */
+.error-message {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  white-space: pre-wrap;
+}
+
+.error-message div {
+  margin: 5px 0;
+}
+
+.form-group label::after {
+  content: " *";
+  color: #d32f2f;
+  display: none;
+}
+
+.form-group label[for]:has(+ input[required])::after,
+.form-group label[for]:has(+ textarea[required])::after {
+  display: inline;
+}
+
+/* 詳細表示用スタイル */
+.prompt-details {
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #ddd;
+  margin-top: 10px;
+}
+
+.prompt-details div {
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-actions button[type="button"] {
+  background-color: #f0f0f0;
+}
+
+.modal-actions button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.modal-actions button[type="submit"]:hover {
+  background-color: #45a049;
+}

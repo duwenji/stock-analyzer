@@ -1,7 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
+import datetime
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from sqlalchemy.orm import Session, sessionmaker
+from models import PromptTemplate
+from typing import List
 import os
 import pandas as pd
 from chart_plotter import plot_candlestick
@@ -187,6 +191,33 @@ class SelectedRecommendationRequest(RecommendationRequest):
     selected_symbols: List[str]
     agent_type: str = "direct"  # デフォルト値
 
+class PromptTemplateRequest(BaseModel):
+    """プロンプトテンプレートリクエストモデル"""
+    name: str
+    system_role: str = ""
+    user_template: str
+    output_format: str
+
+class PromptTemplateResponse(BaseModel):
+    """プロンプトテンプレートレスポンスモデル"""
+    id: int
+    name: str
+    system_role: str
+    user_template: str
+    output_format: str
+    created_at: str
+    updated_at: str
+
+def get_db():
+    """データベースセッションを取得"""
+    engine = get_db_engine()
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+        
 @app.post("/api/filter-stocks", response_model=dict)
 async def filter_stocks(request: RecommendationRequest):
     """テクニカル指標で銘柄をフィルタリング"""
@@ -292,6 +323,154 @@ async def get_industry_codes():
     except Exception as e:
         logger.exception(f"業種コード取得エラー: {str(e)}")
         raise HTTPException(status_code=500, detail="業種コードの取得に失敗しました")
+
+# プロンプトテンプレート管理API
+@app.get("/api/prompts", response_model=List[PromptTemplateResponse])
+async def get_all_prompts(db: Session = Depends(get_db)):
+    """全プロンプトテンプレートを取得"""
+    try:
+        prompts = db.query(PromptTemplate).all()
+        return [
+            {
+                "id": p.id,
+                "name": p.name,
+                "system_role": p.system_role,
+                "user_template": p.user_template,
+                "output_format": p.output_format,
+                "created_at": p.created_at.isoformat(),
+                "updated_at": p.updated_at.isoformat()
+            }
+            for p in prompts
+        ]
+    except Exception as e:
+        logger.exception(f"プロンプト取得エラー: {str(e)}")
+        raise HTTPException(status_code=500, detail="プロンプトの取得に失敗しました")
+
+@app.get("/api/prompts/{name}", response_model=PromptTemplateResponse)
+async def get_prompt(name: str, db: Session = Depends(get_db)):
+    """特定のプロンプトテンプレートを取得"""
+    try:
+        prompt = db.query(PromptTemplate).filter_by(name=name).first()
+        if not prompt:
+            raise HTTPException(status_code=404, detail="プロンプトが見つかりません")
+        return {
+            "id": prompt.id,
+            "name": prompt.name,
+            "system_role": prompt.system_role,
+            "user_template": prompt.user_template,
+            "output_format": prompt.output_format,
+            "created_at": prompt.created_at.isoformat(),
+            "updated_at": prompt.updated_at.isoformat()
+        }
+    except Exception as e:
+        logger.exception(f"プロンプト取得エラー: {str(e)}")
+        raise HTTPException(status_code=500, detail="プロンプトの取得に失敗しました")
+
+@app.post("/api/prompts", response_model=PromptTemplateResponse)
+async def create_prompt(request: PromptTemplateRequest, db: Session = Depends(get_db)):
+    """新規プロンプトテンプレートを作成"""
+    try:
+        existing = db.query(PromptTemplate).filter_by(name=request.name).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="同名のプロンプトが既に存在します")
+            
+        prompt = PromptTemplate(
+            name=request.name,
+            system_role=request.system_role,
+            user_template=request.user_template,
+            output_format=request.output_format,
+            updated_at=datetime.datetime.now(datetime.timezone.utc)
+        )
+        db.add(prompt)
+        db.commit()
+        db.refresh(prompt)
+        
+        prompt = db.query(PromptTemplate).filter_by(name=request.name).first()
+        if not prompt:
+            raise HTTPException(status_code=404, detail="プロンプトが見つかりません")
+        
+        return {
+            "id": prompt.id,
+            "name": prompt.name,
+            "system_role": prompt.system_role,
+            "user_template": prompt.user_template,
+            "output_format": prompt.output_format,
+            "created_at": prompt.created_at.isoformat(),
+            "updated_at": prompt.updated_at.isoformat()
+        }
+    except Exception as e:
+        db.rollback()
+        logger.exception(f"プロンプト作成エラー: {str(e)}")
+        raise HTTPException(status_code=500, detail="プロンプトの作成に失敗しました")
+
+@app.put("/api/prompts/{name}", response_model=PromptTemplateResponse)
+async def update_prompt(name: str, request: PromptTemplateRequest, db: Session = Depends(get_db)):
+    """プロンプトテンプレートを更新"""
+    try:
+        # トランザクション開始
+        db.begin()
+        
+        prompt = db.query(PromptTemplate).filter_by(name=name).first()
+        if not prompt:
+            raise HTTPException(status_code=404, detail="プロンプトが見つかりません")
+            
+        # 更新処理
+        prompt.user_template = request.user_template
+        prompt.output_format = request.output_format
+        prompt.system_role = request.system_role
+        prompt.updated_at = datetime.datetime.now(datetime.timezone.utc)
+        
+        # 変更を検証
+        db.flush()
+        
+        # コミット
+        db.commit()
+        
+        # 最新データを取得
+        db.refresh(prompt)
+        
+        return {
+            "id": prompt.id,
+            "name": prompt.name,
+            "user_template": prompt.user_template,
+            "output_format": prompt.output_format,
+            "created_at": prompt.created_at.isoformat(),
+            "updated_at": prompt.updated_at.isoformat()
+        }
+        
+    except HTTPException:
+        db.rollback()
+        raise
+    except SQLAlchemyError as e:
+        db.rollback()
+        logger.exception(f"データベースエラー: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"データベースエラー: {e.orig.args[0] if hasattr(e, 'orig') else str(e)}"
+        )
+    except Exception as e:
+        db.rollback()
+        logger.exception(f"予期せぬエラー: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"予期せぬエラー: {str(e)}"
+        )
+
+@app.delete("/api/prompts/{name}")
+async def delete_prompt(name: str, db: Session = Depends(get_db)):
+    """プロンプトテンプレートを削除"""
+    try:
+        prompt = db.query(PromptTemplate).filter_by(name=name).first()
+        if not prompt:
+            raise HTTPException(status_code=404, detail="プロンプトが見つかりません")
+            
+        db.delete(prompt)
+        db.commit()
+        return {"message": "プロンプトを削除しました"}
+    except Exception as e:
+        db.rollback()
+        logger.exception(f"プロンプト削除エラー: {str(e)}")
+        raise HTTPException(status_code=500, detail="プロンプトの削除に失敗しました")
 
 @app.get("/api/scale-codes", response_model=list)
 async def get_scale_codes():

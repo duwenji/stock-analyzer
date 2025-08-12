@@ -71,3 +71,14 @@ CREATE TABLE IF NOT EXISTS recommendation_results (
     confidence DECIMAL(5,4),
     reason TEXT
 );
+
+-- プロンプトテンプレートテーブルの作成
+CREATE TABLE IF NOT EXISTS prompt_templates (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    system_role TEXT,
+    user_template TEXT NOT NULL,
+    output_format TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
