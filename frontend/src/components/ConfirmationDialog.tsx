@@ -20,6 +20,7 @@ interface ConfirmationDialogProps {
     principal: string;
     riskTolerance: string;
     strategy: string;
+    agentType: string;
     symbols: string;
     search: string;
     technical_filters?: TechnicalFilters;
@@ -61,6 +62,15 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             value: 'バリュー投資'
           } as const;
           return strategyMap[value as keyof typeof strategyMap] || value;
+        }
+        return String(value);
+      case 'agentType':
+        if (typeof value === 'string') {
+          const agentTypeMap = {
+            direct: 'Direct (シンプルな推奨生成)',
+            mcpagent: 'MCP Agent (評価・最適化ループ付き)'
+          } as const;
+          return agentTypeMap[value as keyof typeof agentTypeMap] || value;
         }
         return String(value);
       case 'principal':
@@ -132,6 +142,9 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             
             <div>投資方針:</div>
             <div>{formatParam('strategy', params.strategy)}</div>
+            
+            <div>AIエージェントタイプ:</div>
+            <div>{formatParam('agentType', params.agentType)}</div>
             
             <div>特定銘柄:</div>
             <div>{formatParam('symbols', params.symbols)}</div>

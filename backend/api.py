@@ -185,6 +185,7 @@ class RecommendationRequest(BaseModel):
 
 class SelectedRecommendationRequest(RecommendationRequest):
     selected_symbols: List[str]
+    agent_type: str = "direct"  # デフォルト値
 
 @app.post("/api/filter-stocks", response_model=dict)
 async def filter_stocks(request: RecommendationRequest):
@@ -263,10 +264,11 @@ async def filter_stocks(request: RecommendationRequest):
 async def get_recommendations(request: SelectedRecommendationRequest):
     """選択された銘柄のみで推奨生成"""
     try:
-        logger.info(f"推奨リクエスト受信 (選択銘柄: {len(request.selected_symbols)}件)")
+        logger.info(f"推奨リクエスト受信 {request}")
 
         params = request.model_dump()
         params['symbols'] = request.selected_symbols
+        params['agent_type'] = request.agent_type
         result = await recommend_stocks(params)
 
         if "error" in result.get("data", {}):

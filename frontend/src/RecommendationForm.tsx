@@ -16,6 +16,7 @@ export interface RecommendationParams {
   principal: string;
   riskTolerance: string;
   strategy: string;
+  agentType: string;
   symbols: string;
   search: string;
   technical_filters?: {
@@ -30,6 +31,7 @@ const RecommendationForm: React.FC<{
     principal: '1000000',
     riskTolerance: 'medium',
     strategy: 'growth',
+    agentType: 'direct',
     symbols: '',
     search: '',
     technical_filters: {}
@@ -152,7 +154,7 @@ const RecommendationForm: React.FC<{
           <select
             name="strategy"
             value={formData.strategy}
-                    onChange={handleInputChange}
+            onChange={handleInputChange}
             required
           >
             <option value="growth">成長株重視</option>
@@ -160,6 +162,22 @@ const RecommendationForm: React.FC<{
             <option value="balanced">バランス型</option>
             <option value="value">バリュー投資</option>
           </select>
+        </div>
+
+        <div className="form-group">
+          <label>AIエージェントタイプ:</label>
+          <select
+            name="agentType"
+            value={formData.agentType}
+            onChange={handleInputChange}
+            required
+          >
+            <option value="direct">Direct (シンプルな推奨生成)</option>
+            <option value="mcpagent">MCP Agent (評価・最適化ループ付き)</option>
+          </select>
+          <div className="form-hint">
+            MCP Agentでは、1つのLLMが推奨を生成し、別のLLMが評価とフィードバックを行います
+          </div>
         </div>
         
         <div className="form-group">

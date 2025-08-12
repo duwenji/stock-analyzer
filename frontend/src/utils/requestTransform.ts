@@ -8,6 +8,7 @@ export interface TransformedRequest {
   principal: number;
   risk_tolerance: string;
   strategy: string;
+  agent_type: string;
   symbols?: string[];
   search?: string;
   technical_filters?: TechnicalFilter;
@@ -29,6 +30,7 @@ export const transformRecommendationRequest = (
     principal,
     risk_tolerance: data.riskTolerance,
     strategy: data.strategy,
+    agent_type: data.agentType || "direct",
     symbols: data.symbols 
       ? data.symbols.split(',').map((s: string) => s.trim()).filter((s: string) => s.length > 0)
       : undefined,

@@ -5,13 +5,16 @@ import os
 
 class RecommenderFactory:
     @staticmethod
-    def create() -> IStockRecommender:
+    def create(agent_type: str = 'direct') -> IStockRecommender:
         """設定に基づいて推奨クラスのインスタンスを生成
         
+        Args:
+            agent_type: 使用するエージェントタイプ ('direct' または 'mcpagent')
+            
         Returns:
             IStockRecommender: 推奨クラスのインスタンス
         """
-        mode = os.getenv('AGENT_TYPE', 'direct').lower()
+        mode = agent_type.lower()
         
         if mode == 'direct':
             return DeepSeekDirectRecommender()
