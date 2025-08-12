@@ -194,6 +194,7 @@ class SelectedRecommendationRequest(RecommendationRequest):
 class PromptTemplateRequest(BaseModel):
     """プロンプトテンプレートリクエストモデル"""
     name: str
+    agent_type: str = "direct"
     system_role: str = ""
     user_template: str
     output_format: str
@@ -202,6 +203,7 @@ class PromptTemplateResponse(BaseModel):
     """プロンプトテンプレートレスポンスモデル"""
     id: int
     name: str
+    agent_type: str
     system_role: str
     user_template: str
     output_format: str
@@ -334,6 +336,7 @@ async def get_all_prompts(db: Session = Depends(get_db)):
             {
                 "id": p.id,
                 "name": p.name,
+                "agent_type":p.agent_type, 
                 "system_role": p.system_role,
                 "user_template": p.user_template,
                 "output_format": p.output_format,
@@ -356,6 +359,7 @@ async def get_prompt(name: str, db: Session = Depends(get_db)):
         return {
             "id": prompt.id,
             "name": prompt.name,
+            "agent_type":prompt.agent_type, 
             "system_role": prompt.system_role,
             "user_template": prompt.user_template,
             "output_format": prompt.output_format,
@@ -376,6 +380,7 @@ async def create_prompt(request: PromptTemplateRequest, db: Session = Depends(ge
             
         prompt = PromptTemplate(
             name=request.name,
+            agent_type=request.agent_type,
             system_role=request.system_role,
             user_template=request.user_template,
             output_format=request.output_format,
@@ -392,6 +397,7 @@ async def create_prompt(request: PromptTemplateRequest, db: Session = Depends(ge
         return {
             "id": prompt.id,
             "name": prompt.name,
+            "agent_type": prompt.agent_type,
             "system_role": prompt.system_role,
             "user_template": prompt.user_template,
             "output_format": prompt.output_format,
@@ -415,6 +421,7 @@ async def update_prompt(name: str, request: PromptTemplateRequest, db: Session =
             raise HTTPException(status_code=404, detail="プロンプトが見つかりません")
             
         # 更新処理
+        prompt.agent_type = request.agent_type
         prompt.user_template = request.user_template
         prompt.output_format = request.output_format
         prompt.system_role = request.system_role
@@ -432,6 +439,8 @@ async def update_prompt(name: str, request: PromptTemplateRequest, db: Session =
         return {
             "id": prompt.id,
             "name": prompt.name,
+            "system_role": prompt.system_role,
+            "agent_type":prompt.agent_type, 
             "user_template": prompt.user_template,
             "output_format": prompt.output_format,
             "created_at": prompt.created_at.isoformat(),

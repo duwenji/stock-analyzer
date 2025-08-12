@@ -42,6 +42,7 @@ class PromptTemplate(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False, unique=True)
+    agent_type = Column(String(20), nullable=False, server_default="direct")
     system_role = Column(Text)
     user_template = Column(Text, nullable=False)
     output_format = Column(Text, nullable=False)

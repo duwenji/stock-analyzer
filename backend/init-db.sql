@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS recommendation_results (
 CREATE TABLE IF NOT EXISTS prompt_templates (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
+    agent_type VARCHAR(20) NOT NULL DEFAULT 'direct',
     system_role TEXT,
     user_template TEXT NOT NULL,
     output_format TEXT NOT NULL,

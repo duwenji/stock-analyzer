@@ -6,6 +6,7 @@ import '../src/styles/components/PromptManagement.css';
 interface Prompt {
   id: number;
   name: string;
+  agent_type: string;
   system_role: string;
   user_template: string;
   output_format: string;
@@ -51,6 +52,7 @@ const PromptManagement: React.FC = () => {
     setCurrentPrompt({
       id: 0,
       name: '',
+      agent_type: 'direct',
       system_role: '',
       user_template: '',
       output_format: '',
@@ -65,7 +67,7 @@ const PromptManagement: React.FC = () => {
     setIsDeleting(true);
   };
 
-  const handleSave = async (promptData: { name: string; system_role: string; user_template: string; output_format: string }) => {
+  const handleSave = async (promptData: { name: string; agent_type: string; system_role: string; user_template: string; output_format: string }) => {
     try {
       if (isCreating) {
         await promptService.createPrompt(promptData);
@@ -117,24 +119,25 @@ const PromptManagement: React.FC = () => {
                 onClick={() => setExpandedId(expandedId === prompt.id ? null : prompt.id)}
                 style={{ cursor: 'pointer' }}
               >
-                {prompt.name}
+                {prompt.name} ({prompt.agent_type === 'direct' ? 'Direct' : 'MCP Agent'})
               </h3>
               <div className="prompt-actions">
                 <button onClick={() => handleEdit(prompt)}>編集</button>
                 <button onClick={() => handleDelete(prompt.name)}>削除</button>
               </div>
             </div>
-          <div className="prompt-meta">
-            <span>作成日: {new Date(prompt.created_at).toLocaleString()}</span>
-            <span>更新日: {new Date(prompt.updated_at).toLocaleString()}</span>
-          </div>
-          {expandedId === prompt.id && (
-            <div className="prompt-details">
-              <div><strong>System Role:</strong> {prompt.system_role}</div>
-              <div><strong>User Template:</strong> {prompt.user_template}</div>
-              <div><strong>Output Format:</strong> {prompt.output_format}</div>
+            <div className="prompt-meta">
+              <span>作成日: {new Date(prompt.created_at).toLocaleString()}</span>
+              <span>更新日: {new Date(prompt.updated_at).toLocaleString()}</span>
             </div>
-          )}
+            {expandedId === prompt.id && (
+              <div className="prompt-details">
+                <div><strong>Agent Type:</strong> {prompt.agent_type}</div>
+                <div><strong>System Role:</strong> {prompt.system_role}</div>
+                <div><strong>User Template:</strong> {prompt.user_template}</div>
+                <div><strong>Output Format:</strong> {prompt.output_format}</div>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -166,13 +169,14 @@ const PromptManagement: React.FC = () => {
 interface PromptEditModalProps {
   prompt: Prompt;
   isCreating: boolean;
-  onSave: (data: { name: string; system_role: string; user_template: string; output_format: string }) => void;
+  onSave: (data: { name: string; agent_type: string; system_role: string; user_template: string; output_format: string }) => void;
   onCancel: () => void;
   errorMessage: string | null;
 }
 
 const PromptEditModal: React.FC<PromptEditModalProps> = ({ prompt, isCreating, onSave, onCancel, errorMessage }) => {
   const [name, setName] = useState(prompt.name);
+  const [agentType, setAgentType] = useState(prompt.agent_type);
   const [systemRole, setSystemRole] = useState(prompt.system_role);
   const [userTemplate, setUserTemplate] = useState(prompt.user_template);
   const [outputFormat, setOutputFormat] = useState(prompt.output_format);
@@ -181,6 +185,7 @@ const PromptEditModal: React.FC<PromptEditModalProps> = ({ prompt, isCreating, o
     e.preventDefault();
     const data = {
       name: isCreating ? name : prompt.name, // 編集時は元のnameを使用
+      agent_type: agentType,
       system_role: systemRole,
       user_template: userTemplate,
       output_format: outputFormat
@@ -209,6 +214,17 @@ const PromptEditModal: React.FC<PromptEditModalProps> = ({ prompt, isCreating, o
               required
               disabled={!isCreating}
             />
+          </div>
+          <div className="form-group">
+            <label>エージェントタイプ:</label>
+            <select
+              value={agentType}
+              onChange={(e) => setAgentType(e.target.value)}
+              required
+            >
+              <option value="direct">Direct (シンプルな推奨生成)</option>
+              <option value="mcpagent">MCP Agent (評価・最適化ループ付き)</option>
+            </select>
           </div>
           <div className="form-group">
             <label>System Role:</label>
