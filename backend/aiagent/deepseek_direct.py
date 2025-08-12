@@ -47,7 +47,6 @@ class DeepSeekDirectRecommender(IStockRecommender):
         """必要なデータを取得"""
         return {
             "company_infos": fetch_company_infos(symbols),
-            "news": await fetch_news(symbols),
             "technical_indicators": fetch_technical_indicators(symbols, limit=50)
         }
 

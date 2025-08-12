@@ -27,9 +27,7 @@ def build_recommendation_prompt(params: Dict, data: Dict) -> str:
                 risk_tolerance=params.get('risk_tolerance', '中'),
                 strategy=params.get('strategy', '成長株重視'),
                 company_infos=json.dumps(data.get('company_infos', []), ensure_ascii=False),
-                news=json.dumps(data.get('news', []), ensure_ascii=False),
-                technical_indicators=json.dumps(data.get('technical_indicators', []), ensure_ascii=False),
-                price_history=json.dumps(data.get('price_history', []), ensure_ascii=False)
+                technical_indicators=json.dumps(data.get('technical_indicators', []), ensure_ascii=False)
             ) + "\n\n" +
             "output_format:" + template['output_format']
         )
