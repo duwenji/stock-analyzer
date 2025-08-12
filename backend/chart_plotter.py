@@ -114,7 +114,6 @@ def plot_candlestick(symbol_df, symbol, company_name, output_dir='reports'):
         # ファイル保存（キャッシュ回避のためタイムスタンプ付与）
         timestamp = pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')
         output_path = os.path.abspath(os.path.join(output_dir, f'{symbol}_candle_chart_{timestamp}.png'))
-        logger.debug(f"フォント設定を適用: {font_prop.get_name()}, サイズ: {font_prop.get_size()}")
         plt.savefig(output_path)
         plt.close()
         

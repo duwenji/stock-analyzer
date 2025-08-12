@@ -3,6 +3,8 @@ import os
 import asyncio
 import argparse
 from datetime import datetime
+
+# プロジェクトルートをsys.pathに追加
 from utils import get_db_engine, initialize_environment, process_in_symbol_groups
 from technical_indicators import calculate_indicators, batch_store_indicators
 

@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import requests
 from io import BytesIO
+
+# プロジェクトルートをsys.pathに追加
 from utils import initialize_environment
 
 # 環境初期化

@@ -7,8 +7,7 @@ from utils import setup_backend_logger
 from aiagent.data_access import (
     fetch_company_infos,
     fetch_news,
-    fetch_technical_indicators,
-    fetch_price_history
+    fetch_technical_indicators
 )
 from aiagent.prompt_builder import build_recommendation_prompt
 
@@ -49,8 +48,7 @@ class DeepSeekDirectRecommender(IStockRecommender):
         return {
             "company_infos": fetch_company_infos(symbols),
             "news": await fetch_news(symbols),
-            "technical_indicators": fetch_technical_indicators(symbols, limit=50),
-            "price_history": fetch_price_history(symbols, limit=200)
+            "technical_indicators": fetch_technical_indicators(symbols, limit=50)
         }
 
     async def _call_deepseek(self, params: Dict, data: Dict) -> Dict:

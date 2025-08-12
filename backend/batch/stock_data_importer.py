@@ -15,6 +15,7 @@ import random
 from tqdm import tqdm
 import jpholiday
 
+# プロジェクトルートをsys.pathに追加
 from utils import initialize_environment, setup_backend_logger
 
 # 環境初期化
