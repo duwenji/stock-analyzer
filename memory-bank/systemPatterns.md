@@ -76,3 +76,34 @@
 - 追加データソースの統合
 - 出力フォーマットの拡張（CSV、Excelなど）
 - AIエージェント機能の統合
+
+## データベーススキーマ
+
+### 推奨システム関連テーブル
+```mermaid
+erDiagram
+    recommendation_sessions ||--o{ recommendation_results : "1:N"
+    recommendation_sessions {
+        integer session_id PK
+        timestamp generated_at
+        decimal principal
+        varchar risk_tolerance
+        varchar strategy
+        text[] symbols
+        text technical_filter
+    }
+    recommendation_results {
+        integer id PK
+        integer session_id FK
+        varchar symbol
+        varchar name
+        varchar allocation
+        decimal confidence
+        text reason
+    }
+```
+
+**関係説明**:
+- `recommendation_sessions`と`recommendation_results`は1対多の関係
+- セッションごとに複数の推奨結果を保持
+- `session_id`が外部キーとして関連付け
