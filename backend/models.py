@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DECIMAL, Text, JSON, TIMESTAMP, UUID, text
+from sqlalchemy import Column, Integer, String, DECIMAL, Text, JSON, TIMESTAMP, text
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -9,9 +9,8 @@ class RecommendationSession(Base):
     __tablename__ = 'recommendation_sessions'
 
     session_id = Column(
-        UUID(as_uuid=True), 
-        primary_key=True,
-        server_default=text("uuid_generate_v4()")
+        Integer, 
+        primary_key=True
     )
     generated_at = Column(
         TIMESTAMP(timezone=True), 
@@ -29,7 +28,7 @@ class RecommendationResult(Base):
     __tablename__ = 'recommendation_results'
 
     id = Column(Integer, primary_key=True)
-    session_id = Column(UUID(as_uuid=True), nullable=False)
+    session_id = Column(Integer, nullable=False)
     symbol = Column(String(10), nullable=False)
     name = Column(String(100), nullable=False)
     allocation = Column(String(10), nullable=False)
