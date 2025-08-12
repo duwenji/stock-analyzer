@@ -16,6 +16,7 @@ interface Stock {
   symbol: string;
   name: string;
   industry: string;
+  scale_name?: string;
   technical_date?: string;
   golden_cross?: boolean;
   dead_cross?: boolean;
@@ -37,6 +38,10 @@ const StockList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>(''); // 検索用state
   const [sortBy, setSortBy] = useState<string>('symbol'); // ソート用state
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc'); // ソート順state
+  const [industryCode, setIndustryCode] = useState<string>(''); // 業種コード用state
+  const [industryOptions, setIndustryOptions] = useState<{code: string, name: string}[]>([]); // 業種選択肢
+  const [scaleCode, setScaleCode] = useState<string>(''); // 規模コード用state
+  const [scaleOptions, setScaleOptions] = useState<{code: string, name: string}[]>([]); // 規模選択肢
 
   // カラム定義
   const columns: Column<Stock>[] = React.useMemo(() => [
@@ -67,6 +72,13 @@ const StockList: React.FC = () => {
       accessor: 'industry',
       Cell: ({ value }: { value: string }) => (
         <div className="text-left">{value}</div>
+      )
+    },
+    {
+      Header: '規模',
+      accessor: 'scale_name',
+      Cell: ({ value }: { value?: string }) => (
+        <div className="text-left">{value || ''}</div>
       )
     },
     {
@@ -137,9 +149,17 @@ const StockList: React.FC = () => {
     usePagination
   );
 
-  const fetchStocks = async (page: number, limit: number, term: string = '', sortField: string = sortBy, order: 'asc' | 'desc' = sortOrder) => {
+  const fetchStocks = async (
+    page: number, 
+    limit: number, 
+    term: string = '', 
+    industry: string = '', 
+    scale: string = '',
+    sortField: string = sortBy, 
+    order: 'asc' | 'desc' = sortOrder
+  ) => {
     try {
-      const url = `/api/stocks?page=${page}&limit=${limit}&search=${encodeURIComponent(term)}&sort_by=${sortField}&sort_order=${order}`;
+      const url = `/api/stocks?page=${page}&limit=${limit}&search=${encodeURIComponent(term)}&industry_code=${encodeURIComponent(industry)}&scale_code=${encodeURIComponent(scale)}&sort_by=${sortField}&sort_order=${order}`;
       const response = await axios.get(url);
       setStocks(response.data.stocks);
       setTotalItems(response.data.total);
@@ -150,9 +170,35 @@ const StockList: React.FC = () => {
     }
   };
 
+  // 業種コード一覧取得
   useEffect(() => {
-    fetchStocks(currentPage, itemsPerPage, searchTerm, sortBy, sortOrder);
-  }, [currentPage, itemsPerPage, searchTerm, sortBy, sortOrder]);
+    const fetchIndustryCodes = async () => {
+      try {
+        const response = await axios.get('/api/industry-codes');
+        setIndustryOptions(response.data);
+      } catch (err) {
+        setError('業種コードの取得に失敗しました');
+      }
+    };
+    fetchIndustryCodes();
+  }, []);
+
+  // 規模コード一覧取得
+  useEffect(() => {
+    const fetchScaleCodes = async () => {
+      try {
+        const response = await axios.get('/api/scale-codes');
+        setScaleOptions(response.data);
+      } catch (err) {
+        setError('規模コードの取得に失敗しました');
+      }
+    };
+    fetchScaleCodes();
+  }, []);
+
+  useEffect(() => {
+    fetchStocks(currentPage, itemsPerPage, searchTerm, industryCode, scaleCode, sortBy, sortOrder);
+  }, [currentPage, itemsPerPage, searchTerm, industryCode, scaleCode, sortBy, sortOrder]);
   
   // ソートハンドラ（No.列はソート対象外）
   const handleSort = (columnId: string) => {
@@ -182,14 +228,16 @@ const StockList: React.FC = () => {
   // 検索実行ハンドラ
   const handleSearch = () => {
     setCurrentPage(1); // 検索時はページを1にリセット
-    fetchStocks(1, itemsPerPage, searchTerm);
+    fetchStocks(1, itemsPerPage, searchTerm, industryCode, scaleCode);
   };
 
   // 検索リセットハンドラ
   const handleReset = () => {
     setSearchTerm('');
+    setIndustryCode('');
+    setScaleCode('');
     setCurrentPage(1);
-    fetchStocks(1, itemsPerPage, '');
+    fetchStocks(1, itemsPerPage, '', '', '');
   };
 
   const closeModal = () => {
@@ -304,6 +352,30 @@ const StockList: React.FC = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
         />
+        <select
+          value={industryCode}
+          onChange={(e) => setIndustryCode(e.target.value)}
+          className="industry-select"
+        >
+          <option value="">すべての業種</option>
+          {industryOptions.map((option) => (
+            <option key={option.code} value={option.code}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+        <select
+          value={scaleCode}
+          onChange={(e) => setScaleCode(e.target.value)}
+          className="scale-select"
+        >
+          <option value="">すべての規模</option>
+          {scaleOptions.map((option) => (
+            <option key={option.code} value={option.code}>
+              {option.name}
+            </option>
+          ))}
+        </select>
         <button onClick={handleSearch} className="search-button">
           検索
         </button>

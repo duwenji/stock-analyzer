@@ -50,6 +50,8 @@ async def get_stocks(
     page: int = 1, 
     limit: int = 20, 
     search: Optional[str] = None,
+    industry_code: Optional[str] = None,
+    scale_code: Optional[str] = None,
     sort_by: Optional[str] = "symbol",
     sort_order: Optional[str] = "asc"
 ):
@@ -88,6 +90,22 @@ async def get_stocks(
                 search_condition = "WHERE LOWER(s.symbol) LIKE :search_term OR LOWER(s.name) LIKE :search_term"
                 search_params = {"search_term": search_term}
             
+            if industry_code and industry_code.strip():
+                industry_code_term = industry_code.strip()
+                if not search_condition:
+                    search_condition = "WHERE s.industry_code_33 = :industry_code"
+                else:
+                    search_condition += " AND s.industry_code_33 = :industry_code"
+                search_params["industry_code"] = industry_code_term
+
+            if scale_code and scale_code.strip():
+                scale_code_term = scale_code.strip()
+                if not search_condition:
+                    search_condition = "WHERE s.scale_code = :scale_code"
+                else:
+                    search_condition += " AND s.scale_code = :scale_code"
+                search_params["scale_code"] = scale_code_term
+            
             # 総件数取得
             count_query = f"SELECT COUNT(*) FROM stocks s {search_condition}"
             result = conn.execute(text(count_query), search_params)
@@ -100,6 +118,7 @@ async def get_stocks(
                     s.symbol, 
                     s.name, 
                     industry_name_33 as industry,
+                    s.scale_name,
                     ti.golden_cross,
                     ti.dead_cross,
                     ti.rsi,
@@ -258,6 +277,32 @@ async def get_recommendations(request: SelectedRecommendationRequest):
     except Exception as e:
         logger.exception(f"推奨生成エラー: {str(e)}")
         raise HTTPException(status_code=500, detail=f"推奨生成エラー: {str(e)}")
+
+@app.get("/api/industry-codes", response_model=list)
+async def get_industry_codes():
+    """業種コードと業種名の一覧を取得"""
+    try:
+        engine = get_db_engine()
+        with engine.connect() as conn:
+            query = "SELECT DISTINCT industry_code_33 as code, industry_name_33 as name FROM stocks ORDER BY code"
+            result = conn.execute(text(query))
+            return [dict(row._mapping) for row in result]
+    except Exception as e:
+        logger.exception(f"業種コード取得エラー: {str(e)}")
+        raise HTTPException(status_code=500, detail="業種コードの取得に失敗しました")
+
+@app.get("/api/scale-codes", response_model=list)
+async def get_scale_codes():
+    """規模コードと規模名の一覧を取得"""
+    try:
+        engine = get_db_engine()
+        with engine.connect() as conn:
+            query = "SELECT DISTINCT scale_code as code, scale_name as name FROM stocks ORDER BY code"
+            result = conn.execute(text(query))
+            return [dict(row._mapping) for row in result]
+    except Exception as e:
+        logger.exception(f"規模コード取得エラー: {str(e)}")
+        raise HTTPException(status_code=500, detail="規模コードの取得に失敗しました")
 
 @app.get("/api/chart/{symbol}", response_model=dict)
 async def get_chart(symbol: str):

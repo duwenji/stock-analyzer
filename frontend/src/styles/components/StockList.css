@@ -117,11 +117,25 @@
   gap: 10px;
 }
 
-.search-container input {
+.search-container input,
+.search-container select {
   padding: 8px 12px;
   border: 1px solid #cbd5e1;
   border-radius: 4px;
-  width: 300px;
+  width: 200px;
+}
+
+.search-container select {
+  background-color: white;
+  cursor: pointer;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .search-container button {

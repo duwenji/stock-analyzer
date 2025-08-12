@@ -16,8 +16,7 @@ def fetch_jpx_tickers():
     response = requests.get(url)
     
     # Excelをデータフレームに読み込み
-    df = pd.read_excel(BytesIO(response.content))
-    
+    df = pd.read_excel(BytesIO(response.content))   
     # 必要な列を選択（最新の列名に基づく）
     required_columns = ['コード', '銘柄名', '市場・商品区分', '33業種コード', 
                        '33業種区分', '17業種コード', '17業種区分', '規模コード', '規模区分']
