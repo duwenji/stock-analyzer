@@ -16,6 +16,6 @@ async def recommend_stocks(params: Dict) -> Dict:
     
     # 推奨結果をDBに保存
     if result.get('status') != 'error':
-        await save_recommendation(result, params)
+        save_recommendation(result, params)
     
     return result

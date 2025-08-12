@@ -123,6 +123,12 @@ def fetch_price_history(symbols: List[str], limit: int = 90) -> str:
 def save_recommendation(result: Dict, params: Dict) -> bool:
     """推奨結果をデータベースに保存"""
     try:
+        logger.debug(
+            f"推奨結果保存開始 - principal: {params['principal']}, "
+            f"戦略: {params['strategy']}, "
+            f"銘柄数: {len(params['selected_symbols'])}, "
+            f"推奨: {result}"
+        )
         engine = get_db_engine()
         with engine.begin() as conn:
             # セッション作成
@@ -135,7 +141,7 @@ def save_recommendation(result: Dict, params: Dict) -> bool:
             )
             conn.execute(session_stmt)
             session_id = conn.execute(
-                select([RecommendationSession.session_id])
+                select(RecommendationSession.session_id)
                 .order_by(RecommendationSession.session_id.desc())
                 .limit(1)
             ).scalar()
@@ -145,10 +151,10 @@ def save_recommendation(result: Dict, params: Dict) -> bool:
                 result_stmt = insert(RecommendationResult).values(
                     session_id=session_id,
                     symbol=rec['symbol'],
-                    rating=rec['rating'],
-                    confidence=rec.get('confidence'),
-                    reason=rec.get('reason'),
-                    target_price=rec.get('target_price')
+                    name=rec.get('name', ''),
+                    allocation=rec.get('allocation', ''),
+                    confidence=rec.get('confidence') / 100.0 if rec.get('confidence') else None,
+                    reason=rec.get('reason', "")
                 )
                 conn.execute(result_stmt)
             return True

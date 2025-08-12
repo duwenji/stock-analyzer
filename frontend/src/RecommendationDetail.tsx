@@ -7,10 +7,9 @@ import dayjs from 'dayjs';
 interface Recommendation {
   symbol: string;
   name: string;
-  rating: string;
   confidence: number;
+  allocation: number;
   reason: string;
-  target_price?: number;
 }
 
 interface Session {
@@ -140,9 +139,8 @@ const RecommendationDetail: React.FC = () => {
             <TableRow>
               <TableCell>銘柄コード</TableCell>
               <TableCell>銘柄名</TableCell>
-              <TableCell>評価</TableCell>
+              <TableCell>推奨割合</TableCell>
               <TableCell>信頼度</TableCell>
-              <TableCell>目標価格</TableCell>
               <TableCell>理由</TableCell>
             </TableRow>
           </TableHead>
@@ -153,17 +151,10 @@ const RecommendationDetail: React.FC = () => {
                 <TableCell>{rec.name}</TableCell>
                 <TableCell>
                   <Chip 
-                    label={rec.rating} 
-                    color={
-                      rec.rating === '強力買い' ? 'success' : 
-                      rec.rating === '買い' ? 'primary' : 'default'
-                    }
+                    label={`${rec.allocation}`} 
                   />
                 </TableCell>
                 <TableCell>{rec.confidence}%</TableCell>
-                <TableCell>
-                  {rec.target_price ? `¥${rec.target_price.toLocaleString()}` : '-'}
-                </TableCell>
                 <TableCell>{rec.reason}</TableCell>
               </TableRow>
             ))}

@@ -362,12 +362,29 @@ async def get_recommendation_history(
 ):
     """推奨履歴一覧を取得"""
     try:
-        # ソート条件の解析
-        sort_field, sort_order = sort.split("_") if "_" in sort else (sort, "desc")
+        # ソート条件の解析とバリデーション
         valid_sort_fields = ["generated_at", "principal", "risk_tolerance", "strategy"]
+        valid_sort_orders = ["asc", "desc"]
         
-        if sort_field not in valid_sort_fields:
-            raise HTTPException(status_code=400, detail="無効なソート項目")
+        try:
+            if "_" in sort:
+                sort_field, sort_order = sort.split("-")
+                if sort_order.lower() not in valid_sort_orders:
+                    raise ValueError("無効なソート順序")
+            else:
+                sort_field = sort
+                sort_order = "desc"
+                
+            if sort_field not in valid_sort_fields:
+                raise ValueError("無効なソート項目")
+                
+            logger.info(f"ソート条件: field={sort_field}, order={sort_order}")
+        except ValueError as e:
+            logger.warning(f"無効なソートパラメータ: {sort} ({str(e)})")
+            raise HTTPException(
+                status_code=400,
+                detail=f"無効なソートパラメータ: {sort}. 有効な形式: field_asc または field_desc (field: {', '.join(valid_sort_fields)})"
+            )
 
         # クエリ構築
         where_clauses = []
@@ -457,15 +474,13 @@ async def get_recommendation_detail(session_id: str):
             results_query = """
                 SELECT 
                     rr.symbol,
-                    s.name,
-                    rr.rating,
+                    rr.name,
+                    rr.allocation,
                     rr.confidence,
-                    rr.reason,
-                    rr.target_price
+                    rr.reason
                 FROM recommendation_results rr
-                JOIN stocks s ON rr.symbol = s.symbol
                 WHERE rr.session_id = :session_id
-                ORDER BY rr.rating DESC, rr.confidence DESC
+                ORDER BY rr.allocation DESC, rr.confidence DESC
             """
             results = conn.execute(text(results_query), {"session_id": session_id})
             recommendations = [dict(row._mapping) for row in results]

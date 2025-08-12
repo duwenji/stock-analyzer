@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 from sqlalchemy import text
-from sqlalchemy.exc import SQLAlchemyError
 
 # 移動平均計算関数
 def calculate_moving_average(data, window=30):

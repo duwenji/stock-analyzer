@@ -66,8 +66,10 @@ CREATE TABLE IF NOT EXISTS recommendation_results (
     id SERIAL PRIMARY KEY,
     session_id UUID NOT NULL REFERENCES recommendation_sessions(session_id),
     symbol TEXT NOT NULL REFERENCES stocks(symbol),
-    rating TEXT NOT NULL,
+    name TEXT NOT NULL,
+    allocation TEXT NOT NULL,
     confidence DECIMAL(5,4),
     reason TEXT,
-    target_price DECIMAL(20,4)
+    target_price DECIMAL(20,4),
+    rating VARCHAR(20)
 );
