@@ -309,7 +309,7 @@ const StockList: React.FC = () => {
     
     return (
       <div className="chart-modal">
-        <div className="modal-content">
+          <div className="chart-modal-content">
           <div className="modal-header">
             <h3 className="modal-title">{selectedSymbol} チャート</h3>
             <button 
