@@ -332,7 +332,7 @@ async def get_industry_codes():
 async def get_all_prompts(db: Session = Depends(get_db)):
     """全プロンプトテンプレートを取得"""
     try:
-        prompts = db.query(PromptTemplate).all()
+        prompts = db.query(PromptTemplate).order_by(PromptTemplate.id).all()
         return [
             {
                 "id": p.id,
@@ -350,11 +350,11 @@ async def get_all_prompts(db: Session = Depends(get_db)):
         logger.exception(f"プロンプト取得エラー: {str(e)}")
         raise HTTPException(status_code=500, detail="プロンプトの取得に失敗しました")
 
-@app.get("/api/prompts/{name}", response_model=PromptTemplateResponse)
-async def get_prompt(name: str, db: Session = Depends(get_db)):
+@app.get("/api/prompts/{id}", response_model=PromptTemplateResponse)
+async def get_prompt(id: int, db: Session = Depends(get_db)):
     """特定のプロンプトテンプレートを取得"""
     try:
-        prompt = db.query(PromptTemplate).filter_by(name=name).first()
+        prompt = db.query(PromptTemplate).filter_by(id=id).first()
         if not prompt:
             raise HTTPException(status_code=404, detail="プロンプトが見つかりません")
         return {
@@ -410,14 +410,14 @@ async def create_prompt(request: PromptTemplateRequest, db: Session = Depends(ge
         logger.exception(f"プロンプト作成エラー: {str(e)}")
         raise HTTPException(status_code=500, detail="プロンプトの作成に失敗しました")
 
-@app.put("/api/prompts/{name}", response_model=PromptTemplateResponse)
-async def update_prompt(name: str, request: PromptTemplateRequest, db: Session = Depends(get_db)):
+@app.put("/api/prompts/{id}", response_model=PromptTemplateResponse)
+async def update_prompt(id: int, request: PromptTemplateRequest, db: Session = Depends(get_db)):
     """プロンプトテンプレートを更新"""
     try:
         # トランザクション開始
         db.begin()
         
-        prompt = db.query(PromptTemplate).filter_by(name=name).first()
+        prompt = db.query(PromptTemplate).filter_by(id=id).first()
         if not prompt:
             raise HTTPException(status_code=404, detail="プロンプトが見つかりません")
             
@@ -466,11 +466,11 @@ async def update_prompt(name: str, request: PromptTemplateRequest, db: Session =
             detail=f"予期せぬエラー: {str(e)}"
         )
 
-@app.delete("/api/prompts/{name}")
-async def delete_prompt(name: str, db: Session = Depends(get_db)):
+@app.delete("/api/prompts/{id}")
+async def delete_prompt(id: int, db: Session = Depends(get_db)):
     """プロンプトテンプレートを削除"""
     try:
-        prompt = db.query(PromptTemplate).filter_by(name=name).first()
+        prompt = db.query(PromptTemplate).filter_by(id=id).first()
         if not prompt:
             raise HTTPException(status_code=404, detail="プロンプトが見つかりません")
             

@@ -20,7 +20,7 @@ const PromptManagement: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
@@ -62,8 +62,8 @@ const PromptManagement: React.FC = () => {
     setIsCreating(true);
   };
 
-  const handleDelete = (name: string) => {
-    setDeleteTarget(name);
+  const handleDelete = (id: number) => {
+    setDeleteTarget(id);
     setIsDeleting(true);
   };
 
@@ -72,7 +72,10 @@ const PromptManagement: React.FC = () => {
       if (isCreating) {
         await promptService.createPrompt(promptData);
       } else {
-        await promptService.updatePrompt(promptData.name, promptData);
+        if (!currentPrompt) {
+          throw new Error('編集するプロンプトが見つかりません');
+        }
+        await promptService.updatePrompt(currentPrompt.id, promptData);
       }
       setErrorMessage(null);
       fetchPrompts();
@@ -123,7 +126,7 @@ const PromptManagement: React.FC = () => {
               </h3>
               <div className="prompt-actions">
                 <button onClick={() => handleEdit(prompt)}>編集</button>
-                <button onClick={() => handleDelete(prompt.name)}>削除</button>
+                <button onClick={() => handleDelete(prompt.id)}>削除</button>
               </div>
             </div>
             <div className="prompt-meta">
@@ -157,7 +160,7 @@ const PromptManagement: React.FC = () => {
 
       {isDeleting && (
         <SimpleConfirmationDialog
-          message={`プロンプト「${deleteTarget}」を削除しますか？`}
+                message={`プロンプトID: ${deleteTarget} を削除しますか？`}
           onConfirm={confirmDelete}
           onCancel={() => setIsDeleting(false)}
         />
