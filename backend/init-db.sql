@@ -58,7 +58,8 @@ CREATE TABLE IF NOT EXISTS recommendation_sessions (
     risk_tolerance VARCHAR(20) NOT NULL,
     strategy VARCHAR(50) NOT NULL,
     symbols TEXT[] NOT NULL,
-    technical_filter TEXT
+    technical_filter TEXT,
+    prompt_id INTEGER REFERENCES prompt_templates(id)
 );
 
 -- 推奨結果テーブルの作成
@@ -82,4 +83,118 @@ CREATE TABLE IF NOT EXISTS prompt_templates (
     output_format TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+-- プロンプトテンプレート初期データ
+INSERT INTO prompt_templates (
+    name, agent_type, system_role, user_template, output_format
+) VALUES 
+(
+    'deepseek-direct',
+    'direct',
+    'あなたはプロの株式アナリストです。',
+    '### ユーザー情報:\n- 元金: {principal}円\n- リスク許容度: {risk_tolerance}\n- 投資方針: {strategy}\n\n### 利用可能クニカル指標: \n{technical_indicators}\n',
+    '{\n  \"recommendations\": [\n    {\n      \"s--Moreymbol\": \"銘柄コード\",\n      \"name\": \"会社名\",\n      \"confidence\": 0-100,\n --More--     \"allocation\": \"推奨割合%\",\n      \"reason\": \"推奨理由\"\n    }\n  ],\n  \"--More--total_return_estimate\": \"期待リターン%\"\n}'
+),
+(
+    '基本推奨プロンプト', 
+    'direct',
+    'あなたはプロの株式アナリストです。与えられた銘柄情報を基に、投資家向けの推奨を生成してください。',
+    '以下の銘柄情報を分析し、投資推奨を生成してください:
+    
+    銘柄情報:
+    {company_infos}
+    
+    テクニカル指標:
+    {technical_indicators}
+    
+    投資条件:
+    元金: {principal}円
+    リスク許容度: {risk_tolerance}
+    戦略: {strategy}
+    
+    出力形式に従って回答してください。',
+    '{
+        "recommendations": [
+            {
+                "symbol": "銘柄コード",
+                "name": "企業名",
+                "allocation": "推奨割合(%)",
+                "confidence": "信頼度(0-1)",
+                "reason": "推奨理由"
+            }
+        ],
+        "summary": "全体の推奨概要"
+    }'
+),
+(
+    '詳細分析プロンプト', 
+    'direct',
+    'あなたはプロの株式アナリストです。銘柄の詳細な分析とリスク評価を行ってください。',
+    '以下の銘柄情報を詳細に分析し、リスク評価を含む推奨を生成してください:
+    
+    銘柄情報:
+    {company_infos}
+    
+    テクニカル指標:
+    {technical_indicators}
+    
+    投資条件:
+    元金: {principal}円
+    リスク許容度: {risk_tolerance}
+    戦略: {strategy}
+    
+    各銘柄について以下の点を分析してください:
+    - 強み
+    - 弱み
+    - 機会
+    - 脅威
+    - リスク評価(1-5)',
+    '{
+        "analysis": [
+            {
+                "symbol": "銘柄コード",
+                "strengths": ["強み1", "強み2"],
+                "weaknesses": ["弱み1", "弱み2"],
+                "opportunities": ["機会1", "機会2"],
+                "threats": ["脅威1", "脅威2"],
+                "risk_rating": 3
+            }
+        ],
+        "recommendations": "全体の推奨"
+    }'
+),
+(
+    'リスク管理プロンプト', 
+    'direct',
+    'あなたはリスク管理の専門家です。',
+    '以下の銘柄リストから、リスク分散されたポートフォリオを提案してください:
+    
+    銘柄情報:
+    {company_infos}
+    
+    投資条件:
+    元金: {principal}円
+    リスク許容度: {risk_tolerance}
+    戦略: {strategy}
+    
+    業種分散とリスク分散を考慮した推奨を生成してください。',
+    '{
+        "portfolio": [
+            {
+                "symbol": "銘柄コード",
+                "allocation": "割合(%)",
+                "sector": "業種",
+                "risk_level": "リスクレベル"
+            }
+        ],
+        "diversification": {
+            "sectors": ["業種1", "業種2"],
+            "risk_distribution": {
+                "low": 30,
+                "medium": 50,
+                "high": 20
+            }
+        }
+    }'
 );
