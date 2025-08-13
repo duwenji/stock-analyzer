@@ -1,6 +1,5 @@
 import React from 'react';
 import '../src/styles/components/RecommendationResults.css';
-import ChartExplanation from './components/ChartExplanation';
 
 interface Recommendation {
   symbol: string;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TextField, MenuItem, Select, FormControl, InputLabel, Typography, Box, Tooltip, TextFieldProps } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, MenuItem, Select, FormControl, InputLabel, Typography, Box, Tooltip, TableSortLabel } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { styled } from '@mui/system';
@@ -81,6 +81,16 @@ const RecommendationHistory: React.FC = () => {
     setSort(`${field}-${newOrder}`);
   };
 
+  const columns = [
+    { id: 'generated_at', label: '生成日時', align: 'left', sortable: true },
+    { id: 'principal', label: '投資元本', align: 'right', sortable: true },
+    { id: 'risk_tolerance', label: 'リスク許容度', align: 'left', sortable: true },
+    { id: 'strategy', label: '戦略', align: 'left', sortable: true },
+    { id: 'prompt_name', label: 'プロンプト', align: 'left', sortable: true },
+    { id: 'technical_filter', label: 'テクニカル条件', align: 'left', sortable: true },
+    { id: 'symbol_count', label: '銘柄数', align: 'center', sortable: true }
+  ];
+
   const handleRowClick = (sessionId: string) => {
     navigate(`/recommendations/${sessionId}`);
   };
@@ -127,27 +137,32 @@ const RecommendationHistory: React.FC = () => {
         </FormControl>
       </Box>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'auto' }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell 
-                onClick={() => handleSortChange('date')}
-                sx={{ cursor: 'pointer', fontWeight: 'bold' }}
-              >
-                日時 {sort.startsWith('date') && (sort.endsWith('asc') ? '↑' : '↓')}
-              </TableCell>
-              <TableCell 
-                onClick={() => handleSortChange('principal')}
-                sx={{ cursor: 'pointer', fontWeight: 'bold' }}
-              >
-                元本 {sort.startsWith('principal') && (sort.endsWith('asc') ? '↑' : '↓')}
-              </TableCell>
-              <TableCell>リスク許容度</TableCell>
-              <TableCell>戦略</TableCell>
-              <TableCell>プロンプト</TableCell>
-              <TableCell>テクニカルフィルタ</TableCell>
-              <TableCell>銘柄数</TableCell>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.id}
+                  align={column.align as any}
+                  onClick={() => column.sortable && handleSortChange(column.id)}
+                  sx={{ 
+                    fontWeight: 'bold',
+                    cursor: column.sortable ? 'pointer' : 'default'
+                  }}
+                >
+                  {column.sortable ? (
+                    <TableSortLabel
+                      active={sort.startsWith(column.id)}
+                      direction={sort.endsWith('asc') ? 'asc' : 'desc'}
+                    >
+                      {column.label}
+                    </TableSortLabel>
+                  ) : (
+                    column.label
+                  )}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>

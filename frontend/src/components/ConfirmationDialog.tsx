@@ -1,5 +1,22 @@
 import React from 'react';
-import '../styles/components/ConfirmationDialog.css';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Checkbox,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Box,
+  Grid
+} from '@mui/material';
 
 interface Stock {
   symbol: string;
@@ -92,16 +109,15 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
           // 値が有効な数値かチェック
           const numVal = typeof val === 'string' ? parseFloat(val) : val;
           const isValidNumber = typeof numVal === 'number' && !isNaN(numVal);
-          const isValidOperator = operator === '>' || operator === '<';
           
-          if (isValidOperator && isValidNumber) {
+          if ((operator === '>' || operator === '<') && isValidNumber) {
             filters.push(`RSI ${operator === '>' ? '＞' : '＜'} ${numVal}`);
           }
         }
         
         // ゴールデンクロスのチェック
         if (techFilters.golden_cross !== undefined && Array.isArray(techFilters.golden_cross)) {
-          const [operator, val] = techFilters.golden_cross;
+          const val = techFilters.golden_cross[1]; // 2番目の要素のみ取得
           const boolVal = typeof val === 'string' ? 
             val.toLowerCase() === 'true' : 
             Boolean(val);
@@ -127,96 +143,102 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   };
 
   return (
-    <div className="confirmation-dialog-overlay">
-      <div className="confirmation-dialog">
-        <h3>推奨パラメータ確認</h3>
-        
-        <div className="param-section">
-          <h4>入力パラメータ</h4>
-          <div className="param-grid">
-            <div>投資元本:</div>
-            <div>{formatParam('principal', params.principal)}</div>
-            
-            <div>リスク許容度:</div>
-            <div>{formatParam('riskTolerance', params.riskTolerance)}</div>
-            
-            <div>投資方針:</div>
-            <div>{formatParam('strategy', params.strategy)}</div>
-            
-            <div>AIエージェントタイプ:</div>
-            <div>{formatParam('agentType', params.agentType)}</div>
-            
-            <div>特定銘柄:</div>
-            <div>{formatParam('symbols', params.symbols)}</div>
-            
-            <div>検索条件:</div>
-            <div>{formatParam('search', params.search)}</div>
-            
-            <div>テクニカル指標:</div>
-            <div>{formatParam('technical_filters', params.technical_filters)}</div>
-          </div>
-        </div>
+    <Dialog open={true} onClose={onCancel} maxWidth="lg" fullWidth>
+      <DialogTitle>推奨パラメータ確認</DialogTitle>
+      <DialogContent dividers>
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" gutterBottom>入力パラメータ</Typography>
+          <Grid container spacing={2}>
+            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
+              <Typography variant="subtitle1">投資元本:</Typography>
+              <Typography>{formatParam('principal', params.principal)}</Typography>
+            </Grid>
+            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
+              <Typography variant="subtitle1">リスク許容度:</Typography>
+              <Typography>{formatParam('riskTolerance', params.riskTolerance)}</Typography>
+            </Grid>
+            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
+              <Typography variant="subtitle1">投資方針:</Typography>
+              <Typography>{formatParam('strategy', params.strategy)}</Typography>
+            </Grid>
+            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
+              <Typography variant="subtitle1">AIエージェントタイプ:</Typography>
+              <Typography>{formatParam('agentType', params.agentType)}</Typography>
+            </Grid>
+            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
+              <Typography variant="subtitle1">特定銘柄:</Typography>
+              <Typography>{formatParam('symbols', params.symbols)}</Typography>
+            </Grid>
+            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
+              <Typography variant="subtitle1">検索条件:</Typography>
+              <Typography>{formatParam('search', params.search)}</Typography>
+            </Grid>
+            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
+              <Typography variant="subtitle1">テクニカル指標:</Typography>
+              <Typography>{formatParam('technical_filters', params.technical_filters)}</Typography>
+            </Grid>
+          </Grid>
+        </Box>
 
-        <div className="stock-section">
-          <h4>候補銘柄 ({selected.length}/{stocks.length}件選択)</h4>
-          <div className="stock-table-container">
-            <table className="stock-table">
-              <thead>
-                <tr>
-                  <th>
-                    <input
-                      type="checkbox"
+        <Box>
+          <Typography variant="h6" gutterBottom>
+            候補銘柄 ({selected.length}/{stocks.length}件選択)
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Checkbox
                       checked={selected.length === stocks.length && stocks.length > 0}
                       onChange={toggleAllStocks}
                     />
-                  </th>
-                  <th>銘柄コード</th>
-                  <th>会社名</th>
-                  <th>業種</th>
-                  <th>RSI</th>
-                  <th>ゴールデンクロス</th>
-                  <th>指標日付</th>
-                </tr>
-              </thead>
-              <tbody>
+                  </TableCell>
+                  <TableCell>銘柄コード</TableCell>
+                  <TableCell>会社名</TableCell>
+                  <TableCell>業種</TableCell>
+                  <TableCell>RSI</TableCell>
+                  <TableCell>ゴールデンクロス</TableCell>
+                  <TableCell>指標日付</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {stocks.map(stock => (
-                  <tr key={stock.symbol}>
-                    <td>
-                      <input
-                        type="checkbox"
+                  <TableRow key={stock.symbol}>
+                    <TableCell>
+                      <Checkbox
                         checked={selected.includes(stock.symbol)}
                         onChange={() => toggleStock(stock.symbol)}
                       />
-                    </td>
-                    <td>{stock.symbol}</td>
-                    <td>{stock.name}</td>
-                    <td>{stock.industry}</td>
-                    <td>{
+                    </TableCell>
+                    <TableCell>{stock.symbol}</TableCell>
+                    <TableCell>{stock.name}</TableCell>
+                    <TableCell>{stock.industry}</TableCell>
+                    <TableCell>{
                       stock.rsi === null || stock.rsi === undefined ? '-' : 
                       typeof stock.rsi === 'number' ? stock.rsi.toFixed(2) :
                       stock.rsi.toString().replace(/^Decimal\(['"]?|['"]?\)$/g, '')
-                    }</td>
-                    <td>{stock.golden_cross ? '○' : '-'}</td>
-                    <td>{stock.indicator_date || '-'}</td>
-                  </tr>
+                    }</TableCell>
+                    <TableCell>{stock.golden_cross ? '○' : '-'}</TableCell>
+                    <TableCell>{stock.indicator_date || '-'}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="action-buttons">
-          <button onClick={onCancel} className="cancel-btn">キャンセル</button>
-          <button 
-            onClick={onConfirm} 
-            className="confirm-btn"
-            disabled={selected.length === 0}
-          >
-            推奨を生成 ({selected.length}件)
-          </button>
-        </div>
-      </div>
-    </div>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onCancel} variant="outlined">キャンセル</Button>
+        <Button 
+          onClick={onConfirm} 
+          variant="contained"
+          disabled={selected.length === 0}
+        >
+          推奨を生成 ({selected.length}件)
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
