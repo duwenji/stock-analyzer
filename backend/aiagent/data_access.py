@@ -2,7 +2,7 @@ import pandas as pd
 from typing import List, Dict
 from utils import get_db_engine, setup_backend_logger
 from sqlalchemy import select, insert
-from models import RecommendationSession, RecommendationResult
+from models import RecommendationSession, RecommendationResult, PromptTemplate
 
 logger = setup_backend_logger(__name__)
 
@@ -119,6 +119,48 @@ def fetch_price_history(symbols: List[str], limit: int = 90) -> str:
         result.append(group.drop(columns=['symbol']).to_csv(index=False))
     
     return "\n".join(result)
+
+def get_prompt_template(prompt_id: int) -> Dict[str, str]:
+    """プロンプトテンプレートをデータベースから取得
+    
+    Args:
+        prompt_id: prompt_templatesテーブルのID
+        
+    Returns:
+        {
+            "system_role": システムロールテキスト,
+            "user_template": ユーザーテンプレートテキスト,
+            "output_format": 出力フォーマット
+        }
+    """
+    try:
+        engine = get_db_engine()
+        with engine.begin() as conn:
+            stmt = select(
+                PromptTemplate.system_role,
+                PromptTemplate.user_template,
+                PromptTemplate.output_format
+            ).where(PromptTemplate.id == prompt_id)
+            
+            result = conn.execute(stmt).fetchone()
+            
+            if result is None:
+                logger.warning(f"指定されたプロンプトテンプレートが見つかりません: prompt_id={prompt_id}")
+                return {
+                    "system_role": "あなたはプロの株式アナリストです。",
+                    "user_template": "以下の銘柄情報を分析して投資推奨を行ってください。\n銘柄情報:\n{company_info}\n\nテクニカル指標:\n{technical_indicators}\n\n価格履歴:\n{price_history}",
+                    "output_format": "JSON形式で推奨銘柄とその理由を返してください"
+                }
+                
+            return {
+                "system_role": result.system_role or "",
+                "user_template": result.user_template,
+                "output_format": result.output_format
+            }
+            
+    except Exception as e:
+        logger.error(f"プロンプトテンプレートの取得に失敗: {str(e)}")
+        raise
 
 def save_recommendation(result: Dict, params: Dict) -> bool:
     """推奨結果をデータベースに保存"""

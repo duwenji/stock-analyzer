@@ -190,6 +190,7 @@ class RecommendationRequest(BaseModel):
 class SelectedRecommendationRequest(RecommendationRequest):
     selected_symbols: List[str]
     agent_type: str = "direct"  # デフォルト値
+    prompt_id: Optional[int] = None  # プロンプトテンプレートID
 
 class PromptTemplateRequest(BaseModel):
     """プロンプトテンプレートリクエストモデル"""

@@ -5,7 +5,7 @@ interface Stock {
   symbol: string;
   name: string;
   industry: string;
-  rsi?: number | string;
+  rsi?: number | string | null;
   golden_cross?: boolean;
   indicator_date?: string;
 }
@@ -192,7 +192,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                     <td>{stock.name}</td>
                     <td>{stock.industry}</td>
                     <td>{
-                      stock.rsi === undefined ? '-' : 
+                      stock.rsi === null || stock.rsi === undefined ? '-' : 
                       typeof stock.rsi === 'number' ? stock.rsi.toFixed(2) :
                       stock.rsi.toString().replace(/^Decimal\(['"]?|['"]?\)$/g, '')
                     }</td>

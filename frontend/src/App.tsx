@@ -36,7 +36,8 @@ function App() {
         technical_filters: params.technical_filters,
         symbols: params.symbols,
         selected_symbols: params.selected_symbols,
-        agent_type: params.agent_type || "direct"
+        agent_type: params.agent_type || "direct",
+        prompt_id: params.prompt_id
       };
       console.log("requestData:", requestData)
       

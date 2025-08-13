@@ -12,6 +12,7 @@ export interface TransformedRequest {
   symbols?: string[];
   search?: string;
   technical_filters?: TechnicalFilter;
+  prompt_id?: number;  // プロンプトIDを追加
 }
 
 export const transformRecommendationRequest = (
@@ -35,6 +36,7 @@ export const transformRecommendationRequest = (
       ? data.symbols.split(',').map((s: string) => s.trim()).filter((s: string) => s.length > 0)
       : undefined,
     search: data.search,
-    technical_filters: data.technical_filters
+    technical_filters: data.technical_filters,
+    prompt_id: data.promptId  // プロンプトIDを追加
   };
 };

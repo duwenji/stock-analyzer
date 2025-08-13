@@ -20,6 +20,7 @@ interface Session {
   strategy: string;
   technical_filter?: string;
   symbol_count: number;
+  prompt_name?: string;
 }
 
 const RecommendationHistory: React.FC = () => {
@@ -144,6 +145,7 @@ const RecommendationHistory: React.FC = () => {
               </TableCell>
               <TableCell>リスク許容度</TableCell>
               <TableCell>戦略</TableCell>
+              <TableCell>プロンプト</TableCell>
               <TableCell>テクニカルフィルタ</TableCell>
               <TableCell>銘柄数</TableCell>
             </TableRow>
@@ -167,6 +169,11 @@ const RecommendationHistory: React.FC = () => {
                   <TableCell>¥{session.principal.toLocaleString()}</TableCell>
                   <TableCell>{session.risk_tolerance}</TableCell>
                   <TableCell>{session.strategy}</TableCell>
+                  <TableCell>
+                    <Tooltip title={session.prompt_name || 'デフォルト'} arrow>
+                      <span>{session.prompt_name || 'デフォルト'}</span>
+                    </Tooltip>
+                  </TableCell>
                   <TableCell>
                     <Tooltip title={session.technical_filter || 'なし'} arrow>
                       <span>

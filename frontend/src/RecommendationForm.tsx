@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../src/styles/components/RecommendationForm.css';
 import ConfirmationDialog from './components/ConfirmationDialog';
@@ -19,6 +19,7 @@ export interface RecommendationParams {
   agentType: string;
   symbols: string;
   search: string;
+  promptId?: number;
   technical_filters?: {
     [key: string]: [string, any];
   };
@@ -34,8 +35,28 @@ const RecommendationForm: React.FC<{
     agentType: 'direct',
     symbols: '',
     search: '',
-    technical_filters: {}
+    technical_filters: {},
+    promptId: undefined
   });
+
+  const [prompts, setPrompts] = useState<{id: number, name: string}[]>([]);
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      try {
+        const response = await axios.get('/api/prompts');
+        setPrompts(response.data);
+        if (response.data.length > 0) {
+          setFormData(prev => ({
+            ...prev,
+            promptId: response.data[0].id
+          }));
+        }
+      } catch (error) {
+        console.error('プロンプト取得エラー:', error);
+      }
+    };
+    fetchPrompts();
+  }, []);
 
   const [isConfirming, setIsConfirming] = useState(false);
   const [candidateStocks, setCandidateStocks] = useState<Stock[]>([]);
@@ -84,7 +105,8 @@ const RecommendationForm: React.FC<{
     try {
       const transformedData = transformRecommendationRequest({
         ...formData,
-        technical_filters: setTechFilter()
+        technical_filters: setTechFilter(),
+        promptId: formData.promptId  // プロンプトIDを追加
       });
       const response = await axios.post('/api/filter-stocks', transformedData);
       setCandidateStocks(response.data.candidate_stocks);
@@ -106,7 +128,8 @@ const RecommendationForm: React.FC<{
 
       onSubmit({
         ...transformedData,
-        selected_symbols: selectedStocks
+        selected_symbols: selectedStocks,
+        prompt_id: formData.promptId  // プロンプトIDを追加
       });
       setIsConfirming(false);
     } catch (error) {
@@ -178,6 +201,23 @@ const RecommendationForm: React.FC<{
           <div className="form-hint">
             MCP Agentでは、1つのLLMが推奨を生成し、別のLLMが評価とフィードバックを行います
           </div>
+        </div>
+
+        <div className="form-group">
+          <label>プロンプトテンプレート:</label>
+          <select
+            name="promptId"
+            value={formData.promptId || ''}
+            onChange={(e) => setFormData({
+              ...formData,
+              promptId: e.target.value ? parseInt(e.target.value) : undefined
+            })}
+            required
+          >
+            {prompts.map(prompt => (
+              <option key={prompt.id} value={prompt.id}>{prompt.name}</option>
+            ))}
+          </select>
         </div>
         
         <div className="form-group">
