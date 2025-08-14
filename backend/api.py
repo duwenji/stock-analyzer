@@ -186,11 +186,12 @@ class RecommendationRequest(BaseModel):
     symbols: Optional[List[str]] = None     # 特定銘柄指定（オプション）
     search: Optional[str] = None        # 検索条件（追加）
     technical_filters: Optional[dict] = None
+    agent_type: str = "direct"  # デフォルト値
+    prompt_id: Optional[int] = None  # プロンプトテンプレートID
 
 class SelectedRecommendationRequest(RecommendationRequest):
     selected_symbols: List[str]
-    agent_type: str = "direct"  # デフォルト値
-    prompt_id: Optional[int] = None  # プロンプトテンプレートID
+    # agent_typeとprompt_idは親クラスから継承
 
 class PromptTemplateRequest(BaseModel):
     """プロンプトテンプレートリクエストモデル"""
@@ -221,9 +222,9 @@ def get_db():
     finally:
         db.close()
         
-@app.post("/api/filter-stocks", response_model=dict)
-async def filter_stocks(request: RecommendationRequest):
-    """テクニカル指標で銘柄をフィルタリング"""
+@app.post("/api/prepare-recommendations", response_model=dict)
+async def prepare_recommendations(request: RecommendationRequest):
+    """推奨銘柄準備エンドポイント"""
     try:
         logger.info(f"フィルタリングリクエスト受信: {request.model_dump()}")
 

@@ -108,7 +108,7 @@ const RecommendationForm: React.FC<{
         technical_filters: setTechFilter(),
         promptId: formData.promptId  // プロンプトIDを追加
       });
-      const response = await axios.post('/api/filter-stocks', transformedData);
+      const response = await axios.post('/api/prepare-recommendations', transformedData);
       setCandidateStocks(response.data.candidate_stocks);
       setSelectedStocks(response.data.candidate_stocks.map((stock: Stock) => stock.symbol));
       setIsConfirming(true);
