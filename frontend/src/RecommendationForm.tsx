@@ -31,7 +31,7 @@ export interface RecommendationParams {
   symbols: string;
   search: string;
   promptId?: number;
-  recommendationPromptId?: number;
+  optimizerPromptId?: number;
   evaluationPromptId?: number;
   technical_filters?: {
     [key: string]: [string, any];
@@ -50,7 +50,7 @@ const RecommendationForm: React.FC<{
     search: '',
     technical_filters: {},
     promptId: undefined,
-    recommendationPromptId: undefined,
+    optimizerPromptId: undefined,
     evaluationPromptId: undefined
   });
 
@@ -73,7 +73,9 @@ const RecommendationForm: React.FC<{
         if (promptsData.length > 0) {
           setFormData(prev => ({
             ...prev,
-            promptId: promptsData[0].id
+            promptId: promptsData[0].id,
+            optimizerPromptId: promptsData[0].id,
+            evaluationPromptId: promptsData[0].id
           }));
         }
       } catch (error) {
@@ -130,8 +132,7 @@ const RecommendationForm: React.FC<{
     try {
       const transformedData = transformRecommendationRequest({
         ...formData,
-        technical_filters: setTechFilter(),
-        promptId: formData.promptId  // プロンプトIDを追加
+        technical_filters: setTechFilter()
       });
       const response = await axios.post('/api/prepare-recommendations', transformedData);
       setCandidateStocks(response.data.candidate_stocks);
@@ -155,7 +156,7 @@ const RecommendationForm: React.FC<{
         ...transformedData,
         selected_symbols: selectedStocks,
         prompt_id: formData.promptId,
-        recommendation_prompt_id: formData.recommendationPromptId,
+        optimizer_prompt_id: formData.optimizerPromptId,
         evaluation_prompt_id: formData.evaluationPromptId
       });
       setIsConfirming(false);
@@ -234,11 +235,11 @@ const RecommendationForm: React.FC<{
               <div className="form-group">
                 <label>推奨用プロンプト:</label>
                 <select
-                  name="recommendationPromptId"
-                  value={formData.recommendationPromptId || ''}
+                  name="optimizerPromptId"
+                  value={formData.optimizerPromptId || ''}
                   onChange={(e) => setFormData({
                     ...formData,
-                    recommendationPromptId: e.target.value ? parseInt(e.target.value) : undefined
+                    optimizerPromptId: e.target.value ? parseInt(e.target.value) : undefined
                   })}
                   required
                 >

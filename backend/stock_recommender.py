@@ -38,15 +38,13 @@ async def recommend_stocks(params: Dict) -> Dict:
     
     recommender = RecommenderFactory.create(agent_type)
     logger.info(f"Created recommender: {recommender.__class__.__name__}")
-    logger.info("Executing recommendation...")
+
     result = await recommender.execute(params)
-    logger.info("Recommendation execution completed")
     
     # 推奨結果をDBに保存
     logger.info("Saving recommendation to database...")
     if result.get('status') != 'error':
         save_recommendation(result, params)
-        logger.info("Recommendation saved successfully")
     else:
         logger.error("Recommendation failed with error status")
     

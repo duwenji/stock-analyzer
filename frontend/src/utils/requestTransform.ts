@@ -13,7 +13,7 @@ export interface TransformedRequest {
   search?: string;
   technical_filters?: TechnicalFilter;
   prompt_id?: number;
-  recommendation_prompt_id?: number;
+  optimizer_prompt_id?: number;
   evaluation_prompt_id?: number;
 }
 
@@ -40,7 +40,7 @@ export const transformRecommendationRequest = (
     search: data.search,
     technical_filters: data.technical_filters,
     prompt_id: data.promptId,
-    recommendation_prompt_id: data.agentType === 'mcpagent' ? data.recommendationPromptId : undefined,
+    optimizer_prompt_id: data.agentType === 'mcpagent' ? data.optimizerPromptId : undefined,
     evaluation_prompt_id: data.agentType === 'mcpagent' ? data.evaluationPromptId : undefined
   };
 };

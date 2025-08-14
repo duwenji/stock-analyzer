@@ -37,7 +37,9 @@ function App() {
         symbols: params.symbols,
         selected_symbols: params.selected_symbols,
         agent_type: params.agent_type || "direct",
-        prompt_id: params.prompt_id
+        prompt_id: params.prompt_id,
+        optimizer_prompt_id: params.optimizer_prompt_id,
+        evaluation_prompt_id: params.evaluation_prompt_id
       };
       console.log("requestData:", requestData)
       
