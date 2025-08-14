@@ -12,7 +12,9 @@ export interface TransformedRequest {
   symbols?: string[];
   search?: string;
   technical_filters?: TechnicalFilter;
-  prompt_id?: number;  // プロンプトIDを追加
+  prompt_id?: number;
+  recommendation_prompt_id?: number;
+  evaluation_prompt_id?: number;
 }
 
 export const transformRecommendationRequest = (
@@ -37,6 +39,8 @@ export const transformRecommendationRequest = (
       : undefined,
     search: data.search,
     technical_filters: data.technical_filters,
-    prompt_id: data.promptId  // プロンプトIDを追加
+    prompt_id: data.promptId,
+    recommendation_prompt_id: data.agentType === 'mcpagent' ? data.recommendationPromptId : undefined,
+    evaluation_prompt_id: data.agentType === 'mcpagent' ? data.evaluationPromptId : undefined
   };
 };

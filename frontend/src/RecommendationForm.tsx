@@ -12,6 +12,17 @@ export interface Stock {
   golden_cross?: boolean;
 }
 
+interface Prompt {
+  id: number;
+  name: string;
+  agent_type: string;
+  system_role: string;
+  user_template: string;
+  output_format: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface RecommendationParams {
   principal: string;
   riskTolerance: string;
@@ -20,6 +31,8 @@ export interface RecommendationParams {
   symbols: string;
   search: string;
   promptId?: number;
+  recommendationPromptId?: number;
+  evaluationPromptId?: number;
   technical_filters?: {
     [key: string]: [string, any];
   };
@@ -36,19 +49,31 @@ const RecommendationForm: React.FC<{
     symbols: '',
     search: '',
     technical_filters: {},
-    promptId: undefined
+    promptId: undefined,
+    recommendationPromptId: undefined,
+    evaluationPromptId: undefined
   });
 
-  const [prompts, setPrompts] = useState<{id: number, name: string}[]>([]);
+  const [prompts, setPrompts] = useState<Prompt[]>([]);
   useEffect(() => {
     const fetchPrompts = async () => {
       try {
         const response = await axios.get('/api/prompts');
-        setPrompts(response.data);
-        if (response.data.length > 0) {
+        const promptsData = response.data.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          agent_type: item.agent_type,
+          system_role: item.system_role,
+          user_template: item.user_template,
+          output_format: item.output_format,
+          created_at: item.created_at,
+          updated_at: item.updated_at
+        }));
+        setPrompts(promptsData);
+        if (promptsData.length > 0) {
           setFormData(prev => ({
             ...prev,
-            promptId: response.data[0].id
+            promptId: promptsData[0].id
           }));
         }
       } catch (error) {
@@ -129,7 +154,9 @@ const RecommendationForm: React.FC<{
       onSubmit({
         ...transformedData,
         selected_symbols: selectedStocks,
-        prompt_id: formData.promptId  // プロンプトIDを追加
+        prompt_id: formData.promptId,
+        recommendation_prompt_id: formData.recommendationPromptId,
+        evaluation_prompt_id: formData.evaluationPromptId
       });
       setIsConfirming(false);
     } catch (error) {
@@ -187,7 +214,7 @@ const RecommendationForm: React.FC<{
           </select>
         </div>
 
-        <div className="form-group">
+        <div className="form-group agent-type-section">
           <label>AIエージェントタイプ:</label>
           <select
             name="agentType"
@@ -201,24 +228,63 @@ const RecommendationForm: React.FC<{
           <div className="form-hint">
             MCP Agentでは、1つのLLMが推奨を生成し、別のLLMが評価とフィードバックを行います
           </div>
+
+          {formData.agentType === 'mcpagent' && (
+            <div className="prompt-selection-group">
+              <div className="form-group">
+                <label>推奨用プロンプト:</label>
+                <select
+                  name="recommendationPromptId"
+                  value={formData.recommendationPromptId || ''}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    recommendationPromptId: e.target.value ? parseInt(e.target.value) : undefined
+                  })}
+                  required
+                >
+                  {prompts.map(prompt => (
+                    <option key={prompt.id} value={prompt.id}>{prompt.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>評価用プロンプト:</label>
+                <select
+                  name="evaluationPromptId"
+                  value={formData.evaluationPromptId || ''}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    evaluationPromptId: e.target.value ? parseInt(e.target.value) : undefined
+                  })}
+                  required
+                >
+                  {prompts.map(prompt => (
+                    <option key={prompt.id} value={prompt.id}>{prompt.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="form-group">
-          <label>プロンプトテンプレート:</label>
-          <select
-            name="promptId"
-            value={formData.promptId || ''}
-            onChange={(e) => setFormData({
-              ...formData,
-              promptId: e.target.value ? parseInt(e.target.value) : undefined
-            })}
-            required
-          >
-            {prompts.map(prompt => (
-              <option key={prompt.id} value={prompt.id}>{prompt.name}</option>
-            ))}
-          </select>
-        </div>
+        {formData.agentType === 'direct' && (
+          <div className="form-group">
+            <label>プロンプトテンプレート:</label>
+            <select
+              name="promptId"
+              value={formData.promptId || ''}
+              onChange={(e) => setFormData({
+                ...formData,
+                promptId: e.target.value ? parseInt(e.target.value) : undefined
+              })}
+              required
+            >
+              {prompts.map(prompt => (
+                <option key={prompt.id} value={prompt.id}>{prompt.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
         
         <div className="form-group">
           <label>特定銘柄 (オプション, カンマ区切り):</label>
@@ -279,14 +345,15 @@ const RecommendationForm: React.FC<{
       </form>
 
       {isConfirming && (
-        <RecommendationConfirmationDialog
-          params={formData}
-          stocks={candidateStocks}
-          selected={selectedStocks}
-          onSelectionChange={setSelectedStocks}
-          onConfirm={handleConfirm}
-          onCancel={() => setIsConfirming(false)}
-        />
+          <RecommendationConfirmationDialog
+            params={formData}
+            stocks={candidateStocks}
+            selected={selectedStocks}
+            prompts={prompts}
+            onSelectionChange={setSelectedStocks}
+            onConfirm={handleConfirm}
+            onCancel={() => setIsConfirming(false)}
+          />
       )}
     </div>
   );
