@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/components/ConfirmationDialog.css';
+import '../styles/components/SimpleConfirmationDialog.css';
 
 interface SimpleConfirmationDialogProps {
   message: string;
@@ -13,13 +13,13 @@ const SimpleConfirmationDialog: React.FC<SimpleConfirmationDialogProps> = ({
   onCancel
 }) => {
   return (
-    <div className="confirmation-dialog-overlay">
-      <div className="confirmation-dialog">
+    <div className="simple-confirmation-dialog-overlay">
+      <div className="simple-confirmation-dialog">
         <h3>確認</h3>
         <p>{message}</p>
-        <div className="action-buttons">
-          <button onClick={onCancel} className="cancel-btn">キャンセル</button>
-          <button onClick={onConfirm} className="confirm-btn">確認</button>
+        <div className="simple-confirmation-action-buttons">
+          <button onClick={onCancel} className="simple-confirmation-cancel-btn">キャンセル</button>
+          <button onClick={onConfirm} className="simple-confirmation-confirm-btn">確認</button>
         </div>
       </div>
     </div>
