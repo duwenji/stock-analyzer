@@ -7,11 +7,12 @@ from sqlalchemy.orm import sessionmaker
 
 logger = setup_backend_logger(__name__)
 
-def build_recommendation_prompt(params: Dict, data: Dict) -> str:
+def build_recommendation_prompt(template, params: Dict, data: Dict) -> str:
     """paramsからプロンプトテンプレートを取得し、推奨プロンプトを構築
     
     Args:
-        params: ユーザー入力パラメータ (prompt_templateを含む)
+        template: プロンプトテンプレート
+        params: ユーザー入力パラメータ 
         data: 銘柄データ
         
     Returns:
@@ -20,7 +21,6 @@ def build_recommendation_prompt(params: Dict, data: Dict) -> str:
     logger.debug(f"推奨プロンプトを構築: {params}")
     
     try:
-        template = params.get('prompt_template')
         if not template:
             raise ValueError("プロンプトテンプレートがparamsに見つかりません")
         
