@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../src/styles/components/RecommendationForm.css';
-import ConfirmationDialog from './components/ConfirmationDialog';
+import RecommendationConfirmationDialog from './components/RecommendationConfirmationDialog';
 import { transformRecommendationRequest, TransformedRequest } from './utils/requestTransform';
 
 export interface Stock {
@@ -279,7 +279,7 @@ const RecommendationForm: React.FC<{
       </form>
 
       {isConfirming && (
-        <ConfirmationDialog
+        <RecommendationConfirmationDialog
           params={formData}
           stocks={candidateStocks}
           selected={selectedStocks}

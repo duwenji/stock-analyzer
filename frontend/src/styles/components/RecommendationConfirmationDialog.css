@@ -1,4 +1,4 @@
-.confirmation-dialog-overlay {
+.recommendation-confirmation-dialog-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   z-index: 1000;
 }
 
-.confirmation-dialog {
+.recommendation-confirmation-dialog {
   background: white;
   border-radius: 8px;
   padding: 24px;
@@ -23,7 +23,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-.confirmation-dialog h3 {
+.recommendation-confirmation-dialog h3 {
   margin-top: 0;
   color: #333;
   border-bottom: 1px solid #eee;

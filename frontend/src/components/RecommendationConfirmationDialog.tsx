@@ -32,7 +32,7 @@ interface TechnicalFilters {
   golden_cross?: [string, boolean | string];
 }
 
-interface ConfirmationDialogProps {
+interface RecommendationConfirmationDialogProps {
   params: {
     principal: string;
     riskTolerance: string;
@@ -49,7 +49,7 @@ interface ConfirmationDialogProps {
   onCancel: () => void;
 }
 
-const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
+const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialogProps> = ({
   params,
   stocks,
   selected,
@@ -57,7 +57,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   onConfirm,
   onCancel
 }) => {
-  console.log('ConfirmationDialog params:', params);
+  console.log('RecommendationConfirmationDialog params:', params);
   const formatParam = (key: keyof typeof params, value: unknown): React.ReactNode => {
     if (value === null || value === undefined || value === '') {
       return '指定なし';
@@ -143,7 +143,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   };
 
   return (
-    <Dialog open={true} onClose={onCancel} maxWidth="lg" fullWidth>
+    <Dialog open={true} onClose={onCancel} maxWidth="lg" fullWidth className="recommendation-confirmation-dialog">
       <DialogTitle>推奨パラメータ確認</DialogTitle>
       <DialogContent dividers>
         <Box sx={{ mb: 3 }}>
@@ -242,4 +242,4 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   );
 };
 
-export default ConfirmationDialog;
+export default RecommendationConfirmationDialog;
