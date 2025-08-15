@@ -31,7 +31,6 @@ class MCPAgentRecommender(IStockRecommender):
         Returns:
             推奨結果
         """
-        logger.info("MCPエージェント処理開始")
         
         # プロンプト取得
         optimizer_prompt = get_prompt_template(params['optimizer_prompt_id'])
@@ -49,12 +48,11 @@ class MCPAgentRecommender(IStockRecommender):
             data=stock_data
         )
         
-        logger.debug(f"optimizer’s instruction={optimizer_prompt['system_role']}")
-        logger.debug(f"evaluator's instruction={evaluation_prompt['system_role']}")
-        logger.debug(f"generator's message={message}")
+        logger.info(f"optimizer’s instruction={optimizer_prompt['system_role']}")
+        logger.info(f"evaluator's instruction={evaluation_prompt['system_role']}")
+        logger.info(f"generator's message={message}")
         
         # 分析実行
-        logger.info("分析処理開始")
         optimizer = Agent(
             name="stock_optimizer",
             instruction=optimizer_prompt['system_role'],
@@ -75,7 +73,7 @@ class MCPAgentRecommender(IStockRecommender):
         
         result = await evaluator_optimizer.generate_str(
             message=message,
-            request_params=RequestParams(model="gpt-4o"),
+            request_params=RequestParams(model="gpt-5"),
         )
-        logger.info("分析処理完了")
+        logger.info(f"MCPAgentRecommender's result={result}")
         return result
