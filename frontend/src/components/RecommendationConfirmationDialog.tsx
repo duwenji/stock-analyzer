@@ -53,7 +53,7 @@ interface RecommendationConfirmationDialogProps {
     search: string;
     technical_filters?: TechnicalFilters;
     promptId?: number;
-    recommendationPromptId?: number;
+    optimizerPromptId?: number;
     evaluationPromptId?: number;
   };
   stocks: Stock[];
@@ -111,7 +111,7 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
       case 'principal':
         return `${Number(value).toLocaleString()}円`;
       case 'promptId':
-      case 'recommendationPromptId':
+      case 'optimizerPromptId':
       case 'evaluationPromptId':
         if (typeof value === 'number') {
           return `ID: ${value}`;
@@ -229,8 +229,8 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
                     className="prompt-item"
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (params.recommendationPromptId) {
-                        setExpandedPromptId(params.recommendationPromptId === expandedPromptId ? null : params.recommendationPromptId);
+                      if (params.optimizerPromptId) {
+                        setExpandedPromptId(params.optimizerPromptId === expandedPromptId ? null : params.optimizerPromptId);
                       }
                     }}
                     style={{ 
@@ -239,20 +239,20 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
                       padding: '8px', 
                       margin: '8px 0',
                       cursor: 'pointer',
-                      backgroundColor: params.recommendationPromptId === expandedPromptId ? '#f5f5f5' : 'white'
+                      backgroundColor: params.optimizerPromptId === expandedPromptId ? '#f5f5f5' : 'white'
                     }}
                   >
                     <div className="prompt-header">
                       <Typography fontWeight="bold">
-                        {prompts.find(p => p.id === params.recommendationPromptId)?.name || '未選択'} ({prompts.find(p => p.id === params.recommendationPromptId)?.agent_type === 'direct' ? 'Direct' : 'MCP Agent'})
+                        {prompts.find(p => p.id === params.optimizerPromptId)?.name || '未選択'} ({prompts.find(p => p.id === params.optimizerPromptId)?.agent_type === 'direct' ? 'Direct' : 'MCP Agent'})
                       </Typography>
                     </div>
-                    {params.recommendationPromptId === expandedPromptId && prompts.find(p => p.id === params.recommendationPromptId) && (
+                    {params.optimizerPromptId === expandedPromptId && prompts.find(p => p.id === params.optimizerPromptId) && (
                       <div className="prompt-details" style={{ marginTop: '8px' }}>
-                        <div><strong>Agent Type:</strong> {prompts.find(p => p.id === params.recommendationPromptId)?.agent_type}</div>
-                        <div><strong>System Role:</strong> {prompts.find(p => p.id === params.recommendationPromptId)?.system_role}</div>
-                        <div><strong>User Template:</strong> {prompts.find(p => p.id === params.recommendationPromptId)?.user_template}</div>
-                        <div><strong>Output Format:</strong> {prompts.find(p => p.id === params.recommendationPromptId)?.output_format}</div>
+                        <div><strong>Agent Type:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.agent_type}</div>
+                        <div><strong>System Role:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.system_role}</div>
+                        <div><strong>User Template:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.user_template}</div>
+                        <div><strong>Output Format:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.output_format}</div>
                       </div>
                     )}
                   </div>
