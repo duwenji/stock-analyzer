@@ -14,10 +14,7 @@ async def recommend_stocks(params: Dict) -> Dict:
     Returns:
         推奨結果を含む辞書
     """
-    logger.info(f"Starting stock recommendation process. {params}")
     agent_type = params.get('agent_type', 'direct')
-    
-    logger.info(f"Selected agent type: {agent_type}")
     
     recommender = RecommenderFactory.create(agent_type)
     logger.info(f"Created recommender: {recommender.__class__.__name__}")

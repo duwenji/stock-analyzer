@@ -34,25 +34,24 @@ class MCPAgentRecommender(IStockRecommender):
         logger.info("MCPエージェント処理開始")
         
         # プロンプト取得
-        logger.debug(f"プロンプト取得: optimizer_prompt_id={params['optimizer_prompt_id']}, evaluation_prompt_id={params['evaluation_prompt_id']}")
         optimizer_prompt = get_prompt_template(params['optimizer_prompt_id'])
         evaluation_prompt = get_prompt_template(params['evaluation_prompt_id'])
         
-        logger.debug(f"銘柄データ取得開始: symbols={params['selected_symbols']}")
         stock_data = {
             "company_infos": fetch_company_infos(params['selected_symbols']),
             "technical_indicators": fetch_technical_indicators(params['selected_symbols'])
         }
-        logger.debug(f"銘柄データ取得完了: company_infos={len(stock_data['company_infos'])}, indicators={len(stock_data['technical_indicators'])}")
 
         # メッセージ構築
-        logger.debug("プロンプト構築開始")
         message = build_recommendation_prompt(
             optimizer_prompt,
             params=params,
             data=stock_data
         )
-        logger.debug(f"プロンプト構築完了: length={len(message)}")
+        
+        logger.debug(f"optimizer’s instruction={optimizer_prompt['system_role']}")
+        logger.debug(f"evaluator's instruction={evaluation_prompt['system_role']}")
+        logger.debug(f"generator's message={message}")
         
         # 分析実行
         logger.info("分析処理開始")

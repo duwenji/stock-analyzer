@@ -14,7 +14,6 @@ def build_recommendation_prompt(template, params: Dict, data: Dict) -> str:
     Returns:
         構築されたプロンプト文字列
     """
-    logger.debug(f"推奨プロンプトを構築: {params}")
     
     try:
         if not template:
@@ -30,8 +29,6 @@ def build_recommendation_prompt(template, params: Dict, data: Dict) -> str:
             ) + "\n\n" +
             "output_format:" + template['output_format']
         )
-        
-        logger.debug(f"構築されたプロンプト: {prompt[:200]}...")  # ログには先頭200文字のみ表示
         return prompt
         
     except Exception as e:
