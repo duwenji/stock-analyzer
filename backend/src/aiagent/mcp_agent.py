@@ -7,7 +7,7 @@ from mcp_agent.workflows.evaluator_optimizer.evaluator_optimizer import (
 )
 from mcp_agent.agents.agent import Agent
 from aiagent.data_access import (fetch_company_infos, fetch_technical_indicators, get_prompt_template)
-from aiagent.deepseek_augmented import DeepSeekAugmentedLLM
+from mcp_agent.workflows.llm.augmented_llm_openai import OpenAIAugmentedLLM
 
 class StockQualityRating(IntEnum):
     LOW_RISK = 1
@@ -40,7 +40,7 @@ class StockEvaluatorOptimizer(EvaluatorOptimizerLLM):
         super().__init__(
             optimizer=optimizer,
             evaluator=evaluator,
-            llm_factory=DeepSeekAugmentedLLM,
+            llm_factory=OpenAIAugmentedLLM,
             min_rating=StockQualityRating.BALANCED
         )
 

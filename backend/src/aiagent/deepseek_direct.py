@@ -6,7 +6,6 @@ from .interface import IStockRecommender
 from utils import setup_backend_logger
 from aiagent.data_access import (
     fetch_company_infos,
-    fetch_news,
     fetch_technical_indicators
 )
 from aiagent.prompt_builder import build_recommendation_prompt

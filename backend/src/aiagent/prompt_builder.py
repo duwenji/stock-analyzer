@@ -1,9 +1,5 @@
 from typing import Dict
-from sqlalchemy.orm import Session
-from models import PromptTemplate
-from utils import setup_backend_logger, get_db_engine
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from utils import setup_backend_logger
 
 logger = setup_backend_logger(__name__)
 

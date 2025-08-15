@@ -1,7 +1,6 @@
-/db_sample.py
-/sample
 reports/
 __pycache__/
-backend/logs
-backend/.env
-frontend/node_modules
+/backend/logs
+/backend/.env
+/frontend/node_modules
+/work
