@@ -298,7 +298,7 @@ async def prepare_recommendations(request: RecommendationRequest):
         raise HTTPException(status_code=500, detail=f"フィルタリングエラー: {str(e)}")
 
 @app.post("/api/recommend", response_model=dict)
-async def get_recommendations(request: SelectedRecommendationRequest):
+async def recommend(request: SelectedRecommendationRequest):
     """選択された銘柄のみで推奨生成"""
     try:
         logger.info(f"推奨リクエスト受信: {request.model_dump()}")
