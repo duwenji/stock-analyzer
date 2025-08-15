@@ -4,4 +4,4 @@ __pycache__/
 /backend/.env
 /frontend/node_modules
 /work
-backend/src/aiagent/mcp_agent.secrets.yaml
+backend/mcp_agent.secrets.yaml
