@@ -2,47 +2,18 @@ from .interface import IStockRecommender
 from typing import Dict, Any
 from enum import IntEnum
 from aiagent.prompt_builder import build_recommendation_prompt
+from utils import setup_backend_logger
 from mcp_agent.workflows.evaluator_optimizer.evaluator_optimizer import (
-    EvaluatorOptimizerLLM
+    EvaluatorOptimizerLLM,
+    QualityRating,
 )
+
 from mcp_agent.agents.agent import Agent
+from mcp_agent.workflows.llm.augmented_llm import RequestParams
 from aiagent.data_access import (fetch_company_infos, fetch_technical_indicators, get_prompt_template)
 from mcp_agent.workflows.llm.augmented_llm_openai import OpenAIAugmentedLLM
 
-class StockQualityRating(IntEnum):
-    LOW_RISK = 1
-    HIGH_RETURN = 2
-    BALANCED = 3
-    
-    @classmethod
-    def from_scores(cls, risk_score: int, return_score: int):
-        if risk_score <= 3 and return_score >= 8:
-            return cls.BALANCED
-        elif risk_score <= 2:
-            return cls.LOW_RISK
-        elif return_score >= 9:
-            return cls.HIGH_RETURN
-        return None
-
-class StockEvaluatorOptimizer(EvaluatorOptimizerLLM):
-    def __init__(self, optimizer_instruction: str, evaluator_instruction: str):
-        optimizer = Agent(
-            name="stock_optimizer",
-            instruction=optimizer_instruction,
-            server_names=["stock_analysis"]
-        )
-        
-        evaluator = Agent(
-            name="risk_evaluator",
-            instruction=evaluator_instruction,
-        )
-        
-        super().__init__(
-            optimizer=optimizer,
-            evaluator=evaluator,
-            llm_factory=OpenAIAugmentedLLM,
-            min_rating=StockQualityRating.BALANCED
-        )
+logger = setup_backend_logger(__name__)
 
 class MCPAgentRecommender(IStockRecommender):
     async def execute(self, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -60,29 +31,52 @@ class MCPAgentRecommender(IStockRecommender):
         Returns:
             推奨結果
         """
+        logger.info("MCPエージェント処理開始")
+        
         # プロンプト取得
+        logger.debug(f"プロンプト取得: optimizer_prompt_id={params['optimizer_prompt_id']}, evaluation_prompt_id={params['evaluation_prompt_id']}")
         optimizer_prompt = get_prompt_template(params['optimizer_prompt_id'])
         evaluation_prompt = get_prompt_template(params['evaluation_prompt_id'])
         
+        logger.debug(f"銘柄データ取得開始: symbols={params['selected_symbols']}")
         stock_data = {
             "company_infos": fetch_company_infos(params['selected_symbols']),
             "technical_indicators": fetch_technical_indicators(params['selected_symbols'])
         }
+        logger.debug(f"銘柄データ取得完了: company_infos={len(stock_data['company_infos'])}, indicators={len(stock_data['technical_indicators'])}")
 
         # メッセージ構築
+        logger.debug("プロンプト構築開始")
         message = build_recommendation_prompt(
             optimizer_prompt,
             params=params,
             data=stock_data
         )
+        logger.debug(f"プロンプト構築完了: length={len(message)}")
         
         # 分析実行
-        analyzer = StockEvaluatorOptimizer(
-            optimizer_instruction=optimizer_prompt['system_role'],
-            evaluator_instruction=evaluation_prompt['system_role']
+        logger.info("分析処理開始")
+        optimizer = Agent(
+            name="stock_optimizer",
+            instruction=optimizer_prompt['system_role'],
+            server_names=["fetch"]
         )
         
-        return await analyzer.generate_str(
-            message=message,
-            request_params={"model": "deepseek-r1"}
+        evaluator = Agent(
+            name="risk_evaluator",
+            instruction=evaluation_prompt['system_role'],
+        )        
+                
+        evaluator_optimizer = EvaluatorOptimizerLLM(
+            optimizer=optimizer,
+            evaluator=evaluator,
+            llm_factory=OpenAIAugmentedLLM,
+            min_rating=QualityRating.EXCELLENT,
         )
+        
+        result = await evaluator_optimizer.generate_str(
+            message=message,
+            request_params=RequestParams(model="gpt-4o"),
+        )
+        logger.info("分析処理完了")
+        return result

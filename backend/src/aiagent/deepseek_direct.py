@@ -6,7 +6,8 @@ from .interface import IStockRecommender
 from utils import setup_backend_logger
 from aiagent.data_access import (
     fetch_company_infos,
-    fetch_technical_indicators
+    fetch_technical_indicators,
+    get_prompt_template
 )
 from aiagent.prompt_builder import build_recommendation_prompt
 
@@ -67,7 +68,7 @@ class DeepSeekDirectRecommender(IStockRecommender):
 
     def _build_prompt(self, params: Dict, data: Dict) -> str:
         """プロンプトを構築"""
-        template = params.get('prompt_template')
+        template = get_prompt_template(params.get('prompt_id'))
         return build_recommendation_prompt(template, params, data)
 
     def _parse_response(self, response) -> Dict:

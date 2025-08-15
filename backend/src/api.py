@@ -302,12 +302,6 @@ async def get_recommendations(request: SelectedRecommendationRequest):
     """選択された銘柄のみで推奨生成"""
     try:
         logger.info(f"推奨リクエスト受信: {request.model_dump()}")
-        logger.info(
-            f"詳細: principal={request.principal} risk_tolerance={request.risk_tolerance} "
-            f"strategy={request.strategy} symbols={request.symbols} agent_type={request.agent_type} "
-            f"prompt_id={request.prompt_id} optimizer_prompt_id={request.optimizer_prompt_id} "
-            f"evaluation_prompt_id={request.evaluation_prompt_id}"
-        )
 
         params = request.model_dump()
         params['symbols'] = request.selected_symbols
