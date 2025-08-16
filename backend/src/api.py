@@ -139,8 +139,6 @@ async def get_stocks(
                 ORDER BY {sort_by} {sort_order} NULLS LAST
                 LIMIT :limit OFFSET :offset
             """
-            logger.info(f"クエリを実行します: {data_query}")
-            logger.info(f"検索パラメータ: {search_params}")
             
             # クエリ実行
             params = {**search_params, "limit": limit, "offset": offset}
@@ -536,7 +534,6 @@ async def get_chart(symbol: str):
         
             # 3. チャート生成
             df = pd.DataFrame(chart_data)
-            logger.info(f"チャートデータ:\n{df}")
 
             df['date'] = pd.to_datetime(df['date'])
             df.set_index('date', inplace=True)
