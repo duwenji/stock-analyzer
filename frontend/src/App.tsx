@@ -5,6 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import 'dayjs/locale/ja';
 import dayjs from 'dayjs';
+import { recommendationService } from './utils/apiService';
 import StockList from './StockList';
 import RecommendationForm from './RecommendationForm';
 import RecommendationResults from './RecommendationResults';
@@ -43,19 +44,7 @@ function App() {
       };
       console.log("requestData:", requestData)
       
-      const response = await fetch('/api/recommend', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestData)
-      });
-      
-      if (!response.ok) {
-        throw new Error(`APIエラー: ${response.status}`);
-      }
-      
-      const data = await response.json();
+      const data = await recommendationService.createRecommendation(requestData);
       console.log("API response data:", JSON.stringify(data, null, 2));
       setRecommendationData(data);
     } catch (err) {

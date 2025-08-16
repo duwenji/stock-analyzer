@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { stockService, chartService } from './utils/apiService';
 import {
   Table,
   TableBody,
@@ -99,10 +100,18 @@ const StockList: React.FC = () => {
     order: 'asc' | 'desc' = sortOrder
   ) => {
     try {
-      const url = `/api/stocks?page=${page}&limit=${limit}&search=${encodeURIComponent(term)}&industry_code=${encodeURIComponent(industry)}&scale_code=${encodeURIComponent(scale)}&sort_by=${sortField}&sort_order=${order}`;
-      const response = await axios.get(url);
-      setStocks(response.data.stocks);
-      setTotalItems(response.data.total);
+      const params = {
+        page,
+        limit,
+        search: term,
+        industry_code: industry,
+        scale_code: scale,
+        sort_by: sortField,
+        sort_order: order
+      };
+      const response = await stockService.getStocks(params);
+      setStocks(response.stocks);
+      setTotalItems(response.total);
       setLoading(false);
     } catch (err) {
       setError('銘柄一覧の取得に失敗しました');
@@ -114,8 +123,8 @@ const StockList: React.FC = () => {
   useEffect(() => {
     const fetchIndustryCodes = async () => {
       try {
-        const response = await axios.get('/api/industry-codes');
-        setIndustryOptions(response.data);
+        const response = await stockService.getIndustryCodes();
+        setIndustryOptions(response);
       } catch (err) {
         setError('業種コードの取得に失敗しました');
       }
@@ -127,8 +136,8 @@ const StockList: React.FC = () => {
   useEffect(() => {
     const fetchScaleCodes = async () => {
       try {
-        const response = await axios.get('/api/scale-codes');
-        setScaleOptions(response.data);
+        const response = await stockService.getScaleCodes();
+        setScaleOptions(response);
       } catch (err) {
         setError('規模コードの取得に失敗しました');
       }
@@ -156,9 +165,9 @@ const StockList: React.FC = () => {
 
   const handleRowClick = async (symbol: string) => {
     try {
-      const response = await axios.get(`/api/chart/${symbol}`);
+      const response = await chartService.getChart(symbol);
       setSelectedSymbol(symbol);
-      setChartImage(response.data.image);
+      setChartImage(response.image);
       setIsModalOpen(true);
     } catch (err) {
       setError('チャートの取得に失敗しました');

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../src/styles/components/RecommendationForm.css';
+import { promptService, recommendationService } from './utils/apiService';
 import RecommendationConfirmationDialog from './components/RecommendationConfirmationDialog';
 import { transformRecommendationRequest, TransformedRequest } from './utils/requestTransform';
 
@@ -58,17 +59,7 @@ const RecommendationForm: React.FC<{
   useEffect(() => {
     const fetchPrompts = async () => {
       try {
-        const response = await axios.get('/api/prompts');
-        const promptsData = response.data.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-          agent_type: item.agent_type,
-          system_role: item.system_role,
-          user_template: item.user_template,
-          output_format: item.output_format,
-          created_at: item.created_at,
-          updated_at: item.updated_at
-        }));
+        const promptsData = await promptService.getAllPrompts();
         setPrompts(promptsData);
         if (promptsData.length > 0) {
           setFormData(prev => ({
@@ -134,9 +125,9 @@ const RecommendationForm: React.FC<{
         ...formData,
         technical_filters: setTechFilter()
       });
-      const response = await axios.post('/api/prepare-recommendations', transformedData);
-      setCandidateStocks(response.data.candidate_stocks);
-      setSelectedStocks(response.data.candidate_stocks.map((stock: Stock) => stock.symbol));
+      const response = await recommendationService.prepareRecommendations(transformedData);
+      setCandidateStocks(response.candidate_stocks);
+      setSelectedStocks(response.candidate_stocks.map((stock: Stock) => stock.symbol));
       setIsConfirming(true);
     } catch (error) {
       console.error('フィルタリングエラー:', error);

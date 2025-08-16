@@ -1,6 +1,44 @@
 import axios from 'axios';
 
-// 既存のAPI関数...
+// 推奨関連API
+export const recommendationService = {
+  prepareRecommendations: async (data: any) => {
+    const response = await axios.post('/api/prepare-recommendations', data);
+    return response.data;
+  },
+  getHistory: async (params: any) => {
+    const response = await axios.get('/api/recommendations/history', { params });
+    return response.data;
+  },
+  createRecommendation: async (data: any) => {
+    const response = await axios.post('/api/recommend', data);
+    return response.data;
+  }
+};
+
+// 銘柄関連API
+export const stockService = {
+  getStocks: async (params: any) => {
+    const response = await axios.get('/api/stocks', { params });
+    return response.data;
+  },
+  getIndustryCodes: async () => {
+    const response = await axios.get('/api/industry-codes');
+    return response.data;
+  },
+  getScaleCodes: async () => {
+    const response = await axios.get('/api/scale-codes');
+    return response.data;
+  }
+};
+
+// チャート関連API
+export const chartService = {
+  getChart: async (symbol: string) => {
+    const response = await axios.get(`/api/chart/${symbol}`);
+    return response.data;
+  }
+};
 
 // プロンプト管理API
 export const promptService = {

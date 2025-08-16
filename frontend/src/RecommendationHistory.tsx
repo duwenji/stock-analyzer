@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, MenuItem, Select, FormControl, InputLabel, Typography, Box, Tooltip, TableSortLabel } from '@mui/material';
+import { recommendationService } from './utils/apiService';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { styled } from '@mui/system';
@@ -47,12 +48,7 @@ const RecommendationHistory: React.FC = () => {
         ...(strategyFilter && { strategy: strategyFilter })
       });
 
-      const response = await fetch(`/api/recommendations/history?${params}`);
-      if (!response.ok) {
-        throw new Error('推奨履歴の取得に失敗しました');
-      }
-      const data = await response.json();
-      // バックエンドから空配列が返るように修正したため、安全にアクセス
+      const data = await recommendationService.getHistory(params);
       setSessions(data.sessions || []);
       setTotal(data.total || 0);
     } catch (error) {
