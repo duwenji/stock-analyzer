@@ -1,8 +1,8 @@
 import json
 import re
+import os
 from .interface import IStockRecommender
 from typing import Dict, Any
-from enum import IntEnum
 from aiagent.prompt_builder import build_recommendation_prompt
 from utils import setup_backend_logger
 from mcp_agent.workflows.evaluator_optimizer.evaluator_optimizer import (
@@ -75,7 +75,7 @@ class MCPAgentRecommender(IStockRecommender):
         
         result = await evaluator_optimizer.generate_str(
             message=message,
-            request_params=RequestParams(model="gpt-4o"),
+            request_params=RequestParams(model=os.getenv('DEEPSEEK_MODEL')),
         )
         logger.info(f"MCPAgentRecommender's result={result}")
         
