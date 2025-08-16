@@ -140,6 +140,34 @@ sequenceDiagram
 - 推奨結果の根拠説明生成
 - プロンプトテンプレート選択機能
 
+## 主要キーワード
+
+### コア技術
+- CLINE (開発環境AIエージェント)
+- mcp-agent (本番環境AIエージェント)
+- DeepSeek API (AI推奨エンジン)
+- FastAPI (バックエンドフレームワーク)
+- React (フロントエンドフレームワーク)
+- PostgreSQL (データベース)
+
+### データ処理
+- yfinance (株価データ取得)
+- pandas (データ分析)
+- matplotlib (可視化)
+- Technical Indicators (RSI, MACD, 移動平均線)
+
+### AI統合
+- プロンプトチェイニング
+- プロンプトテンプレート管理
+- Evaluator-Optimizerワークフロー
+- 根拠説明生成
+
+### 開発プロセス
+- プロトタイピング
+- バックテスト
+- リトライ機制
+- エラーハンドリング
+
 ## 技術スタックと選定理由
 ### バックエンド
 - **Python (FastAPI)**
