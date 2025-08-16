@@ -21,12 +21,17 @@ async def recommend_stocks(params: Dict) -> Dict:
 
     result = await recommender.execute(params)
     
+    # 型チェックを追加
+    if not isinstance(result, dict):
+        logger.error(f"無効な結果型: {type(result)}")
+        return {"status": "error", "message": "無効な推奨結果形式"}
+    
     # 推奨結果をDBに保存
     logger.info("Saving recommendation to database...")
     if result.get('status') != 'error':
         save_recommendation(result, params)
     else:
-        logger.error("Recommendation failed with error status")
+        logger.error(f"Recommendation failed with error status: {result.get('message', '不明なエラー')}")
     
     logger.info("Recommendation process completed")
     return result

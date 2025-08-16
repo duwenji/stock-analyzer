@@ -308,8 +308,17 @@ async def recommend(request: SelectedRecommendationRequest):
         params['agent_type'] = request.agent_type
         result = await recommend_stocks(params)
 
-        if "error" in result.get("data", {}):
-            raise HTTPException(status_code=500, detail=result["data"]["error"])
+        if result.get("status") == "error":
+            raise HTTPException(
+                status_code=500,
+                detail=result.get("message", "推奨生成中にエラーが発生しました")
+            )
+
+        if not isinstance(result, dict):
+            raise HTTPException(
+                status_code=500,
+                detail=f"無効な推奨結果形式: {type(result)}"
+            )
 
         return result
 

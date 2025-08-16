@@ -1,3 +1,5 @@
+import json
+import re
 from .interface import IStockRecommender
 from typing import Dict, Any
 from enum import IntEnum
@@ -73,7 +75,18 @@ class MCPAgentRecommender(IStockRecommender):
         
         result = await evaluator_optimizer.generate_str(
             message=message,
-            request_params=RequestParams(model="gpt-5"),
+            request_params=RequestParams(model="gpt-4o"),
         )
         logger.info(f"MCPAgentRecommender's result={result}")
-        return result
+        
+        try:
+            # JSON部分を抽出してパース
+            json_match = re.search(r'```json\s*({.*?})\s*```', result, re.DOTALL)
+            if json_match:
+                return json.loads(json_match.group(1))
+            else:
+                # JSON形式が見つからない場合のフォールバック
+                return {"status": "success", "data": result}
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON解析エラー: {str(e)}")
+            return {"status": "error", "message": "推奨結果の解析に失敗しました"}
