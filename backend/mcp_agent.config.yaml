@@ -19,6 +19,9 @@ mcp:
     filesystem:
       command: "npx"
       args: ["-y", "@modelcontextprotocol/server-filesystem"]
+    yfinance:
+      command: "npx"
+      args: ["-y", "@onori/yfinance-mcp-server"]
 
 openai:
   # Secrets (API keys, etc.) are stored in an mcp_agent.secrets.yaml file which can be gitignored

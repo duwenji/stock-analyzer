@@ -58,7 +58,7 @@ class MCPAgentRecommender(IStockRecommender):
         optimizer = Agent(
             name="stock_optimizer",
             instruction=optimizer_prompt['system_role'],
-            server_names=["fetch"]
+            server_names=["yfinance", "fetch"]
         )
         
         evaluator = Agent(
@@ -70,7 +70,8 @@ class MCPAgentRecommender(IStockRecommender):
             optimizer=optimizer,
             evaluator=evaluator,
             llm_factory=OpenAIAugmentedLLM,
-            min_rating=QualityRating.EXCELLENT,
+            min_rating=QualityRating.GOOD,
+            max_refinements=10
         )
         
         result = await evaluator_optimizer.generate_str(
