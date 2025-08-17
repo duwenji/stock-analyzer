@@ -63,7 +63,7 @@ async def fetch_news(symbols: List[str]) -> List[Dict]:
         "source": "仮想ニュースソース"
     }]
 
-def fetch_technical_indicators(symbols: List[str], limit: int = 10) -> str:
+def fetch_technical_indicators(symbols: List[str], limit: int = 100) -> str:
     """テクニカル指標を文字列形式で取得"""
     if not symbols:
         return ""

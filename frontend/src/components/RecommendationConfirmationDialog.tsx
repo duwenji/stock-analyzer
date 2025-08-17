@@ -15,8 +15,7 @@ import {
   TableRow,
   Paper,
   Typography,
-  Box,
-  Grid
+  Box
 } from '@mui/material';
 
 interface Stock {
@@ -204,139 +203,142 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
       <DialogContent dividers>
         <Box sx={{ mb: 3 }}>
           <Typography variant="h6" gutterBottom>入力パラメータ</Typography>
-          <Grid container spacing={1}>
-            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-              <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>投資元本:</strong> {formatParam('principal', params.principal)}</Typography>
-            </Grid>
-            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-              <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>リスク許容度:</strong> {formatParam('riskTolerance', params.riskTolerance)}</Typography>
-            </Grid>
-            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-              <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>投資方針:</strong> {formatParam('strategy', params.strategy)}</Typography>
-            </Grid>
-            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>AIエージェント:</strong> {formatParam('agentType', params.agentType)}</Typography>
-            </Grid>
-              {params.agentType === 'direct' && params.promptId && (
-                <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-                  <Typography variant="subtitle1" sx={{ mt: 2 }}>プロンプト:</Typography>
-                  <div 
-                    className="prompt-item"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (params.promptId) {
-                        setExpandedPromptId(params.promptId === expandedPromptId ? null : params.promptId);
-                      }
-                    }}
-                    style={{ 
-                      border: '1px solid #ddd', 
-                      borderRadius: '4px', 
-                      padding: '8px', 
-                      margin: '8px 0',
-                      cursor: 'pointer',
-                      backgroundColor: params.promptId === expandedPromptId ? '#f5f5f5' : 'white'
-                    }}
-                  >
-                    <div className="prompt-header">
-                      <Typography fontWeight="bold">
-                        {prompts.find(p => p.id === params.promptId)?.name || '未選択'} ({prompts.find(p => p.id === params.promptId)?.agent_type === 'direct' ? 'Direct' : 'MCP Agent'})
-                      </Typography>
-                    </div>
-                    {params.promptId === expandedPromptId && prompts.find(p => p.id === params.promptId) && (
-                      <div className="prompt-details" style={{ marginTop: '8px' }}>
-                        <div><strong>Agent Type:</strong> {prompts.find(p => p.id === params.promptId)?.agent_type}</div>
-                        <div><strong>System Role:</strong> {prompts.find(p => p.id === params.promptId)?.system_role}</div>
-                        <div><strong>User Template:</strong> {prompts.find(p => p.id === params.promptId)?.user_template}</div>
-                        <div><strong>Output Format:</strong> {prompts.find(p => p.id === params.promptId)?.output_format}</div>
+          <div className="form-sections-container">
+            {/* 左カラム - 投資情報 & AIエージェント */}
+            <div className="form-column">
+              <div className="form-section">
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>投資情報</Typography>
+                <Typography variant="body2" sx={{ lineHeight: 1.5, mb: 1 }}><strong>投資元本:</strong> {formatParam('principal', params.principal)}</Typography>
+                <Typography variant="body2" sx={{ lineHeight: 1.5, mb: 1 }}><strong>リスク許容度:</strong> {formatParam('riskTolerance', params.riskTolerance)}</Typography>
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>投資方針:</strong> {formatParam('strategy', params.strategy)}</Typography>
+              </div>
+
+              <div className="form-section">
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>AIエージェント</Typography>
+                <Typography variant="body2" sx={{ lineHeight: 1.5, mb: 1 }}><strong>AIエージェント:</strong> {formatParam('agentType', params.agentType)}</Typography>
+                {params.agentType === 'direct' && params.promptId && (
+                  <div className="form-subsection">
+                    <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>プロンプト:</Typography>
+                    <div 
+                      className="prompt-item"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (params.promptId) {
+                          setExpandedPromptId(params.promptId === expandedPromptId ? null : params.promptId);
+                        }
+                      }}
+                      style={{ 
+                        border: '1px solid #ddd', 
+                        borderRadius: '4px', 
+                        padding: '8px', 
+                        margin: '8px 0',
+                        cursor: 'pointer',
+                        backgroundColor: params.promptId === expandedPromptId ? '#f5f5f5' : 'white'
+                      }}
+                    >
+                      <div className="prompt-header">
+                        <Typography fontWeight="bold">
+                          {prompts.find(p => p.id === params.promptId)?.name || '未選択'} ({prompts.find(p => p.id === params.promptId)?.agent_type === 'direct' ? 'Direct' : 'MCP Agent'})
+                        </Typography>
                       </div>
-                    )}
-                  </div>
-                </Grid>
-              )}
-              {params.agentType === 'mcpagent' && (
-                <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-                  <Typography variant="subtitle1" sx={{ mt: 2 }}>推奨用プロンプト:</Typography>
-                  <div 
-                    className="prompt-item"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (params.optimizerPromptId) {
-                        setExpandedPromptId(params.optimizerPromptId === expandedPromptId ? null : params.optimizerPromptId);
-                      }
-                    }}
-                    style={{ 
-                      border: '1px solid #ddd', 
-                      borderRadius: '4px', 
-                      padding: '8px', 
-                      margin: '8px 0',
-                      cursor: 'pointer',
-                      backgroundColor: params.optimizerPromptId === expandedPromptId ? '#f5f5f5' : 'white'
-                    }}
-                  >
-                    <div className="prompt-header">
-                      <Typography fontWeight="bold">
-                        {prompts.find(p => p.id === params.optimizerPromptId)?.name || '未選択'} ({prompts.find(p => p.id === params.optimizerPromptId)?.agent_type === 'direct' ? 'Direct' : 'MCP Agent'})
-                      </Typography>
+                      {params.promptId === expandedPromptId && prompts.find(p => p.id === params.promptId) && (
+                        <div className="prompt-details" style={{ marginTop: '8px' }}>
+                          <div><strong>Agent Type:</strong> {prompts.find(p => p.id === params.promptId)?.agent_type}</div>
+                          <div><strong>System Role:</strong> {prompts.find(p => p.id === params.promptId)?.system_role}</div>
+                          <div><strong>User Template:</strong> {prompts.find(p => p.id === params.promptId)?.user_template}</div>
+                          <div><strong>Output Format:</strong> {prompts.find(p => p.id === params.promptId)?.output_format}</div>
+                        </div>
+                      )}
                     </div>
-                    {params.optimizerPromptId === expandedPromptId && prompts.find(p => p.id === params.optimizerPromptId) && (
-                      <div className="prompt-details" style={{ marginTop: '8px' }}>
-                        <div><strong>Agent Type:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.agent_type}</div>
-                        <div><strong>System Role:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.system_role}</div>
-                        <div><strong>User Template:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.user_template}</div>
-                        <div><strong>Output Format:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.output_format}</div>
-                      </div>
-                    )}
                   </div>
-                  <Typography variant="subtitle1" sx={{ mt: 2 }}>評価用プロンプト:</Typography>
-                  <div 
-                    className="prompt-item"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (params.evaluationPromptId) {
-                        setExpandedPromptId(params.evaluationPromptId === expandedPromptId ? null : params.evaluationPromptId);
-                      }
-                    }}
-                    style={{ 
-                      border: '1px solid #ddd', 
-                      borderRadius: '4px', 
-                      padding: '8px', 
-                      margin: '8px 0',
-                      cursor: 'pointer',
-                      backgroundColor: params.evaluationPromptId === expandedPromptId ? '#f5f5f5' : 'white'
-                    }}
-                  >
-                    <div className="prompt-header">
-                      <Typography fontWeight="bold">
-                        {prompts.find(p => p.id === params.evaluationPromptId)?.name || '未選択'} ({prompts.find(p => p.id === params.evaluationPromptId)?.agent_type === 'direct' ? 'Direct' : 'MCP Agent'})
-                      </Typography>
+                )}
+                {params.agentType === 'mcpagent' && (
+                  <div className="form-subsection">
+                    <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>推奨用プロンプト:</Typography>
+                    <div 
+                      className="prompt-item"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (params.optimizerPromptId) {
+                          setExpandedPromptId(params.optimizerPromptId === expandedPromptId ? null : params.optimizerPromptId);
+                        }
+                      }}
+                      style={{ 
+                        border: '1px solid #ddd', 
+                        borderRadius: '4px', 
+                        padding: '8px', 
+                        margin: '8px 0',
+                        cursor: 'pointer',
+                        backgroundColor: params.optimizerPromptId === expandedPromptId ? '#f5f5f5' : 'white'
+                      }}
+                    >
+                      <div className="prompt-header">
+                        <Typography fontWeight="bold">
+                          {prompts.find(p => p.id === params.optimizerPromptId)?.name || '未選択'} ({prompts.find(p => p.id === params.optimizerPromptId)?.agent_type === 'direct' ? 'Direct' : 'MCP Agent'})
+                        </Typography>
+                      </div>
+                      {params.optimizerPromptId === expandedPromptId && prompts.find(p => p.id === params.optimizerPromptId) && (
+                        <div className="prompt-details" style={{ marginTop: '8px' }}>
+                          <div><strong>Agent Type:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.agent_type}</div>
+                          <div><strong>System Role:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.system_role}</div>
+                          <div><strong>User Template:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.user_template}</div>
+                          <div><strong>Output Format:</strong> {prompts.find(p => p.id === params.optimizerPromptId)?.output_format}</div>
+                        </div>
+                      )}
                     </div>
-                    {params.evaluationPromptId === expandedPromptId && prompts.find(p => p.id === params.evaluationPromptId) && (
-                      <div className="prompt-details" style={{ marginTop: '8px' }}>
-                        <div><strong>Agent Type:</strong> {prompts.find(p => p.id === params.evaluationPromptId)?.agent_type}</div>
-                        <div><strong>System Role:</strong> {prompts.find(p => p.id === params.evaluationPromptId)?.system_role}</div>
-                        <div><strong>User Template:</strong> {prompts.find(p => p.id === params.evaluationPromptId)?.user_template}</div>
-                        <div><strong>Output Format:</strong> {prompts.find(p => p.id === params.evaluationPromptId)?.output_format}</div>
+                    <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>評価用プロンプト:</Typography>
+                    <div 
+                      className="prompt-item"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (params.evaluationPromptId) {
+                          setExpandedPromptId(params.evaluationPromptId === expandedPromptId ? null : params.evaluationPromptId);
+                        }
+                      }}
+                      style={{ 
+                        border: '1px solid #ddd', 
+                        borderRadius: '4px', 
+                        padding: '8px', 
+                        margin: '8px 0',
+                        cursor: 'pointer',
+                        backgroundColor: params.evaluationPromptId === expandedPromptId ? '#f5f5f5' : 'white'
+                      }}
+                    >
+                      <div className="prompt-header">
+                        <Typography fontWeight="bold">
+                          {prompts.find(p => p.id === params.evaluationPromptId)?.name || '未選択'} ({prompts.find(p => p.id === params.evaluationPromptId)?.agent_type === 'direct' ? 'Direct' : 'MCP Agent'})
+                        </Typography>
                       </div>
-                    )}
+                      {params.evaluationPromptId === expandedPromptId && prompts.find(p => p.id === params.evaluationPromptId) && (
+                        <div className="prompt-details" style={{ marginTop: '8px' }}>
+                          <div><strong>Agent Type:</strong> {prompts.find(p => p.id === params.evaluationPromptId)?.agent_type}</div>
+                          <div><strong>System Role:</strong> {prompts.find(p => p.id === params.evaluationPromptId)?.system_role}</div>
+                          <div><strong>User Template:</strong> {prompts.find(p => p.id === params.evaluationPromptId)?.user_template}</div>
+                          <div><strong>Output Format:</strong> {prompts.find(p => p.id === params.evaluationPromptId)?.output_format}</div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </Grid>
-              )}
-            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>特定銘柄:</strong> {formatParam('symbols', params.symbols)}</Typography>
-            </Grid>
-            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>検索条件:</strong> {formatParam('search', params.search)}</Typography>
-            </Grid>
-            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>業種:</strong> {formatParam('industries', params.industries)}</Typography>
-            </Grid>
-            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>規模:</strong> {formatParam('scales', params.scales)}</Typography>
-            </Grid>
-            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>テクニカル指標:</strong> {formatParam('technical_filters', params.technical_filters)}</Typography>
-            </Grid>
-          </Grid>
+                )}
+              </div>
+              
+              {/* 右カラム - 対象銘柄 & テクニカルフィルター */}
+              <div className="form-column">
+                <div className="form-section">
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>対象銘柄</Typography>
+                  <Typography variant="body2" sx={{ lineHeight: 1.5, mb: 1 }}><strong>特定銘柄:</strong> {formatParam('symbols', params.symbols)}</Typography>
+                  <Typography variant="body2" sx={{ lineHeight: 1.5, mb: 1 }}><strong>検索条件:</strong> {formatParam('search', params.search)}</Typography>
+                  <Typography variant="body2" sx={{ lineHeight: 1.5, mb: 1 }}><strong>業種:</strong> {formatParam('industries', params.industries)}</Typography>
+                  <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>規模:</strong> {formatParam('scales', params.scales)}</Typography>
+                </div>
+                
+                <div className="form-section">
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>テクニカルフィルター</Typography>
+                  <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>テクニカル指標:</strong> {formatParam('technical_filters', params.technical_filters)}</Typography>
+                </div>
+              </div>
+            </div>
+          </div>
         </Box>
 
         <Box>
