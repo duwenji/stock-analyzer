@@ -192,6 +192,16 @@ async def prepare_recommendations(request: RecommendationRequest, db: Session = 
             where_clauses.append("LOWER(s.symbol) LIKE :search_term OR LOWER(s.name) LIKE :search_term")
             search_params = {"search_term": search_term}
 
+        # 業種でフィルタリング
+        if request.industries:
+            where_clauses.append("s.industry_code_33 = ANY(:industries)")
+            search_params["industries"] = request.industries
+
+        # 規模でフィルタリング
+        if request.scales:
+            where_clauses.append("s.scale_code = ANY(:scales)")
+            search_params["scales"] = request.scales
+
         # テクニカル指標でフィルタリング
         if request.technical_filters:
             for indicator, value in request.technical_filters.items():
@@ -681,3 +691,4 @@ if __name__ == "__main__":
     # 環境初期化
     initialize_environment()
     uvicorn.run(app, host="0.0.0.0", port=8000)
+

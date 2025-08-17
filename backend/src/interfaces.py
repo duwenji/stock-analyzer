@@ -7,6 +7,8 @@ class RecommendationRequest(BaseModel):
     strategy: str           # 例: "成長株", "配当株", "バランス"
     symbols: Optional[List[str]] = None     # 特定銘柄指定（オプション）
     search: Optional[str] = None        # 検索条件（追加）
+    industries: Optional[List[str]] = None  # 業種コードリスト（オプション）
+    scales: Optional[List[str]] = None     # 規模コードリスト（オプション）
     technical_filters: Optional[dict] = None
     agent_type: str = "direct"  # デフォルト値
     prompt_id: Optional[int] = None  # プロンプトテンプレートID

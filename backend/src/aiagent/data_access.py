@@ -7,7 +7,7 @@ from models import RecommendationSession, RecommendationResult, PromptTemplate
 logger = setup_backend_logger(__name__)
 
 def fetch_company_infos(symbols: List[str]) -> str:
-    """銘柄情報をCSV形式で取得"""
+    """銘柄情報を文字列形式で取得"""
     if not symbols:
         return ""
     
@@ -24,12 +24,7 @@ def fetch_company_infos(symbols: List[str]) -> str:
     if df.empty:
         return ""
     
-    result = []
-    for _, row in df.iterrows():
-        result.append(f"{row['symbol']}:")
-        result.append(pd.DataFrame([row]).drop(columns=['symbol']).to_csv(index=False))
-    
-    return "\n".join(result)
+    return df.to_string(header=True, index=False)
 
 async def fetch_news(symbols: List[str]) -> List[Dict]:
     """symbolsを基に関連ニュースを取得（モック実装）"""
@@ -69,7 +64,7 @@ async def fetch_news(symbols: List[str]) -> List[Dict]:
     }]
 
 def fetch_technical_indicators(symbols: List[str], limit: int = 10) -> str:
-    """テクニカル指標を銘柄ごとにCSV形式で取得"""
+    """テクニカル指標を文字列形式で取得"""
     if not symbols:
         return ""
         
@@ -82,21 +77,16 @@ def fetch_technical_indicators(symbols: List[str], limit: int = 10) -> str:
         ORDER BY symbol, date DESC
         LIMIT {limit}
     """
-    logger.debug(query)
+    #logger.debug(query)
     
     df = pd.read_sql_query(query, get_db_engine())
     if df.empty:
         return ""
     
-    result = []
-    for symbol, group in df.groupby('symbol'):
-        result.append(f"{symbol}:")
-        result.append(group.drop(columns=['symbol']).to_csv(index=False))
-    
-    return "\n".join(result)
+    return df.to_string(header=True, index=False)
 
 def fetch_price_history(symbols: List[str], limit: int = 90) -> str:
-    """株価履歴を銘柄ごとにCSV形式で取得（過去3ヶ月分）"""
+    """株価履歴を文字列形式で取得（過去3ヶ月分）"""
     if not symbols:
         return ""
         
@@ -113,12 +103,7 @@ def fetch_price_history(symbols: List[str], limit: int = 90) -> str:
     if df.empty:
         return ""
     
-    result = []
-    for symbol, group in df.groupby('symbol'):
-        result.append(f"{symbol}:")
-        result.append(group.drop(columns=['symbol']).to_csv(index=False))
-    
-    return "\n".join(result)
+    return df.to_string(header=True, index=False)
 
 def get_prompt_template(prompt_id: int) -> Dict[str, str]:
     """プロンプトテンプレートをデータベースから取得

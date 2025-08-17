@@ -11,6 +11,8 @@ export interface TransformedRequest {
   agent_type: string;
   symbols?: string[];
   search?: string;
+  industries?: string[];
+  scales?: string[];
   technical_filters?: TechnicalFilter;
   prompt_id?: number;
   optimizer_prompt_id?: number;
@@ -38,6 +40,8 @@ export const transformRecommendationRequest = (
       ? data.symbols.split(',').map((s: string) => s.trim()).filter((s: string) => s.length > 0)
       : undefined,
     search: data.search,
+    industries: data.industries,
+    scales: data.scales,
     technical_filters: data.technical_filters,
     prompt_id: data.promptId,
     optimizer_prompt_id: data.agentType === 'mcpagent' ? data.optimizerPromptId : undefined,

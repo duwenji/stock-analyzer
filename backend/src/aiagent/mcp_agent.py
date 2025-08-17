@@ -64,7 +64,7 @@ class MCPAgentRecommender(IStockRecommender):
         evaluator = Agent(
             name="risk_evaluator",
             instruction=evaluation_prompt['system_role'],
-        )        
+        )
                 
         evaluator_optimizer = EvaluatorOptimizerLLM(
             optimizer=optimizer,
@@ -75,7 +75,7 @@ class MCPAgentRecommender(IStockRecommender):
         
         result = await evaluator_optimizer.generate_str(
             message=message,
-            request_params=RequestParams(model=os.getenv('DEEPSEEK_MODEL')),
+            request_params=RequestParams(model='gpt-4o'),
         )
         logger.info(f"MCPAgentRecommender's result={result}")
         
