@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Industry, Scale } from '../types';
 
 // 推奨関連API
 export const recommendationService = {
@@ -22,11 +23,11 @@ export const stockService = {
     const response = await axios.get('/api/stocks', { params });
     return response.data;
   },
-  getIndustryCodes: async () => {
+  getIndustryCodes: async (): Promise<Industry[]> => {
     const response = await axios.get('/api/industry-codes');
     return response.data;
   },
-  getScaleCodes: async () => {
+  getScaleCodes: async (): Promise<Scale[]> => {
     const response = await axios.get('/api/scale-codes');
     return response.data;
   }

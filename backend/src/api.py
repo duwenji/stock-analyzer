@@ -233,6 +233,7 @@ async def prepare_recommendations(request: RecommendationRequest, db: Session = 
                 s.symbol,
                 s.name,
                 s.industry_name_33 as industry,
+                s.scale_name as scale_name,
                 ti.rsi,
                 ti.golden_cross,
                 TO_CHAR(ti.date, 'YYYY-MM-DD') as indicator_date

@@ -1,4 +1,5 @@
 import React from 'react';
+import { stockService } from '../utils/apiService';
 import {
   Dialog,
   DialogTitle,
@@ -22,6 +23,8 @@ interface Stock {
   symbol: string;
   name: string;
   industry: string;
+  industry_name_33?: string;
+  scale_name?: string;
   rsi?: number | string | null;
   golden_cross?: boolean;
   indicator_date?: string;
@@ -51,6 +54,8 @@ interface RecommendationConfirmationDialogProps {
     agentType: string;
     symbols: string;
     search: string;
+    industries?: string[];
+    scales?: string[];
     technical_filters?: TechnicalFilters;
     promptId?: number;
     optimizerPromptId?: number;
@@ -74,6 +79,29 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
   onCancel
 }) => {
   const [expandedPromptId, setExpandedPromptId] = React.useState<number | null>(null);
+  const [industryMap, setIndustryMap] = React.useState<Record<string, string>>({});
+  const [scaleMap, setScaleMap] = React.useState<Record<string, string>>({});
+
+  // 業種と規模のマッピングデータを取得
+  React.useEffect(() => {
+    const fetchMappings = async () => {
+      try {
+        const industries = await stockService.getIndustryCodes();
+        setIndustryMap(Object.fromEntries(
+          industries.map(item => [item.code, item.name])
+        ));
+        
+        const scales = await stockService.getScaleCodes();
+        setScaleMap(Object.fromEntries(
+          scales.map(item => [item.code, item.name])
+        ));
+      } catch (error) {
+        console.error('マッピングデータ取得エラー:', error);
+      }
+    };
+    
+    fetchMappings();
+  }, []);
   
   console.log('RecommendationConfirmationDialog params:', params);
   const formatParam = (key: keyof typeof params, value: unknown): React.ReactNode => {
@@ -118,39 +146,42 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
         }
         return '指定なし';
       case 'technical_filters':
-        console.log("technical_filters's value:", value);
-
         if (!value || typeof value !== 'object') {
           return '指定なし';
         }
         
         const filters: string[] = [];
         const techFilters = value as TechnicalFilters;
-        console.log("techFilters:", techFilters);
         
         // RSIフィルターのチェック
-        if (techFilters.rsi !== undefined && Array.isArray(techFilters.rsi)) {
+        if (techFilters.rsi && Array.isArray(techFilters.rsi)) {
           const [operator, val] = techFilters.rsi;
-          // 値が有効な数値かチェック
           const numVal = typeof val === 'string' ? parseFloat(val) : val;
-          const isValidNumber = typeof numVal === 'number' && !isNaN(numVal);
-          
-          if ((operator === '>' || operator === '<') && isValidNumber) {
+          if (typeof numVal === 'number' && !isNaN(numVal)) {
             filters.push(`RSI ${operator === '>' ? '＞' : '＜'} ${numVal}`);
           }
         }
         
         // ゴールデンクロスのチェック
-        if (techFilters.golden_cross !== undefined && Array.isArray(techFilters.golden_cross)) {
-          const val = techFilters.golden_cross[1]; // 2番目の要素のみ取得
-          const boolVal = typeof val === 'string' ? 
-            val.toLowerCase() === 'true' : 
-            Boolean(val);
-          filters.push(boolVal ? 'ゴールデンクロス 有り' : 'ゴールデンクロス 無し');
+        if (techFilters.golden_cross && Array.isArray(techFilters.golden_cross)) {
+          const val = techFilters.golden_cross[1];
+          if (typeof val === 'boolean' || typeof val === 'string') {
+            const boolVal = typeof val === 'string' ? val.toLowerCase() === 'true' : val;
+            filters.push(boolVal ? 'ゴールデンクロス 有り' : 'ゴールデンクロス 無し');
+          }
         }
         
-        console.log('Formatted technical_filters:', filters);
         return filters.length > 0 ? filters.join(' / ') : '指定なし';
+        
+      case 'industries':
+        return Array.isArray(value) && value.length > 0 
+          ? value.map(code => industryMap[code] || code).join(', ') 
+          : '指定なし';
+          
+      case 'scales':
+        return Array.isArray(value) && value.length > 0 
+          ? value.map(code => scaleMap[code] || code).join(', ') 
+          : '指定なし';
       default:
         return String(value || '指定なし');
     }
@@ -184,10 +215,10 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
               <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>投資方針:</strong> {formatParam('strategy', params.strategy)}</Typography>
             </Grid>
             <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-              <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>AIエージェント:</strong> {formatParam('agentType', params.agentType)}</Typography>
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>AIエージェント:</strong> {formatParam('agentType', params.agentType)}</Typography>
             </Grid>
               {params.agentType === 'direct' && params.promptId && (
-                <>
+                <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
                   <Typography variant="subtitle1" sx={{ mt: 2 }}>プロンプト:</Typography>
                   <div 
                     className="prompt-item"
@@ -220,10 +251,10 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
                       </div>
                     )}
                   </div>
-                </>
+                </Grid>
               )}
               {params.agentType === 'mcpagent' && (
-                <>
+                <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
                   <Typography variant="subtitle1" sx={{ mt: 2 }}>推奨用プロンプト:</Typography>
                   <div 
                     className="prompt-item"
@@ -288,16 +319,22 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
                       </div>
                     )}
                   </div>
-                </>
+                </Grid>
               )}
             <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-              <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>特定銘柄:</strong> {formatParam('symbols', params.symbols)}</Typography>
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>特定銘柄:</strong> {formatParam('symbols', params.symbols)}</Typography>
             </Grid>
             <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-              <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>検索条件:</strong> {formatParam('search', params.search)}</Typography>
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>検索条件:</strong> {formatParam('search', params.search)}</Typography>
             </Grid>
             <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
-              <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>テクニカル指標:</strong> {formatParam('technical_filters', params.technical_filters)}</Typography>
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>業種:</strong> {formatParam('industries', params.industries)}</Typography>
+            </Grid>
+            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>規模:</strong> {formatParam('scales', params.scales)}</Typography>
+            </Grid>
+            <Grid component="div" sx={{ width: { xs: '100%', sm: '50%', md: '33.33%' }, p: 2 }}>
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}><strong>テクニカル指標:</strong> {formatParam('technical_filters', params.technical_filters)}</Typography>
             </Grid>
           </Grid>
         </Box>
@@ -318,7 +355,8 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
                   </TableCell>
                   <TableCell>銘柄コード</TableCell>
                   <TableCell>会社名</TableCell>
-                  <TableCell>業種</TableCell>
+                  <TableCell>業種(33分類)</TableCell>
+                  <TableCell>規模</TableCell>
                   <TableCell>RSI</TableCell>
                   <TableCell>ゴールデンクロス</TableCell>
                   <TableCell>指標日付</TableCell>
@@ -335,7 +373,8 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
                     </TableCell>
                     <TableCell>{stock.symbol}</TableCell>
                     <TableCell>{stock.name}</TableCell>
-                    <TableCell>{stock.industry}</TableCell>
+                    <TableCell>{stock.industry_name_33 || stock.industry || '-'}</TableCell>
+                    <TableCell>{stock.scale_name || '-'}</TableCell>
                     <TableCell>{
                       stock.rsi === null || stock.rsi === undefined ? '-' : 
                       typeof stock.rsi === 'number' ? stock.rsi.toFixed(2) :
