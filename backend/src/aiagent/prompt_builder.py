@@ -26,8 +26,8 @@ def build_recommendation_prompt(template, params: Dict, data: Dict) -> str:
                 strategy=params.get('strategy', '成長株重視'),
                 company_infos=data.get('company_infos', []),
                 technical_indicators=data.get('technical_indicators', [])
-            ) + "\n\n" +
-            "output_format:" + template['output_format']
+            ) + "\n" +
+            "【出力形式】\n" + template['output_format']
         )
         return prompt
         

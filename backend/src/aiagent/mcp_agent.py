@@ -1,7 +1,6 @@
 import json
 import re
-import os
-from .interface import IStockRecommender
+from aiagent.interface import IStockRecommender
 from typing import Dict, Any
 from aiagent.prompt_builder import build_recommendation_prompt
 from utils import setup_backend_logger
@@ -12,7 +11,7 @@ from mcp_agent.workflows.evaluator_optimizer.evaluator_optimizer import (
 
 from mcp_agent.agents.agent import Agent
 from mcp_agent.workflows.llm.augmented_llm import RequestParams
-from aiagent.data_access import (fetch_company_infos, fetch_technical_indicators, get_prompt_template)
+from aiagent.data_access import (fetch_company_infos, get_prompt_template)
 from mcp_agent.workflows.llm.augmented_llm_openai import OpenAIAugmentedLLM
 
 logger = setup_backend_logger(__name__)
@@ -39,8 +38,7 @@ class MCPAgentRecommender(IStockRecommender):
         evaluation_prompt = get_prompt_template(params['evaluation_prompt_id'])
         
         stock_data = {
-            "company_infos": fetch_company_infos(params['selected_symbols']),
-            "technical_indicators": fetch_technical_indicators(params['selected_symbols'])
+            "company_infos": fetch_company_infos(params['selected_symbols'])
         }
 
         # メッセージ構築
