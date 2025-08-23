@@ -147,8 +147,14 @@ def get_prompt_template(prompt_id: int) -> Dict[str, str]:
         logger.error(f"プロンプトテンプレートの取得に失敗: {str(e)}")
         raise
 
-def save_recommendation(result: Dict, params: Dict) -> bool:
-    """推奨結果をデータベースに保存"""
+def save_recommendation(result: Dict, params: Dict, ai_raw_response: str = None) -> bool:
+    """推奨結果をデータベースに保存
+    
+    Args:
+        result: パース済みの推奨結果
+        params: 推奨パラメータ
+        ai_raw_response: AIからの生のレスポンス（オプション）
+    """
     try:
         logger.debug(
             f"推奨結果保存開始 - principal: {params['principal']}, "
@@ -164,7 +170,8 @@ def save_recommendation(result: Dict, params: Dict) -> bool:
                 risk_tolerance=params['risk_tolerance'],
                 strategy=params['strategy'],
                 symbols=params['selected_symbols'],
-                technical_filter=params.get('technical_filter')
+                technical_filter=params.get('technical_filter'),
+                ai_raw_response=ai_raw_response
             )
             conn.execute(session_stmt)
             session_id = conn.execute(
@@ -174,16 +181,17 @@ def save_recommendation(result: Dict, params: Dict) -> bool:
             ).scalar()
             
             # 結果保存
-            for rec in result.get('recommendations', []):
-                result_stmt = insert(RecommendationResult).values(
-                    session_id=session_id,
-                    symbol=rec['symbol'],
-                    name=rec.get('name', ''),
-                    allocation=rec.get('allocation', ''),
-                    confidence=rec.get('confidence') / 100.0 if rec.get('confidence') else None,
-                    reason=rec.get('reason', "")
-                )
-                conn.execute(result_stmt)
+            if "recommendations" in result:
+                for rec in result.get('recommendations', []):
+                    result_stmt = insert(RecommendationResult).values(
+                        session_id=session_id,
+                        symbol=rec['symbol'],
+                        name=rec.get('name', ''),
+                        allocation=rec.get('allocation', ''),
+                        confidence=rec.get('confidence') / 100.0 if rec.get('confidence') else None,
+                        reason=rec.get('reason', "")
+                    )
+                    conn.execute(result_stmt)
             return True
             
     except Exception as e:

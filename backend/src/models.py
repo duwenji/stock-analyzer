@@ -23,6 +23,7 @@ class RecommendationSession(Base):
     strategy = Column(String(50), nullable=False)
     symbols = Column(ARRAY(String))
     technical_filter = Column(Text)
+    ai_raw_response = Column(Text)
 
 class RecommendationResult(Base):
     """推奨結果モデル"""

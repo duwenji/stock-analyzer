@@ -82,10 +82,21 @@ class MCPAgentRecommender(IStockRecommender):
             # JSON部分を抽出してパース
             json_match = re.search(r'```json\s*({.*?})\s*```', result, re.DOTALL)
             if json_match:
-                return json.loads(json_match.group(1))
+                parsed_result = json.loads(json_match.group(1))
+                # 生の評価結果を含めて返す
+                return {
+                    "parsed_result": parsed_result,
+                    "raw_response": result
+                }
             else:
                 # JSON形式が見つからない場合のフォールバック
-                return {"status": "success", "data": result}
+                return {
+                    "parsed_result": {"status": "success", "data": result},
+                    "raw_response": result
+                }
         except json.JSONDecodeError as e:
             logger.error(f"JSON解析エラー: {str(e)}")
-            return {"status": "error", "message": "推奨結果の解析に失敗しました"}
+            return {
+                "parsed_result": {"status": "error", "message": "推奨結果の解析に失敗しました"},
+                "raw_response": result
+            }

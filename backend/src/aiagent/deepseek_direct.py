@@ -64,7 +64,19 @@ class DeepSeekDirectRecommender(IStockRecommender):
             stream=False
         )
 
-        return self._parse_response(response)
+        # 生のレスポンスを返す（パース済み結果と生データの両方）
+        parsed_response = self._parse_response(response)
+        if "error" not in parsed_response:
+            # 成功時は生データを含めて返す
+            return {
+                "parsed_result": parsed_response,
+                "raw_response": response.choices[0].message.content
+            }
+        else:
+            return {
+                "parsed_result": {"status": "error", "message": "推奨結果の解析に失敗しました"},
+                "raw_response": response
+            }
 
     def _build_prompt(self, params: Dict, data: Dict) -> str:
         """プロンプトを構築"""
