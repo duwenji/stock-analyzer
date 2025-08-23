@@ -40,16 +40,26 @@ class MCPAgentRecommender(IStockRecommender):
         stock_data = {
             "company_infos": fetch_company_infos(params['selected_symbols'])
         }
-
+        
         # メッセージ構築
-        message = build_recommendation_prompt(
-            optimizer_prompt,
+        msg4optimizer = build_recommendation_prompt(
+            optimizer_prompt['system_role'],
             params=params,
             data=stock_data
         )
+        msg4evaluation = build_recommendation_prompt(
+            evaluation_prompt['system_role'],
+            params=params,
+            data=stock_data
+        )
+        message = build_recommendation_prompt(
+            optimizer_prompt["user_template"],
+            params=params,
+            data=stock_data
+        ) + "\n" + "【出力形式】\n" + optimizer_prompt['output_format']
         
-        logger.info(f"optimizer’s instruction={optimizer_prompt['system_role']}")
-        logger.info(f"evaluator's instruction={evaluation_prompt['system_role']}")
+        logger.info(f"optimizer’s instruction={msg4optimizer}")
+        logger.info(f"evaluator's instruction={msg4evaluation}")
         logger.info(f"generator's message={message}")
         
         # 分析実行

@@ -81,7 +81,7 @@ class DeepSeekDirectRecommender(IStockRecommender):
     def _build_prompt(self, params: Dict, data: Dict) -> str:
         """プロンプトを構築"""
         template = get_prompt_template(params.get('prompt_id'))
-        return build_recommendation_prompt(template, params, data)
+        return build_recommendation_prompt(template["user_template"], params, data)
 
     def _parse_response(self, response) -> Dict:
         """APIレスポンスを解析"""

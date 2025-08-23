@@ -20,14 +20,13 @@ def build_recommendation_prompt(template, params: Dict, data: Dict) -> str:
             raise ValueError("プロンプトテンプレートがparamsに見つかりません")
         
         prompt = (
-            template['user_template'].format(
+            template.format(
                 principal=params.get('principal', 'N/A'),
                 risk_tolerance=params.get('risk_tolerance', '中'),
                 strategy=params.get('strategy', '成長株重視'),
                 company_infos=data.get('company_infos', []),
                 technical_indicators=data.get('technical_indicators', [])
-            ) + "\n" +
-            "【出力形式】\n" + template['output_format']
+            )
         )
         return prompt
         
