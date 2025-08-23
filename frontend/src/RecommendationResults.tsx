@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../src/styles/components/RecommendationResults.css';
 
 interface Recommendation {
@@ -12,9 +12,12 @@ interface Recommendation {
 interface ApiResponse {
   recommendations: Recommendation[];
   total_return_estimate: string;
+  ai_raw_response?: string;
 }
 
 const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data }) => {
+  const [showRawResponse, setShowRawResponse] = useState(false);
+
   if (!data || !data.recommendations) {
     return (
       <div className="recommendation-results">
@@ -23,6 +26,15 @@ const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data })
       </div>
     );
   }
+
+  const formatJson = (jsonString: string): string => {
+    try {
+      const parsed = JSON.parse(jsonString);
+      return JSON.stringify(parsed, null, 2);
+    } catch (e) {
+      return jsonString;
+    }
+  };
 
   return (
     <div className="recommendation-results">
@@ -79,6 +91,26 @@ const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data })
           </tbody>
         </table>
       </div>
+
+      {data.ai_raw_response && (
+        <div className="raw-response-section">
+          <button 
+            className="toggle-raw-response"
+            onClick={() => setShowRawResponse(!showRawResponse)}
+          >
+            {showRawResponse ? 'AI生レスポンスを隠す' : 'AI生レスポンスを表示'}
+          </button>
+          
+          {showRawResponse && (
+            <div className="raw-response-content">
+              <h4>AIからの生レスポンス</h4>
+              <pre className="formatted-json">
+                {formatJson(data.ai_raw_response)}
+              </pre>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

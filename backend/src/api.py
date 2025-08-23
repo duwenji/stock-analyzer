@@ -651,7 +651,9 @@ async def get_recommendation_detail(session_id: str, db: Session = Depends(get_d
                 principal,
                 risk_tolerance,
                 strategy,
-                technical_filter
+                technical_filter,
+                ai_raw_response,
+                total_return_estimate
             FROM recommendation_sessions
             WHERE session_id = :session_id
         """
@@ -692,4 +694,3 @@ if __name__ == "__main__":
     # 環境初期化
     initialize_environment()
     uvicorn.run(app, host="0.0.0.0", port=8000)
-

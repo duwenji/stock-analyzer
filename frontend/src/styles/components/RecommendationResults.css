@@ -103,6 +103,74 @@ th {
   line-height: 1.4;
 }
 
+/* AI生レスポンス表示スタイル */
+.raw-response-section {
+  margin-top: 30px;
+  border-top: 1px solid #eaeaea;
+  padding-top: 20px;
+}
+
+.toggle-raw-response {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.toggle-raw-response:hover {
+  background-color: #2980b9;
+}
+
+.raw-response-content {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #eaeaea;
+}
+
+.raw-response-content h4 {
+  margin-top: 0;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.formatted-json {
+  background-color: #2d3748;
+  color: #e2e8f0;
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.formatted-json::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.formatted-json::-webkit-scrollbar-track {
+  background: #1a202c;
+}
+
+.formatted-json::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 4px;
+}
+
+.formatted-json::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
+
 .loading, .error {
   padding: 15px;
   margin: 15px 0;

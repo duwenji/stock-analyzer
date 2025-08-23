@@ -24,6 +24,7 @@ class RecommendationSession(Base):
     symbols = Column(ARRAY(String))
     technical_filter = Column(Text)
     ai_raw_response = Column(Text)
+    total_return_estimate = Column(String(20))
 
 class RecommendationResult(Base):
     """推奨結果モデル"""

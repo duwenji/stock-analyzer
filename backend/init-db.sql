@@ -60,10 +60,12 @@ CREATE TABLE IF NOT EXISTS recommendation_sessions (
     symbols TEXT[] NOT NULL,
     technical_filter TEXT,
     prompt_id INTEGER REFERENCES prompt_templates(id),
-    ai_raw_response TEXT
+    ai_raw_response TEXT,
+    total_return_estimate VARCHAR(20)
 );
 -- 変更内容の確認クエリ
 COMMENT ON COLUMN recommendation_sessions.ai_raw_response IS 'AIからの生のレスポンスデータ（JSON形式など）';
+COMMENT ON COLUMN recommendation_sessions.total_return_estimate IS '期待リターン推定値';
 
 -- 推奨結果テーブルの作成
 CREATE TABLE IF NOT EXISTS recommendation_results (
