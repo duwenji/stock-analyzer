@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
 import '../src/styles/components/RecommendationResults.css';
+import { chartService } from './utils/apiService';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  CircularProgress,
+  Box
+} from '@mui/material';
 
 interface Recommendation {
   symbol: string;
@@ -17,6 +27,10 @@ interface ApiResponse {
 
 const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data }) => {
   const [showRawResponse, setShowRawResponse] = useState(false);
+  const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
+  const [chartImage, setChartImage] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [loadingChart, setLoadingChart] = useState<boolean>(false);
 
   if (!data || !data.recommendations) {
     return (
@@ -34,6 +48,26 @@ const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data })
     } catch (e) {
       return jsonString;
     }
+  };
+
+  const handleRowClick = async (symbol: string) => {
+    try {
+      setLoadingChart(true);
+      setSelectedSymbol(symbol);
+      const response = await chartService.getChart(symbol);
+      setChartImage(response.image);
+      setIsModalOpen(true);
+    } catch (err) {
+      console.error('チャートの取得に失敗しました:', err);
+    } finally {
+      setLoadingChart(false);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setChartImage(null);
+    setSelectedSymbol(null);
   };
 
   return (
@@ -71,7 +105,11 @@ const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data })
           </thead>
           <tbody>
             {data.recommendations.map((item, index) => (
-              <tr key={index}>
+              <tr 
+                key={index}
+                onClick={() => handleRowClick(item.symbol)}
+                style={{ cursor: 'pointer' }}
+              >
                 <td>{item.symbol}</td>
                 <td>{item.name}</td>
                 <td>
@@ -111,6 +149,34 @@ const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data })
           )}
         </div>
       )}
+
+      {/* チャートモーダル */}
+      <Dialog 
+        open={isModalOpen} 
+        onClose={closeModal}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          {selectedSymbol} チャート
+        </DialogTitle>
+        <DialogContent>
+          {loadingChart ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : chartImage ? (
+            <img 
+              src={chartImage} 
+              alt={`${selectedSymbol} チャート`}
+              style={{ width: '100%' }}
+            />
+          ) : null}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeModal}>閉じる</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

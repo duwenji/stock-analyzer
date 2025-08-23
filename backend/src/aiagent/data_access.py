@@ -11,14 +11,15 @@ def fetch_company_infos(symbols: List[str]) -> str:
     if not symbols:
         return ""
     
-    valid_symbols = [s for s in symbols if s and isinstance(s, str)]
-    if not valid_symbols:
+    # シンボルを正規化
+    normalized_symbols = [normalize_symbol(s) for s in symbols if s and isinstance(s, str)]
+    if not normalized_symbols:
         return ""
         
     query = f"""
         SELECT symbol, name, industry_name_33, industry_name_17
         FROM stocks
-        WHERE symbol IN ({','.join([f"'{s}'" for s in valid_symbols])})
+        WHERE symbol IN ({','.join([f"'{s}'" for s in normalized_symbols])})
     """
     df = pd.read_sql_query(query, get_db_engine())
     if df.empty:
@@ -35,8 +36,9 @@ async def fetch_news(symbols: List[str]) -> List[Dict]:
             "source": "日経新聞"
         }]
     
-    valid_symbols = [s for s in symbols if s and isinstance(s, str)]
-    if not valid_symbols:
+    # シンボルを正規化
+    normalized_symbols = [normalize_symbol(s) for s in symbols if s and isinstance(s, str)]
+    if not normalized_symbols:
         return [{
             "title": "市場ニュース", 
             "summary": "本日の株式市場は概ね好調です",
@@ -46,7 +48,7 @@ async def fetch_news(symbols: List[str]) -> List[Dict]:
     query = f"""
         SELECT symbol, name, industry_name_33, industry_name_17
         FROM stocks
-        WHERE symbol IN ({','.join([f"'{s}'" for s in valid_symbols])})
+        WHERE symbol IN ({','.join([f"'{s}'" for s in normalized_symbols])})
     """
     df = pd.read_sql_query(query, get_db_engine())
     if df.empty:
@@ -67,13 +69,18 @@ def fetch_technical_indicators(symbols: List[str], limit: int = 100) -> str:
     """テクニカル指標を文字列形式で取得"""
     if not symbols:
         return ""
+    
+    # シンボルを正規化
+    normalized_symbols = [normalize_symbol(s) for s in symbols if s and isinstance(s, str)]
+    if not normalized_symbols:
+        return ""
         
     query = f"""
         SELECT DISTINCT ON (symbol)
         symbol, to_char(date, 'YYYY/MM/DD') as date, 
         golden_cross, dead_cross, rsi, macd, signal_line 
         FROM technical_indicators
-        WHERE symbol IN ({','.join([f"'{s}'" for s in symbols])})
+        WHERE symbol IN ({','.join([f"'{s}'" for s in normalized_symbols])})
         ORDER BY symbol, date DESC
         LIMIT {limit}
     """
@@ -89,11 +96,16 @@ def fetch_price_history(symbols: List[str], limit: int = 90) -> str:
     """株価履歴を文字列形式で取得（過去3ヶ月分）"""
     if not symbols:
         return ""
+    
+    # シンボルを正規化
+    normalized_symbols = [normalize_symbol(s) for s in symbols if s and isinstance(s, str)]
+    if not normalized_symbols:
+        return ""
         
     query = f"""
         SELECT symbol, to_char(date, 'YYYY/MM/DD') as date, open, high, low, close, volume 
         FROM stock_prices
-        WHERE symbol IN ({','.join([f"'{s}'" for s in symbols])})
+        WHERE symbol IN ({','.join([f"'{s}'" for s in normalized_symbols])})
           AND date >= current_date - interval '1 months'
         ORDER BY symbol, date DESC
     """
@@ -147,6 +159,12 @@ def get_prompt_template(prompt_id: int) -> Dict[str, str]:
         logger.error(f"プロンプトテンプレートの取得に失敗: {str(e)}")
         raise
 
+def normalize_symbol(symbol: str) -> str:
+    """シンボルを正規化（.Tサフィックスを追加）"""
+    if symbol and not symbol.endswith('.T'):
+        return symbol + '.T'
+    return symbol
+
 def save_recommendation(result: Dict, params: Dict, ai_raw_response: str = None) -> bool:
     """推奨結果をデータベースに保存
     
@@ -183,9 +201,11 @@ def save_recommendation(result: Dict, params: Dict, ai_raw_response: str = None)
             # 結果保存
             if "recommendations" in result:
                 for rec in result.get('recommendations', []):
+                    # シンボルを正規化
+                    normalized_symbol = normalize_symbol(rec['symbol'])
                     result_stmt = insert(RecommendationResult).values(
                         session_id=session_id,
-                        symbol=rec['symbol'],
+                        symbol=normalized_symbol,
                         name=rec.get('name', ''),
                         allocation=rec.get('allocation', ''),
                         confidence=rec.get('confidence') / 100.0 if rec.get('confidence') else None,

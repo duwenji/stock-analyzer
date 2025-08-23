@@ -1,8 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Chip, Divider } from '@mui/material';
+import { 
+  Box, 
+  Typography, 
+  Paper, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  Button, 
+  Chip, 
+  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  CircularProgress
+} from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import dayjs from 'dayjs';
+import { chartService } from './utils/apiService';
 
 interface Recommendation {
   symbol: string;
@@ -27,6 +46,10 @@ const RecommendationDetail: React.FC = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
+  const [chartImage, setChartImage] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [loadingChart, setLoadingChart] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchRecommendationDetail = async () => {
@@ -61,6 +84,26 @@ const RecommendationDetail: React.FC = () => {
       </Box>
     );
   }
+
+  const handleRowClick = async (symbol: string) => {
+    try {
+      setLoadingChart(true);
+      setSelectedSymbol(symbol);
+      const response = await chartService.getChart(symbol);
+      setChartImage(response.image);
+      setIsModalOpen(true);
+    } catch (err) {
+      console.error('チャートの取得に失敗しました:', err);
+    } finally {
+      setLoadingChart(false);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setChartImage(null);
+    setSelectedSymbol(null);
+  };
 
   return (
     <Box sx={{ p: 3 }}>
@@ -146,7 +189,11 @@ const RecommendationDetail: React.FC = () => {
           </TableHead>
           <TableBody>
             {recommendations.map((rec) => (
-              <TableRow key={rec.symbol}>
+              <TableRow 
+                key={rec.symbol}
+                onClick={() => handleRowClick(rec.symbol)}
+                sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'action.hover' } }}
+              >
                 <TableCell>{rec.symbol}</TableCell>
                 <TableCell>{rec.name}</TableCell>
                 <TableCell>
@@ -161,6 +208,34 @@ const RecommendationDetail: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* チャートモーダル */}
+      <Dialog 
+        open={isModalOpen} 
+        onClose={closeModal}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          {selectedSymbol} チャート
+        </DialogTitle>
+        <DialogContent>
+          {loadingChart ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : chartImage ? (
+            <img 
+              src={chartImage} 
+              alt={`${selectedSymbol} チャート`}
+              style={{ width: '100%' }}
+            />
+          ) : null}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeModal}>閉じる</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
