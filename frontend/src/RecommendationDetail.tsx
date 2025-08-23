@@ -38,6 +38,8 @@ interface Session {
   risk_tolerance: string;
   strategy: string;
   technical_filter?: string;
+  ai_raw_response?: string;
+  total_return_estimate?: string;
 }
 
 const RecommendationDetail: React.FC = () => {
@@ -167,8 +169,38 @@ const RecommendationDetail: React.FC = () => {
               <Typography>{session.technical_filter}</Typography>
             </Box>
           )}
+          {session.total_return_estimate && (
+            <Box sx={{ gridColumn: '1 / -1' }}>
+              <Typography variant="subtitle1">期待リターン見積もり</Typography>
+              <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'success.main' }}>
+                {session.total_return_estimate}
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Paper>
+
+      {session.ai_raw_response && (
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            AI生レスポンス
+          </Typography>
+          <Box
+            sx={{
+              p: 2,
+              backgroundColor: 'grey.100',
+              borderRadius: 1,
+              maxHeight: '300px',
+              overflow: 'auto',
+              fontFamily: 'monospace',
+              fontSize: '0.875rem',
+              whiteSpace: 'pre-wrap'
+            }}
+          >
+            {session.ai_raw_response}
+          </Box>
+        </Paper>
+      )}
 
       <Divider sx={{ my: 3 }} />
 
