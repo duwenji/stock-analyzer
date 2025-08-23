@@ -65,15 +65,15 @@ class MCPAgentRecommender(IStockRecommender):
         # 分析実行
         optimizer = Agent(
             name="stock_optimizer",
-            instruction=optimizer_prompt['system_role'],
+            instruction=msg4optimizer,
             server_names=["yfinance", "fetch"]
         )
         
         evaluator = Agent(
             name="risk_evaluator",
-            instruction=evaluation_prompt['system_role'],
+            instruction=msg4evaluation,
         )
-                
+        
         evaluator_optimizer = EvaluatorOptimizerLLM(
             optimizer=optimizer,
             evaluator=evaluator,
