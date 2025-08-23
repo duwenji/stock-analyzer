@@ -341,62 +341,69 @@ const RecommendationConfirmationDialog: React.FC<RecommendationConfirmationDialo
           </div>
         </Box>
 
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            候補銘柄 ({selected.length}/{stocks.length}件選択)
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                    <Checkbox
-                      checked={selected.length === stocks.length && stocks.length > 0}
-                      onChange={toggleAllStocks}
-                    />
-                  </TableCell>
-                  <TableCell>銘柄コード</TableCell>
-                  <TableCell>会社名</TableCell>
-                  <TableCell>業種(33分類)</TableCell>
-                  <TableCell>規模</TableCell>
-                  <TableCell>RSI</TableCell>
-                  <TableCell>ゴールデンクロス</TableCell>
-                  <TableCell>指標日付</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {stocks.map(stock => (
-                  <TableRow key={stock.symbol}>
+        {stocks.length > 0 ? (
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              候補銘柄 ({selected.length}/{stocks.length}件選択)
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
                     <TableCell>
                       <Checkbox
-                        checked={selected.includes(stock.symbol)}
-                        onChange={() => toggleStock(stock.symbol)}
+                        checked={selected.length === stocks.length && stocks.length > 0}
+                        onChange={toggleAllStocks}
                       />
                     </TableCell>
-                    <TableCell>{stock.symbol}</TableCell>
-                    <TableCell>{stock.name}</TableCell>
-                    <TableCell>{stock.industry_name_33 || stock.industry || '-'}</TableCell>
-                    <TableCell>{stock.scale_name || '-'}</TableCell>
-                    <TableCell>{
-                      stock.rsi === null || stock.rsi === undefined ? '-' : 
-                      typeof stock.rsi === 'number' ? stock.rsi.toFixed(2) :
-                      stock.rsi.toString().replace(/^Decimal\(['"]?|['"]?\)$/g, '')
-                    }</TableCell>
-                    <TableCell>{stock.golden_cross ? '○' : '-'}</TableCell>
-                    <TableCell>{stock.indicator_date || '-'}</TableCell>
+                    <TableCell>銘柄コード</TableCell>
+                    <TableCell>会社名</TableCell>
+                    <TableCell>業種(33分類)</TableCell>
+                    <TableCell>規模</TableCell>
+                    <TableCell>RSI</TableCell>
+                    <TableCell>ゴールデンクロス</TableCell>
+                    <TableCell>指標日付</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+                </TableHead>
+                <TableBody>
+                  {stocks.map(stock => (
+                    <TableRow key={stock.symbol}>
+                      <TableCell>
+                        <Checkbox
+                          checked={selected.includes(stock.symbol)}
+                          onChange={() => toggleStock(stock.symbol)}
+                        />
+                      </TableCell>
+                      <TableCell>{stock.symbol}</TableCell>
+                      <TableCell>{stock.name}</TableCell>
+                      <TableCell>{stock.industry_name_33 || stock.industry || '-'}</TableCell>
+                      <TableCell>{stock.scale_name || '-'}</TableCell>
+                      <TableCell>{
+                        stock.rsi === null || stock.rsi === undefined ? '-' : 
+                        typeof stock.rsi === 'number' ? stock.rsi.toFixed(2) :
+                        stock.rsi.toString().replace(/^Decimal\(['"]?|['"]?\)$/g, '')
+                      }</TableCell>
+                      <TableCell>{stock.golden_cross ? '○' : '-'}</TableCell>
+                      <TableCell>{stock.indicator_date || '-'}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        ) : (
+          <Box sx={{ p: 2, textAlign: 'center', backgroundColor: '#f5f5f5', borderRadius: 1 }}>
+            <Typography variant="body1" color="text.secondary">
+              対象銘柄が指定されていないため、全銘柄から推奨します
+            </Typography>
+          </Box>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel} variant="outlined">キャンセル</Button>
         <Button 
           onClick={onConfirm} 
           variant="contained"
-          disabled={selected.length === 0}
         >
           推奨を生成 ({selected.length}件)
         </Button>

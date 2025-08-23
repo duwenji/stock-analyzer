@@ -184,6 +184,22 @@ async def prepare_recommendations(request: RecommendationRequest, db: Session = 
     try:
         logger.info(f"フィルタリングリクエスト受信: {request.model_dump()}")
 
+        # 対象銘柄関連の入力がない場合は空のリストを返す
+        has_stock_related_input = (
+            (request.symbols and len(request.symbols) > 0) or
+            (request.industries and len(request.industries) > 0) or
+            (request.scales and len(request.scales) > 0) or
+            (request.search and request.search.strip() != '') or
+            (request.technical_filters and len(request.technical_filters) > 0)
+        )
+
+        if not has_stock_related_input:
+            logger.info("対象銘柄関連の入力がないため、空のリストを返します")
+            return {
+                "candidate_stocks": [],
+                "params": request.model_dump()
+            }
+
         # 検索条件で銘柄をフィルタリング
         search_params = {}
         where_clauses = []

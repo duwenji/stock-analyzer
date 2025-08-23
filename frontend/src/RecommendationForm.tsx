@@ -148,10 +148,30 @@ const RecommendationForm: React.FC<{
     return formData.technical_filters || {};
   };
 
+  // 対象銘柄関連の入力があるかチェック
+  const hasStockRelatedInput = (): boolean => {
+    const { symbols, industries, scales, search, technical_filters } = formData;
+    return (
+      (symbols && symbols.trim() !== '') ||
+      (industries !== undefined && industries.length > 0) ||
+      (scales !== undefined && scales.length > 0) ||
+      (search && search.trim() !== '') ||
+      (technical_filters !== undefined && Object.keys(technical_filters).length > 0)
+    );
+  };
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
+      // 対象銘柄関連の入力がない場合は空のリストを設定
+      if (!hasStockRelatedInput()) {
+        setCandidateStocks([]);
+        setSelectedStocks([]);
+        setIsConfirming(true);
+        return;
+      }
+      
       const transformedData = transformRecommendationRequest({
         ...formData,
         technical_filters: setTechFilter()
