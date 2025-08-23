@@ -71,7 +71,7 @@ COMMENT ON COLUMN recommendation_sessions.total_return_estimate IS '期待リタ
 CREATE TABLE IF NOT EXISTS recommendation_results (
     id SERIAL PRIMARY KEY,
     session_id INTEGER NOT NULL REFERENCES recommendation_sessions(session_id),
-    symbol TEXT NOT NULL REFERENCES stocks(symbol),
+    symbol TEXT NOT NULL REFERENCES,
     name TEXT NOT NULL,
     allocation TEXT NOT NULL,
     confidence DECIMAL(5,4),
