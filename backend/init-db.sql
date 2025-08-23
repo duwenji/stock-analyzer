@@ -59,8 +59,11 @@ CREATE TABLE IF NOT EXISTS recommendation_sessions (
     strategy VARCHAR(50) NOT NULL,
     symbols TEXT[] NOT NULL,
     technical_filter TEXT,
-    prompt_id INTEGER REFERENCES prompt_templates(id)
+    prompt_id INTEGER REFERENCES prompt_templates(id),
+    ai_raw_response TEXT
 );
+-- 変更内容の確認クエリ
+COMMENT ON COLUMN recommendation_sessions.ai_raw_response IS 'AIからの生のレスポンスデータ（JSON形式など）';
 
 -- 推奨結果テーブルの作成
 CREATE TABLE IF NOT EXISTS recommendation_results (
