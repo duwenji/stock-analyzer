@@ -87,7 +87,7 @@ const RecommendationResults: React.FC<{ data: ApiResponse | null }> = ({ data })
             style={{ width: `${parseFloat(item.allocation)}%` }}
           >
             <span className="symbol">{item.symbol}</span>
-            <span className="percentage">{item.allocation}%</span>
+            <span className="percentage">{item.allocation}</span>
           </div>
         ))}
       </div>

@@ -48,7 +48,11 @@
 .allocation-bar:nth-child(3) { background-color: #e74c3c; }
 .allocation-bar:nth-child(4) { background-color: #f39c12; }
 .allocation-bar:nth-child(5) { background-color: #9b59b6; }
-
+.allocation-bar:nth-child(6) { background-color: #3498db; }
+.allocation-bar:nth-child(7) { background-color: #2ecc71; }
+.allocation-bar:nth-child(8) { background-color: #e74c3c; }
+.allocation-bar:nth-child(9) { background-color: #f39c12; }
+.allocation-bar:nth-child(10) { background-color: #9b59b6; }
 .symbol {
   font-weight: bold;
 }

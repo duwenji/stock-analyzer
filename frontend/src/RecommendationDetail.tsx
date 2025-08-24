@@ -169,14 +169,6 @@ const RecommendationDetail: React.FC = () => {
               <Typography>{session.technical_filter}</Typography>
             </Box>
           )}
-          {session.total_return_estimate && (
-            <Box sx={{ gridColumn: '1 / -1' }}>
-              <Typography variant="subtitle1">期待リターン見積もり</Typography>
-              <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'success.main' }}>
-                {session.total_return_estimate}
-              </Typography>
-            </Box>
-          )}
         </Box>
       </Paper>
 
@@ -207,6 +199,23 @@ const RecommendationDetail: React.FC = () => {
       <Typography variant="h5" gutterBottom>
         推奨銘柄 ({recommendations.length}件)
       </Typography>
+        <div className="summary">
+          <p className="return-estimate">
+            期待リターン: <strong>{session.total_return_estimate}</strong>
+          </p>
+        </div>
+        <div className="allocation-chart">
+          {recommendations.map((item, index) => (
+          <div 
+            key={index} 
+            className="allocation-bar"
+            style={{ width: `${item.allocation}%` }}
+          >
+            <span className="symbol">{item.symbol}</span>
+            <span className="percentage">{item.allocation}</span>
+          </div>
+        ))}
+      </div>
 
       <TableContainer component={Paper}>
         <Table>
@@ -233,7 +242,30 @@ const RecommendationDetail: React.FC = () => {
                     label={`${rec.allocation}`} 
                   />
                 </TableCell>
-                <TableCell>{rec.confidence}%</TableCell>
+                <TableCell>
+                  <Box sx={{ 
+                    height: 20, 
+                    backgroundColor: 'grey.100', 
+                    borderRadius: 10, 
+                    overflow: 'hidden',
+                    position: 'relative'
+                  }}>
+                    <Box sx={{
+                      height: '100%',
+                      backgroundColor: 'primary.main',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: `${rec.confidence}%`,
+                      minWidth: '30px',
+                      color: 'white',
+                      fontSize: '12px',
+                      fontWeight: 'medium'
+                    }}>
+                      {rec.confidence}%
+                    </Box>
+                  </Box>
+                </TableCell>
                 <TableCell>{rec.reason}</TableCell>
               </TableRow>
             ))}
