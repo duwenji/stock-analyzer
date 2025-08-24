@@ -9,7 +9,7 @@
 ### 主要機能
 1. 株式データの自動取得（yfinance API）
 2. テクニカル分析（移動平均線、RSI、MACDなど）
-3. AIによる銘柄推奨（CLINEシステム）
+3. AIによる銘柄推奨
 4. 分析レポートの生成（matplotlib）
 
 ## 開発時のCLINE活用と本番環境のAIAgentシステム
@@ -18,8 +18,8 @@
 ```mermaid
 graph TD
   A[フロントエンド:React] --> B[バックエンド:FastAPI]
-  B --> C[CLINEエージェント]
-  C --> D[DeepSeek API]
+  B --> C[エージェント]
+  C --> D[LLM API]
   C --> E[PostgreSQL]
   B --> F[データ分析モジュール]
   F --> E
