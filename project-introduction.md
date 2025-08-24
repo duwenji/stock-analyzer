@@ -18,7 +18,7 @@
 ```mermaid
 graph TD
   A[フロントエンド:React] --> B[バックエンド:FastAPI]
-  B --> C[エージェント]
+  B --> C[AIエージェント]
   C --> D[LLM API]
   C --> E[PostgreSQL]
   B --> F[データ分析モジュール]

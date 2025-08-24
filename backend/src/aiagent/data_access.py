@@ -189,7 +189,8 @@ def save_recommendation(result: Dict, params: Dict, ai_raw_response: str = None)
                 strategy=params['strategy'],
                 symbols=params['selected_symbols'],
                 technical_filter=params.get('technical_filter'),
-                ai_raw_response=ai_raw_response
+                ai_raw_response=ai_raw_response,
+                total_return_estimate=result.get('total_return_estimate', -1)
             )
             conn.execute(session_stmt)
             session_id = conn.execute(
