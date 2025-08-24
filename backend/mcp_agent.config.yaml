@@ -13,12 +13,6 @@ logger:
 
 mcp:
   servers:
-    fetch:
-      command: "uvx"
-      args: ["mcp-server-fetch"]
-    filesystem:
-      command: "npx"
-      args: ["-y", "@modelcontextprotocol/server-filesystem"]
     yfinance:
       command: "npx"
       args: ["-y", "yahoo-finance-mcp"]

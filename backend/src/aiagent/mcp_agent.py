@@ -66,12 +66,13 @@ class MCPAgentRecommender(IStockRecommender):
         optimizer = Agent(
             name="stock_optimizer",
             instruction=msg4optimizer,
-            server_names=["yfinance", "fetch"]
+            server_names=["yfinance"]
         )
         
         evaluator = Agent(
             name="risk_evaluator",
             instruction=msg4evaluation,
+            server_names=["yfinance"]
         )
         
         evaluator_optimizer = EvaluatorOptimizerLLM(

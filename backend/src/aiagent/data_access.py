@@ -17,7 +17,7 @@ def fetch_company_infos(symbols: List[str]) -> str:
         return ""
         
     query = f"""
-        SELECT symbol, name, industry_name_33, industry_name_17
+        SELECT symbol, name, industry_name_33
         FROM stocks
         WHERE symbol IN ({','.join([f"'{s}'" for s in normalized_symbols])})
     """
