@@ -65,7 +65,7 @@ dependencies = [
     "python-dotenv==1.1.1",
     "python-multipart==0.0.20",
     "pytz==2025.2",
-    "pywin32==311",
+    # "pywin32==311",  # Windows専用ライブラリのためLinux環境ではコメントアウト
     "PyYAML==6.0.2",
     "referencing==0.36.2",
     "regex==2025.7.34",
