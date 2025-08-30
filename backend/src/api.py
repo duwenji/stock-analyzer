@@ -3,16 +3,16 @@ import datetime
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session, sessionmaker
-from models import PromptTemplate
+from .models import PromptTemplate
 from typing import List, Optional
 import pandas as pd
-from chart_plotter import plot_candlestick
+from .chart_plotter import plot_candlestick
 import base64
-from utils import setup_backend_logger, get_db_engine, get_ma_settings
+from .utils import setup_backend_logger, get_db_engine, get_ma_settings
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-from technical_indicators import calculate_moving_average, calculate_macd, calculate_rsi
-from stock_recommender import recommend_stocks
+from .technical_indicators import calculate_moving_average, calculate_macd, calculate_rsi
+from .stock_recommender import recommend_stocks
 from interfaces import (
     RecommendationRequest,
     SelectedRecommendationRequest,

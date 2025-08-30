@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 chcp 65001 >nul
 echo === 株式分析システム Docker環境構築 ===
 echo Windows環境用
@@ -33,12 +34,28 @@ if errorlevel 1 (
 echo 環境変数ファイルを確認しました
 echo Dockerサービスのビルドを開始します...
 
-REM Docker Composeでビルドと起動
-cd backend
-docker-compose up --build -d
+REM 全コンテナの状態をチェック
+echo コンテナ状態を確認中...
+for /f "tokens=*" %%i in ('docker ps -a --filter "name=stock-postgres" --format "{{.Status}}"') do (
+    set "postgres_status=%%i"
+)
+
+REM 状態に応じた処理
+if "!postgres_status!"=="" (
+    echo コンテナが存在しません。全サービスを新規作成します...
+    docker-compose up --build -d
+) else if "!postgres_status:~0,2!"=="Up" (
+    echo PostgreSQLコンテナは既に実行中です: !postgres_status!
+    echo 他のサービスを起動します...
+    docker-compose up --no-recreate -d
+) else (
+    echo PostgreSQLコンテナは停止中です: !postgres_status!
+    echo 全サービスを起動します...
+    docker-compose up --no-recreate -d
+)
 
 echo.
-echo === 起動完了 ===
+echo === 処理完了 ===
 echo フロントエンド: http://localhost:3000
 echo バックエンドAPI: http://localhost:8000
 echo データベース: localhost:5432

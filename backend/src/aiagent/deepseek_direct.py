@@ -3,13 +3,13 @@ import json
 from typing import Dict, List
 from openai import OpenAI
 from .interface import IStockRecommender
-from utils import setup_backend_logger
-from aiagent.data_access import (
+from ..utils import setup_backend_logger
+from .data_access import (
     fetch_company_infos,
     fetch_technical_indicators,
     get_prompt_template
 )
-from aiagent.prompt_builder import build_recommendation_prompt
+from .prompt_builder import build_recommendation_prompt
 
 logger = setup_backend_logger(__name__)
 
