@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, String, DECIMAL, Text, JSON, TIMESTAMP, text
+from sqlalchemy import Column, Integer, String, DECIMAL, Text, TIMESTAMP, text
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.ext.declarative import declarative_base
-from datetime import datetime
 
 Base = declarative_base()
 

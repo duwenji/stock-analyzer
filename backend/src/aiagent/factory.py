@@ -1,7 +1,6 @@
-from .interface import IStockRecommender
-from .deepseek_direct import DeepSeekDirectRecommender
-from .mcp_agent import MCPAgentRecommender
-import os
+from aiagent.interface import IStockRecommender
+from aiagent.deepseek_direct import DeepSeekDirectRecommender
+from aiagent.mcp_agent import MCPAgentRecommender
 
 class RecommenderFactory:
     @staticmethod

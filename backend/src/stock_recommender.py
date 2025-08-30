@@ -1,7 +1,7 @@
 import logging
 from typing import Dict
-from .aiagent.factory import RecommenderFactory
-from .aiagent.data_access import save_recommendation, get_prompt_template
+from aiagent.factory import RecommenderFactory
+from aiagent.data_access import save_recommendation
 
 logger = logging.getLogger(__name__)
 
