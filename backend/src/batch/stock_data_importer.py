@@ -47,12 +47,6 @@ conn = pool.getconn()
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_READ_COMMITTED)
 cursor = conn.cursor()
 
-# stocksテーブルに最終取得日時カラムを追加（存在しない場合）
-cursor.execute("""
-    ALTER TABLE stocks 
-    ADD COLUMN IF NOT EXISTS last_fetched TIMESTAMP WITH TIME ZONE
-""")
-
 # 銘柄シンボルをデータベースから取得
 cursor.execute("SELECT symbol FROM stocks")
 tickers = [row[0] for row in cursor.fetchall()]
