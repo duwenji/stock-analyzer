@@ -70,7 +70,7 @@ async def get_stocks(
         logger.info(f"受信リクエスト: GET /stocks?page={page}&limit={limit}&search={search}&sort_by={sort_by}&sort_order={sort_order}")
         
         # 有効なソートカラムのリスト
-        valid_columns = ["symbol", "name", "industry", "technical_date", "golden_cross", "dead_cross", "rsi", "macd", "signal_line"]
+        valid_columns = ["symbol", "name", "industry", "technical_date", "golden_cross", "dead_cross", "rsi", "macd_score"]
         
         # ソートカラムの検証
         if sort_by and sort_by not in valid_columns:
@@ -129,8 +129,7 @@ async def get_stocks(
                 ti.golden_cross,
                 ti.dead_cross,
                 ti.rsi,
-                ti.macd,
-                ti.signal_line,
+                ti.macd_score,
                 TO_CHAR(ti.date, 'YYYY-MM-DD') as technical_date
             FROM stocks s
             LEFT JOIN (
@@ -516,7 +515,7 @@ async def get_chart(symbol: str, db: Session = Depends(get_db)):
         ma_settings = get_ma_settings()
         df[f'MA{ma_settings["short"]}'] = calculate_moving_average(df['close'], window=ma_settings["short"])
         df[f'MA{ma_settings["long"]}'] = calculate_moving_average(df['close'], window=ma_settings["long"])
-        df['macd'], df['signal_line'] = calculate_macd(df)  # MACD計算
+        df['macd'], df['signal_line'], df['histogram'] = calculate_macd(df)  # MACD計算
         df['rsi'] = calculate_rsi(df)  # RSI計算
         
         # チャート生成

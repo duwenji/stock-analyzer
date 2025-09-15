@@ -38,8 +38,7 @@ interface Stock {
   golden_cross?: boolean;
   dead_cross?: boolean;
   rsi?: number;
-  macd?: number;
-  signal_line?: number;
+  macd_score?: number;
 }
 
 const StockList: React.FC = () => {
@@ -71,8 +70,7 @@ const StockList: React.FC = () => {
     { id: 'golden_cross', label: 'ゴールデンクロス', align: 'center', sortable: true },
     { id: 'dead_cross', label: 'デッドクロス', align: 'center', sortable: true },
     { id: 'rsi', label: 'RSI', align: 'center', sortable: true },
-    { id: 'macd', label: 'MACD', align: 'center', sortable: true },
-    { id: 'signal_line', label: 'シグナル', align: 'center', sortable: true }
+    { id: 'macd_score', label: 'MACDスコア', align: 'center', sortable: true }
   ];
 
   // 行データのフォーマット
@@ -86,8 +84,7 @@ const StockList: React.FC = () => {
     golden_cross: stock.golden_cross ? "✓" : "",
     dead_cross: stock.dead_cross ? "✓" : "",
     rsi: typeof stock.rsi === 'number' ? stock.rsi.toFixed(2) : stock.rsi,
-    macd: typeof stock.macd === 'number' ? stock.macd.toFixed(4) : stock.macd,
-    signal_line: typeof stock.signal_line === 'number' ? stock.signal_line.toFixed(4) : stock.signal_line
+    macd_score: typeof stock.macd_score === 'number' ? stock.macd_score.toFixed(2) : stock.macd_score
   });
 
   const fetchStocks = async (

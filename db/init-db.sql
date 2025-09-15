@@ -45,6 +45,8 @@ CREATE TABLE IF NOT EXISTS technical_indicators (
     rsi DECIMAL(20,4),
     macd DECIMAL(20,4),
     signal_line DECIMAL(20,4),
+    histogram DECIMAL(20,4),
+    macd_score INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (symbol, date),
     FOREIGN KEY (symbol) REFERENCES stocks(symbol)
