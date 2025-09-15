@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: stock-analyzer-backend
+Version: 0.1.0
+Summary: Stock analysis backend service
+Author-email: Fumiyoshi To <fumiyoshi.to@example.com>
+Requires-Dist: pandas==2.3.1
+Requires-Dist: mpl-finance==0.10.1
+Requires-Dist: yfinance==0.2.65
+Requires-Dist: fastapi>=0.116.1
+Requires-Dist: sqlalchemy>=2.0.43
+Requires-Dist: dotenv>=0.9.9
+Requires-Dist: openai>=1.107.2
+Requires-Dist: mcp-agent>=0.1.22
